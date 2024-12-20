@@ -1,10 +1,10 @@
 import express, { Router } from "express";
 import { requireAuth } from "@clerk/express";
 
+const router: Router = express.Router();
+
 // controller
 import { createCourse, listCourses, getCourse } from "../../modules/courses/course.controller";
-
-const router: Router = express.Router();
 
 router.get("/all-courses", listCourses);
 router.get("/:id", getCourse);

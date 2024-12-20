@@ -6,7 +6,9 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
 
-import clerkClient from "./config/clerkConfig"
+export const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
 // import routes v1
 import { routeV1 } from './routes/index'

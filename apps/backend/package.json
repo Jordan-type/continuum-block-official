@@ -11,7 +11,7 @@
     "build": "rimraf dist && tsup",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-    "seed": "ts-node ./src/seed/seedCourses.ts"
+    "seed": "ts-node ./src/seed/seedDB.ts"
   },
   "keywords": [],
   "author": "jordan-type",

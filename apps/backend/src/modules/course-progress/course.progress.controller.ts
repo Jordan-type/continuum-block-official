@@ -12,6 +12,9 @@ const getUserEnrolledCourses = async (req: Request, res: Response): Promise<void
     try {
         const { userId } = req.params;
         const auth = getAuth(req);
+        console.log(
+            auth, "whaaat!!"
+        )
 
         // verify the authenticated user
         if (!auth || auth.userId !== userId) {
@@ -65,5 +68,5 @@ const getUserCourseProgress = async (req: Request, res: Response): Promise<void>
 
 export {
     getUserEnrolledCourses,
-
+    getUserCourseProgress
 }

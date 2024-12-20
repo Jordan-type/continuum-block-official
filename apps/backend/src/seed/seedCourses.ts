@@ -19,7 +19,7 @@ const seedCourses = async () => {
     // Sample course data
     const courses = [
       {
-        "courseId": "3a9f3d6c-c391-4b1c-9c3d-6c3f3d6c3f3d",
+        courseId: "3a9f3d6c-c391-4b1c-9c3d-6c3f3d6c3f3d",
         teacherId: "user_7kFh92JkCpQw3N8M5L4xRzVtYs",
         teacherName: "John Doe",
         title: "Introduction to Programming",
@@ -30,6 +30,7 @@ const seedCourses = async () => {
         level: "Beginner",
         status: "Published",
         enrollments: [
+          { userId: "user_2qRqEYUlVit2zzLYJb6pjaneln5"},
           { userId: "user_2ntu96pUCljUV2T9W0AThzjacQB" },
           { userId: "user_9xWp45MnKjL8vRt2Hs6BqDcEy" },
         ],

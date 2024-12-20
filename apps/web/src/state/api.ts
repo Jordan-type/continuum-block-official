@@ -12,6 +12,9 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
+      console.log(
+        token, "token"
+      )
       return headers;
     },
   });
@@ -28,8 +31,7 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
       toast.error(`Error: ${errorMessage}`);
     }
 
-    const isMutationRequest =
-      (args as FetchArgs).method && (args as FetchArgs).method !== "GET";
+    const isMutationRequest = (args as FetchArgs).method && (args as FetchArgs).method !== "GET";
 
     if (isMutationRequest) {
       const successMessage = result.data?.message;
@@ -54,30 +56,18 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
   }
 };
 
-export const api = createApi({
-  baseQuery: customBaseQuery,
-  reducerPath: "api",
-  tagTypes: ["Courses", "Users", "UserCourseProgress"],
-  endpoints: (build) => ({
-    /* 
-    ===============
-    USER CLERK
-    =============== 
-    */
+export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Courses", "Users", "UserCourseProgress"], endpoints: (build) => ({
+    /* USER CLERK */
     updateUser: build.mutation<User, Partial<User> & { userId: string }>({
       query: ({ userId, ...updatedUser }) => ({
-        url: `users/clerk/${userId}`,
+        url: `users/update/${userId}`,
         method: "PUT",
         body: updatedUser,
       }),
       invalidatesTags: ["Users"],
     }),
 
-    /* 
-    ===============
-    COURSES
-    =============== 
-    */
+    /* COURSES */
     getCourses: build.query<Course[], { category?: string }>({
       query: ({ category }) => ({
         url: "courses/all-courses",
@@ -91,10 +81,7 @@ export const api = createApi({
       providesTags: (result, error, id) => [{ type: "Courses", id }],
     }),
 
-    createCourse: build.mutation<
-      Course,
-      { teacherId: string; teacherName: string }
-    >({
+    createCourse: build.mutation<Course, { teacherId: string; teacherName: string }>({
       query: (body) => ({
         url: `courses/create`,
         method: "POST",
@@ -103,10 +90,7 @@ export const api = createApi({
       invalidatesTags: ["Courses"],
     }),
 
-    updateCourse: build.mutation<
-      Course,
-      { courseId: string; formData: FormData }
-    >({
+    updateCourse: build.mutation<Course, { courseId: string; formData: FormData }>({
       query: ({ courseId, formData }) => ({
         url: `courses/${courseId}`,
         method: "PUT",
@@ -125,16 +109,7 @@ export const api = createApi({
       invalidatesTags: ["Courses"],
     }),
 
-    getUploadVideoUrl: build.mutation<
-      { uploadUrl: string; videoUrl: string },
-      {
-        courseId: string;
-        chapterId: string;
-        sectionId: string;
-        fileName: string;
-        fileType: string;
-      }
-    >({
+    getUploadVideoUrl: build.mutation<{ uploadUrl: string; videoUrl: string },{ courseId: string; chapterId: string; sectionId: string; fileName: string; fileType: string; }>({
       query: ({ courseId, sectionId, chapterId, fileName, fileType }) => ({
         url: `courses/${courseId}/sections/${sectionId}/chapters/${chapterId}/get-upload-url`,
         method: "POST",
@@ -142,24 +117,19 @@ export const api = createApi({
       }),
     }),
 
-    /* 
-    ===============
-    TRANSACTIONS
-    =============== 
-    */
+    /* TRANSACTIONS */
     getTransactions: build.query<Transaction[], string>({
       query: (userId) => `transactions?userId=${userId}`,
     }),
-    createStripePaymentIntent: build.mutation<
-      { clientSecret: string },
-      { amount: number }
-    >({
+
+    createStripePaymentIntent: build.mutation<{ clientSecret: string },{ amount: number }>({
       query: ({ amount }) => ({
         url: `/transactions/stripe/payment-intent`,
         method: "POST",
         body: { amount },
       }),
     }),
+
     createTransaction: build.mutation<Transaction, Partial<Transaction>>({
       query: (transaction) => ({
         url: "transactions",
@@ -168,45 +138,26 @@ export const api = createApi({
       }),
     }),
 
-    /* 
-    ===============
-    USER COURSE PROGRESS
-    =============== 
-    */
+    /* USER COURSE PROGRESS    */
     getUserEnrolledCourses: build.query<Course[], string>({
-      query: (userId) => `users/course-progress/${userId}/enrolled-courses`,
+      query: (userId) => `course-progress/${userId}/enrolled-courses`,
       providesTags: ["Courses", "UserCourseProgress"],
     }),
 
-    getUserCourseProgress: build.query<
-      UserCourseProgress,
-      { userId: string; courseId: string }
-    >({
+    getUserCourseProgress: build.query<UserCourseProgress, { userId: string; courseId: string }>({
       query: ({ userId, courseId }) =>
-        `users/course-progress/${userId}/courses/${courseId}`,
+        `course-progress/${userId}/courses/${courseId}`,
       providesTags: ["UserCourseProgress"],
     }),
 
-    updateUserCourseProgress: build.mutation<
-      UserCourseProgress,
-      {
-        userId: string;
-        courseId: string;
-        progressData: {
-          sections: SectionProgress[];
-        };
-      }
-    >({
+    updateUserCourseProgress: build.mutation<UserCourseProgress, {userId: string; courseId: string; progressData: {sections: SectionProgress[]; };} >({
       query: ({ userId, courseId, progressData }) => ({
-        url: `users/course-progress/${userId}/courses/${courseId}`,
+        url: `course-progress/${userId}/courses/${courseId}`,
         method: "PUT",
         body: progressData,
       }),
       invalidatesTags: ["UserCourseProgress"],
-      async onQueryStarted(
-        { userId, courseId, progressData },
-        { dispatch, queryFulfilled }
-      ) {
+      async onQueryStarted({ userId, courseId, progressData },{ dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           api.util.updateQueryData(
             "getUserCourseProgress",
