@@ -13,6 +13,4 @@ const calculateOverallProgress = (sections: any[]): number => {
   return totalChapters > 0 ? (completedChapters / totalChapters) * 100 : 0;
 };
 
-export { 
-    calculateOverallProgress 
-};
+export default calculateOverallProgress;

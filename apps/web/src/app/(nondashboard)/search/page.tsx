@@ -1,7 +1,7 @@
 "use client";
 
 import Loading from "@/components/Loading";
-import { useGetCoursesQuery } from "@/state/api";
+import { useListCoursesQuery } from "@/state/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -11,14 +11,14 @@ import SelectedCourse from "./SelectedCourse";
 const Search = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const { data: courses, isLoading, isError } = useGetCoursesQuery({});
+  const { data: courses, isLoading, isError } = useListCoursesQuery({});
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     if (courses) {
       if (id) {
-        const course = courses.find((c) => c.courseId === id);
+        const course = courses.find((c) => c._id === id);
         setSelectedCourse(course || courses[0]);
       } else {
         setSelectedCourse(courses[0]);
@@ -31,7 +31,7 @@ const Search = () => {
 
   const handleCourseSelect = (course: Course) => {
     setSelectedCourse(course);
-    router.push(`/search?id=${course.courseId}`, {
+    router.push(`/search?id=${course._id}`, {
       scroll: false,
     });
   };
@@ -60,9 +60,9 @@ const Search = () => {
         >
           {courses.map((course) => (
             <CourseCardSearch
-              key={course.courseId}
+              key={course._id}
               course={course}
-              isSelected={selectedCourse?.courseId === course.courseId}
+              isSelected={selectedCourse?._id === course._id}
               onClick={() => handleCourseSelect(course)}
             />
           ))}

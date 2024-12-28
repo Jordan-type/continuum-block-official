@@ -12,9 +12,6 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
-      console.log(
-        token, "token"
-      )
       return headers;
     },
   });
@@ -22,12 +19,11 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
   try {
     const result: any = await baseQuery(args, api, extraOptions);
 
+    console.log("results....", result)
+
     if (result.error) {
       const errorData = result.error.data;
-      const errorMessage =
-        errorData?.message ||
-        result.error.status.toString() ||
-        "An error occurred";
+      const errorMessage = errorData?.message || result.error.status.toString() || "An error occurred";
       toast.error(`Error: ${errorMessage}`);
     }
 
@@ -49,16 +45,25 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
 
     return result;
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
+    console.log("error:", error)
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
     return { error: { status: "FETCH_ERROR", error: errorMessage } };
   }
 };
 
-export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Courses", "Users", "UserCourseProgress"], endpoints: (build) => ({
-    /* USER CLERK */
-    updateUser: build.mutation<User, Partial<User> & { userId: string }>({
+export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Users", "Courses", "CourseProgress"], endpoints: (build) => ({
+    /* USER CLERK AND MONGODB USER */
+    createUser: build.mutation<User,{ userId: string; firstName: string; lastName: string; email: string; userType?: string }>({
+      query: (newUser) => ({
+        url: "users/create/${newUser.userId}",
+        method: "POST",
+        body: newUser,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    updateUser: build.mutation<User, { userId: string; email?: string; firstName?: string; lastName?: string; userType?: string; }>({
       query: ({ userId, ...updatedUser }) => ({
         url: `users/update/${userId}`,
         method: "PUT",
@@ -68,7 +73,16 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
     }),
 
     /* COURSES */
-    getCourses: build.query<Course[], { category?: string }>({
+    createCourse: build.mutation({
+      query: (courseData) => ({
+        url: "courses/create",
+        method: "POST",
+        body: courseData,
+      }),
+      invalidatesTags: ["Courses"],
+    }),
+    
+    listCourses: build.query<Course[], { category?: string }>({
       query: ({ category }) => ({
         url: "courses/all-courses",
         params: { category },
@@ -76,88 +90,70 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       providesTags: ["Courses"],
     }),
 
-    getCourse: build.query<Course, string>({
-      query: (id) => `courses/${id}`,
+    getCourse: build.query({
+      query: (id: string) => ({
+        url: `courses/${id}`,
+        method: "GET",
+      }),
+      
       providesTags: (result, error, id) => [{ type: "Courses", id }],
     }),
 
-    createCourse: build.mutation<Course, { teacherId: string; teacherName: string }>({
-      query: (body) => ({
-        url: `courses/create`,
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["Courses"],
-    }),
-
-    updateCourse: build.mutation<Course, { courseId: string; formData: FormData }>({
+    updateCourse: build.mutation({
       query: ({ courseId, formData }) => ({
         url: `courses/${courseId}`,
         method: "PUT",
         body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }),
-      invalidatesTags: (result, error, { courseId }) => [
-        { type: "Courses", id: courseId },
-      ],
+      invalidatesTags: (result, error, { courseId }) => [{ type: "Courses", id: courseId }],
     }),
 
-    deleteCourse: build.mutation<{ message: string }, string>({
-      query: (courseId) => ({
+    deleteCourse: build.mutation({
+      query: (courseId: string) => ({
         url: `courses/${courseId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Courses"],
     }),
 
-    getUploadVideoUrl: build.mutation<{ uploadUrl: string; videoUrl: string },{ courseId: string; chapterId: string; sectionId: string; fileName: string; fileType: string; }>({
-      query: ({ courseId, sectionId, chapterId, fileName, fileType }) => ({
+    getUploadVideoUrl: build.mutation({
+      query: ({ courseId, sectionId, chapterId }) => ({
         url: `courses/${courseId}/sections/${sectionId}/chapters/${chapterId}/get-upload-url`,
         method: "POST",
-        body: { fileName, fileType },
       }),
     }),
 
-    /* TRANSACTIONS */
-    getTransactions: build.query<Transaction[], string>({
-      query: (userId) => `transactions?userId=${userId}`,
-    }),
-
-    createStripePaymentIntent: build.mutation<{ clientSecret: string },{ amount: number }>({
-      query: ({ amount }) => ({
-        url: `/transactions/stripe/payment-intent`,
-        method: "POST",
-        body: { amount },
+    /* USER COURSE PROGRESS */
+    getUserEnrolledCourses: build.query({
+      query: (userId: string) => ({
+        url: `course-progress/${userId}/enrolled-courses`,
+        method: "GET",
       }),
+      providesTags: ["Courses", "CourseProgress"],
     }),
 
-    createTransaction: build.mutation<Transaction, Partial<Transaction>>({
-      query: (transaction) => ({
-        url: "transactions",
-        method: "POST",
-        body: transaction,
+    getUserCourseProgress: build.query({
+      query: ({ userId, courseId }: { userId: string; courseId: string }) => ({
+        url: `course-progress/${userId}/courses/${courseId}`,
+        method: "GET",
       }),
+      providesTags: ["CourseProgress"],
     }),
 
-    /* USER COURSE PROGRESS    */
-    getUserEnrolledCourses: build.query<Course[], string>({
-      query: (userId) => `course-progress/${userId}/enrolled-courses`,
-      providesTags: ["Courses", "UserCourseProgress"],
-    }),
-
-    getUserCourseProgress: build.query<UserCourseProgress, { userId: string; courseId: string }>({
-      query: ({ userId, courseId }) =>
-        `course-progress/${userId}/courses/${courseId}`,
-      providesTags: ["UserCourseProgress"],
-    }),
-
-    updateUserCourseProgress: build.mutation<UserCourseProgress, {userId: string; courseId: string; progressData: {sections: SectionProgress[]; };} >({
-      query: ({ userId, courseId, progressData }) => ({
+    updateUserCourseProgress: build.mutation({
+      query: ({ userId, courseId, progressData }: { userId: string; courseId: string; progressData: any }) => ({
         url: `course-progress/${userId}/courses/${courseId}`,
         method: "PUT",
         body: progressData,
       }),
-      invalidatesTags: ["UserCourseProgress"],
-      async onQueryStarted({ userId, courseId, progressData },{ dispatch, queryFulfilled }) {
+      invalidatesTags: ["CourseProgress"],
+      async onQueryStarted(
+        { userId, courseId, progressData },
+        { dispatch, queryFulfilled }
+      ) {
         const patchResult = dispatch(
           api.util.updateQueryData(
             "getUserCourseProgress",
@@ -178,20 +174,28 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       },
     }),
   }),
-});
+
+
+    /* BUY COURSE TRANSACTIONS */
+
+
+
+
+  });
 
 export const {
+  useCreateUserMutation,
   useUpdateUserMutation,
+
   useCreateCourseMutation,
+  useListCoursesQuery,
+  useGetCourseQuery,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
-  useGetCoursesQuery,
-  useGetCourseQuery,
   useGetUploadVideoUrlMutation,
-  useGetTransactionsQuery,
-  useCreateTransactionMutation,
-  useCreateStripePaymentIntentMutation,
+
   useGetUserEnrolledCoursesQuery,
   useGetUserCourseProgressQuery,
   useUpdateUserCourseProgressMutation,
+
 } = api;

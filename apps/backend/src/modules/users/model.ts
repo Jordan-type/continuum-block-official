@@ -1,54 +1,47 @@
-
-
-import mongoose, { Document, Model, Schema } from "mongoose";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { nanoid } from "nanoid";
+import mongoose, { Schema } from "mongoose";
+import { clerkClient } from "@clerk/express";
 
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export interface IUser extends Document {
-    firstName: string;
-    lastName: string;
-    username: string;
-    email: string;
-    imgUrl?: string;
-    password: string;
-    avatar: {
-      public_id: string;
-      url: string;
-    };
-    role: string;
-    isVerified: boolean;
-    verificationCode: string;
-    recoveryCode?: string | null;
-    rememberMe: boolean;
-    courses: Array<{ courseId: string }>;
-    comparePassword: (password: string) => Promise<boolean>;
-    SignAccessToken: () => string;
-    SignRefreshToken: () => string;
-  }
-
-
-const userSchema: Schema<IUser> = new mongoose.Schema({
+const userSchema = new Schema(
+  {
+    clerkUserId: { type: String, required: true, unique: true }, // Clerk user ID
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    username: { type: String, required: [true, "Please enter your name"],},
-    email: { type: String, required: [true, "Please enter your email"], 
-        validate: { validator: function (value: string) {
-            return emailRegexPattern.test(value);
-          },
-          message: "please enter a valid email",
-        }, unique: true,
+    email: {
+      type: String,
+      required: [true, "Please enter your email"],
+      validate: {
+        validator: function (value: string) {
+          return emailRegexPattern.test(value);
+        },
+        message: "please enter a valid email",
       },
-      imgUrl: { type: String },
-      password: { type: String, minlength: [6, "Password must be at least 6 characters"], select: false,},
-      avatar: {public_id: String,url: String,},
-      role: { type: String, default: "user",},
-      isVerified: { type: Boolean, default: false,},
-      verificationCode: { type: String, default: () => nanoid() },
-      courses: [{courseId: String,},],
-      recoveryCode: { type: String },
-      rememberMe: { type: Boolean, default: false },
+      unique: true,
     },
-    { timestamps: true })
+    imgUrl: { type: String },
+    avatar: { public_id: String, url: String },
+    userType: { type: String, default: "student" }, // user, student, teacher
+    isVerified: { type: Boolean, default: false },
+    courses: [{ courseId: String }],
+    clerkMetadata: { type: Object }, // Store additional Clerk data like publicMetadata
+  },
+  { timestamps: true }
+);
+
+userSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("clerkId")) {
+    const clerkUser = await clerkClient.users.getUser(this.clerkUserId);
+    if (clerkUser) {
+      this.firstName = clerkUser.firstName || this.firstName;
+      this.lastName = clerkUser.lastName || this.lastName;
+      this.email = clerkUser.emailAddresses[0]?.emailAddress || this.email;
+      this.isVerified = clerkUser.emailAddresses[0]?.verification?.status === "verified";
+      this.clerkMetadata = clerkUser.publicMetadata;
+    }
+  }
+  next();
+});
+
+const userModel = mongoose.model("Users", userSchema);
+export default userModel;

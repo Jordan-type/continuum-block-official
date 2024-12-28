@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCarousel } from "@/hooks/useCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetCoursesQuery } from "@/state/api";
+import { useListCoursesQuery } from "@/state/api";
 import { useRouter } from "next/navigation";
 import CourseCardSearch from "@/components/CourseCardSearch";
 import { useUser } from "@clerk/nextjs";
@@ -47,7 +47,7 @@ const LoadingSkeleton = () => {
 const Landing = () => {
   const router = useRouter();
   const currentImage = useCarousel({ totalImages: 3 });
-  const { data: courses, isLoading, isError } = useGetCoursesQuery({});
+  const { data: courses, isLoading, isError } = useListCoursesQuery({});
 
   const handleCourseClick = (courseId: string) => {
     router.push(`/search?id=${courseId}`, {
@@ -131,7 +131,7 @@ const Landing = () => {
           {courses &&
             courses.slice(0, 4).map((course, index) => (
               <motion.div
-                key={course.courseId}
+                key={course._id}
                 initial={{ y: 50, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -139,7 +139,7 @@ const Landing = () => {
               >
                 <CourseCardSearch
                   course={course}
-                  onClick={() => handleCourseClick(course.courseId)}
+                  onClick={() => handleCourseClick(course._id)}
                 />
               </motion.div>
             ))}

@@ -33,12 +33,12 @@ export const useCourseProgressData = () => {
 
   const isLoading = !isLoaded || courseLoading || progressLoading;
 
-  const currentSection = course?.sections.find((s) =>
-    s.chapters.some((c) => c.chapterId === chapterId)
+  const currentSection = course?.sections.find((s: Section) =>
+    s.chapters.some((c: Chapter) => c.chapterId === chapterId)
   );
 
   const currentChapter = currentSection?.chapters.find(
-    (c) => c.chapterId === chapterId
+    (c: ChapterProgress) => c.chapterId === chapterId
   );
 
   const isChapterCompleted = () => {
@@ -46,11 +46,11 @@ export const useCourseProgressData = () => {
       return false;
 
     const section = userProgress.sections.find(
-      (s) => s.sectionId === currentSection.sectionId
+      (s: SectionProgress) => s.sectionId === currentSection.sectionId
     );
     return (
       section?.chapters.some(
-        (c) => c.chapterId === currentChapter.chapterId && c.completed
+        (c: ChapterProgress ) => c.chapterId === currentChapter.chapterId && c.completed
       ) ?? false
     );
   };

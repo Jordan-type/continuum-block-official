@@ -11,8 +11,8 @@ const sectionProgressSchema = new Schema({
 });
 
 const courseProgressSchema = new Schema({
-    userId: { type: String, hashKey: true, required: true, },
-    courseId: { type: String, rangeKey: true, required: true, },
+    userId: { type: String, hashKey: true, required: true,},
+    courseId: { type: Schema.Types.ObjectId, ref: "Courses", required: true, },
     enrollmentDate: { type: String, required: true, },
     overallProgress: { type: Number, required: true,},
     sections: { type: Array, schema: [sectionProgressSchema], },
@@ -21,5 +21,5 @@ const courseProgressSchema = new Schema({
   timestamps: true,
 })
 
-const CourseProgress = mongoose.model("course-progress", courseProgressSchema);
+const CourseProgress = mongoose.model("Course-Progress", courseProgressSchema);
 export default CourseProgress;

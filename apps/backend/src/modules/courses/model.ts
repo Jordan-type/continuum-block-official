@@ -1,16 +1,14 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
-
 const commentSchema = new Schema({
-  commentId: {type: String,required: true,},
-  userId: { type: String, required: true,},
+  commentId: {type: String,required: true,}, 
+  userId: { type: Schema.Types.ObjectId, ref: "Users", required: true },
   text: { type: String, required: true,},
   timestamp: { type: String, required: true,},
 });
 
-
 const chapterSchema = new Schema({
-    chapterId: { type: String, required: true,},
+    chapterId: { type: String, required: true,},  
     type: {type: String, enum: ["Text", "Quiz", "Video"], required: true,},
     title: { type: String, required: true, },
     content: { type: String, required: true, },
@@ -18,17 +16,15 @@ const chapterSchema = new Schema({
     video: { type: String, },
 });
 
-
 const sectionSchema = new Schema({
     sectionId: {type: String, required: true, },
     sectionTitle: { type: String, required: true, },
     sectionDescription: { type: String, },
     chapters: { type: Array, schema: [chapterSchema],},
 });
-  
+
 const courseSchema = new Schema({
-    courseId: { type: String, hashKey: true, required: true,},
-    teacherId: {type: String, required: true, },
+    teacherId: {type: String, required: true },
     teacherName: { type: String, required: true, },
     title: { type: String, required: true, },
     description: { type: String, },
@@ -38,7 +34,7 @@ const courseSchema = new Schema({
     level: { type: String, required: true, enum: ["Beginner", "Intermediate", "Advanced"],},
     status: { type: String, required: true, enum: ["Draft", "Published"], },
     sections: { type: Array, schema: [sectionSchema],},
-    enrollments: { type: Array, schema: [ new Schema({ userId: {type: String, required: true,}, }), ],},
+    enrollments: { type: Array, schema: [ new Schema({userId: { type: String, required: true, }, }), ],},
 }, { timestamps: true, });
 
 const Course = mongoose.model("Courses", courseSchema);

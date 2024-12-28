@@ -15,23 +15,16 @@ const Courses = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const {
-    data: courses,
-    isLoading,
-    isError,
-  } = useGetUserEnrolledCoursesQuery(user?.id ?? "", {
+  const {data: courses, isLoading, isError, } = useGetUserEnrolledCoursesQuery(user?.id ?? "", {
     skip: !isLoaded || !user,
   });
 
   const filteredCourses = useMemo(() => {
     if (!courses) return [];
 
-    return courses.filter((course) => {
-      const matchesSearch = course.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || course.category === selectedCategory;
+    return courses.filter((course: Course) => {
+      const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }, [courses, searchTerm, selectedCategory]);
@@ -44,13 +37,13 @@ const Courses = () => {
     ) {
       const firstChapter = course.sections[0].chapters[0];
       router.push(
-        `/user/courses/${course.courseId}/chapters/${firstChapter.chapterId}`,
+        `/user/courses/${course._id}/chapters/${firstChapter.chapterId}`,
         {
           scroll: false,
         }
       );
     } else {
-      router.push(`/user/courses/${course.courseId}`, {
+      router.push(`/user/courses/${course._id}`, {
         scroll: false,
       });
     }
@@ -69,9 +62,9 @@ const Courses = () => {
         onCategoryChange={setSelectedCategory}
       />
       <div className="user-courses__grid">
-        {filteredCourses.map((course) => (
+        {filteredCourses.map((course: Course) => (
           <CourseCard
-            key={course.courseId}
+            key={course._id}
             course={course}
             onGoToCourse={handleGoToCourse}
           />

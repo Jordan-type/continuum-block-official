@@ -36,7 +36,7 @@ declare global {
   }
 
   interface Course {
-    courseId: string;
+    _id: string;
     teacherId: string;
     teacherName: string;
     title: string;
@@ -68,7 +68,7 @@ declare global {
     to: string | undefined;
   }
 
-  interface UserCourseProgress {
+  interface CourseProgress {
     userId: string;
     courseId: string;
     enrollmentDate: string;

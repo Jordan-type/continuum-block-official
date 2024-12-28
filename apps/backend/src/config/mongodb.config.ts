@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const localDbUri = process.env.PRO_MONGO_URI || '';
+const localDbUri = process.env.DEV_MONGO_URI || '';
 const productionDbUri = process.env.PRO_MONGODB_URI || '';
 
 const dbUrl = isProduction ? productionDbUri : localDbUri;
@@ -18,6 +18,7 @@ const connectDB = async () => {
         socketTimeoutMS: 30000,
         maxPoolSize: 50,
         autoIndex: false, // Don't build indexes
+        serverSelectionTimeoutMS: 20000, // Timeout after 20 seconds
     };
 
     try {
