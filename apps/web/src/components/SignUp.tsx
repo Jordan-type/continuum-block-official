@@ -4,7 +4,6 @@ import { SignUp, useUser } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import { dark } from "@clerk/themes";
 import { useSearchParams } from "next/navigation";
-import { useCreateUserMutation, } from "@/state/api";
 import { toast } from "sonner";
 
 const SignUpComponent = () => {

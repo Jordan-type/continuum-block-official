@@ -9,7 +9,7 @@ import courseProgress from "./course.progress.route"
 import transactionRoutes from "./trasactions.route";
 
 routing.use('/api/v1/courses', courseRoutes)
-routing.use('/api/v1/users', requireAuth(), userRoutes)
+routing.use('/api/v1/users', userRoutes)
 routing.use('/api/v1/course-progress', requireAuth(), courseProgress)
 routing.use('/api/v1/transactions', requireAuth(), transactionRoutes)
 

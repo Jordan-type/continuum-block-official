@@ -82,7 +82,7 @@ const UserBilling = () => {
                   filteredData.map((transaction) => (
                     <TableRow
                       className="billing__table-row"
-                      key={transaction.transactionId}
+                      key={transaction._id}
                     >
                       <TableCell className="billing__table-cell">
                         {new Date(transaction.dateTime).toLocaleDateString()}

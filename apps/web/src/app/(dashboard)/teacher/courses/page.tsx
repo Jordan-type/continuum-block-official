@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   useCreateCourseMutation,
   useDeleteCourseMutation,
-  useGetCoursesQuery,
+  useListCoursesQuery,
 } from "@/state/api";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ const Courses = () => {
     data: courses,
     isLoading,
     isError,
-  } = useGetCoursesQuery({ category: "all" });
+  } = useListCoursesQuery({ category: "all" });
 
   const [createCourse] = useCreateCourseMutation();
   const [deleteCourse] = useDeleteCourseMutation();
@@ -43,14 +43,14 @@ const Courses = () => {
   }, [courses, searchTerm, selectedCategory]);
 
   const handleEdit = (course: Course) => {
-    router.push(`/teacher/courses/${course.courseId}`, {
+    router.push(`/teacher/courses/${course._id}`, {
       scroll: false,
     });
   };
 
   const handleDelete = async (course: Course) => {
     if (window.confirm("Are you sure you want to delete this course?")) {
-      await deleteCourse(course.courseId).unwrap();
+      await deleteCourse(course._id).unwrap();
     }
   };
 
@@ -90,7 +90,7 @@ const Courses = () => {
       <div className="teacher-courses__grid">
         {filteredCourses.map((course) => (
           <TeacherCourseCard
-            key={course.courseId}
+            key={course._id}
             course={course}
             onEdit={handleEdit}
             onDelete={handleDelete}

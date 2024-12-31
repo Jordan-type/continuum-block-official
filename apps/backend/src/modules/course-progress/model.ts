@@ -11,7 +11,7 @@ const sectionProgressSchema = new Schema({
 });
 
 const courseProgressSchema = new Schema({
-    userId: { type: String, hashKey: true, required: true,},
+    userId: { type: String, hashKey: true, required: true, },
     courseId: { type: Schema.Types.ObjectId, ref: "Courses", required: true, },
     enrollmentDate: { type: String, required: true, },
     overallProgress: { type: Number, required: true,},

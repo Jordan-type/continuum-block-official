@@ -4,12 +4,24 @@ import { NextResponse } from "next/server";
 const isStudentRoute = createRouteMatcher(["/user/(.*)"]);
 const isTeacherRoute = createRouteMatcher(["/teacher/(.*)"]);
 
+// Public routes
+const publicRoutes = ["/", "/forget-password", "/api/webhooks/clerk"];
+
 export default clerkMiddleware(async (auth, req) => {
+  // Check if the request matches any public route
+  const url = req.nextUrl;
+  const pathname = url.pathname;
+  if (publicRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
+
   const { sessionClaims } = await auth();
   const userRole =
     (sessionClaims?.metadata as { userType: "student" | "teacher" })
       ?.userType || "student";
 
+  // Redirect logic for student routes
   if (isStudentRoute(req)) {
     if (userRole !== "student") {
       const url = new URL("/teacher/courses", req.url);
@@ -17,6 +29,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
+  // Redirect logic for teacher routes
   if (isTeacherRoute(req)) {
     if (userRole !== "teacher") {
       const url = new URL("/user/courses", req.url);

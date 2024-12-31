@@ -5,29 +5,15 @@ import User from "./model"
 
 const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userId } = req.params;
     const userData = req.body;
-
-    // Fetch user details from Clerk
-    const clerkUser = await clerkClient.users.getUser(userId);
-    
-    // Step 1: Create the user in Clerk
-    const clerkUserData = await clerkClient.users.updateUserMetadata(userId, {
-      publicMetadata: {
-        userType: userData.publicMetadata.userType,
-        settings: userData.publicMetadata.settings,
-      },
-    });
 
     // Step 2: Create the user in MongoDB
     const newUser = new User({
-      clerkUserId: clerkUser.id,
-      firstName: clerkUser.firstName,
-      lastName: clerkUser.lastName,
-      email: clerkUser.emailAddresses[0]?.emailAddress,
+      clerkUserId: userData.id,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
       userType: userData.userType || "student",
-      isVerified: clerkUser.emailAddresses[0]?.verification?.status === "verified",
-      clerkMetadata: clerkUser.publicMetadata || {},
     });
 
     await newUser.save();
@@ -35,7 +21,6 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({
       message: "User created successfully",
       data: { 
-        clerkUserData,
         newUser 
       },
     });

@@ -6,7 +6,7 @@ import { createUser, getUser, listUsers, syncUser, deleteUser, updateUser, promo
 
 const router: Router = express.Router();
 
-router.post("/create/:userId", requireAuth(), createUser)
+router.post("/create", createUser)
 router.get("/all-users",  requireAuth(), listUsers)
 router.get("/:userId",  requireAuth(), getUser)
 router.put("/:userId", requireAuth(), syncUser)
