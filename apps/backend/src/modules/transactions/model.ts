@@ -12,7 +12,7 @@ const transactionSchema = new Schema(
         resultCode: { type: String, required: false },
         resultMsg: { type: String, required: false },
         mpesaReceiptNumber: { type: String, required: false },
-        CheckoutRequestID: { type: String, required: false }, // For Mpesa result callback
+        CheckoutRequestID: { type: String, required: false },   // For Mpesa result callback
         merchantRequestID : { type: String, required: false }, // For merchant request id to get payment status from mpesa
     },
       amount: {type: Number, required: true},

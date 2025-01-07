@@ -105,5 +105,5 @@ const initiateSTKPush = async (req: RequestExtended, res: Response) => {
 
 
 export {
-     initiateSTKPush
-    }
+  initiateSTKPush
+}

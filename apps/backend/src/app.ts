@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
 import { clerkMiddleware, createClerkClient } from "@clerk/express";
 import type { Express } from "express";
 import bodyParser from "body-parser";
@@ -39,6 +40,28 @@ app.use(cookieParser());
 app.use(cors());
 app.use(clerkMiddleware());
 app.use(limiter);
+
+// define the health check route
+app.get('/health', async (req: Request, res: Response): Promise<void> => {
+  try {
+      // Check MongoDB connection status
+      const mongoStatus: boolean = mongoose.connection.readyState === 1;
+
+      // ToDo: Assuming checkRedisConnection returns a Promise that resolves to a boolean
+
+
+      if (mongoStatus) {
+          res.status(200).json({ status: 'healthy' });
+      } else {
+          res.status(503).json({ status: 'unhealthy' });
+      }
+  } catch (error: unknown) {
+      // Typing error as unknown, which is safer in TypeScript
+      const errorMessage: string = (error instanceof Error) ? error.message : 'Unknown error';
+      res.status(503).json({ status: 'unhealthy', error: errorMessage });
+  }
+});
+
 
 // testing api
 app.get("/", (req: Request, res: Response, next: NextFunction) => {

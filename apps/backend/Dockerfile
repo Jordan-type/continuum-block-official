@@ -7,9 +7,8 @@ RUN npm install -g pnpm
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy pnpm workspace configuration and lockfile for dependency installation
-COPY pnpm-workspace.yaml ./
-COPY package.json pnpm-lock.yaml ./
+# Copy monorepo configuration and lockfile
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 
 # Install all monorepo dependencies
 RUN pnpm install --frozen-lockfile
@@ -18,13 +17,13 @@ RUN pnpm install --frozen-lockfile
 COPY apps/backend ./apps/backend
 
 # Install only backend dependencies
-RUN pnpm install --filter ./apps/backend --frozen-lockfile
+RUN pnpm install --filter=apps/backend --frozen-lockfile
 
 # Build the backend project (if there's a build step)
-RUN pnpm --filter ./apps/backend run build
+RUN pnpm --filter=apps/backend run build
 
 # Prune development dependencies to reduce image size
-RUN pnpm prune --prod --filter ./apps/backend
+RUN pnpm prune --prod --filter=apps/backend
 
 # Use a smaller Node.js runtime image for production
 FROM node:20-slim
@@ -35,14 +34,12 @@ WORKDIR /app
 # Copy the backend build output and node_modules from the build stage
 COPY --from=build /app/apps/backend/dist ./dist
 COPY --from=build /app/apps/backend/node_modules ./node_modules
-
-# Copy the package.json to ensure runtime dependencies are available
-COPY --from=build /app/apps/backend/package.json ./
+COPY --from=build /app/apps/backend/package.json ./package.json
 
 # Set environment variables
 ENV NODE_ENV=production
 
-# Expose the port your app runs on (adjust if different)
+# Expose the port your app runs on
 EXPOSE 3000
 
 # Command to run the backend server

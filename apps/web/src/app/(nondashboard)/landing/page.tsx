@@ -4,6 +4,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { buttonVariants } from "@/components/ui/button";
+import { HeroCards } from "@/components/HeroCards";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useCarousel } from "@/hooks/useCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useListCoursesQuery } from "@/state/api";
@@ -145,6 +148,9 @@ const Landing = () => {
             ))}
         </div>
       </motion.div>
+
+      {/* ===== Add Team Section Here */}
+
     </motion.div>
   );
 };
