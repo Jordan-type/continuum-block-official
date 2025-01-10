@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react"
+import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card";
@@ -90,24 +91,6 @@ const teamList: TeamProps[] = [
   },
 ];
 
-const LoadingTeamSkeleton = () => {
-  return (
-    <div className="team-skeleton">
-    {[1, 2, 3, 4].map((index) => (
-      <div key={index} className="team-skeleton__card">
-        <Skeleton className="team-skeleton__image" />
-        <Skeleton className="team-skeleton__name" />
-        <Skeleton className="team-skeleton__position" />
-        <div className="team-skeleton__socials">
-          <Skeleton className="team-skeleton__social-icon" />
-          <Skeleton className="team-skeleton__social-icon" />
-          <Skeleton className="team-skeleton__social-icon" />
-        </div>
-      </div>
-    ))}
-  </div>
-  )
-}
 
 const Team = () => {
 
@@ -130,7 +113,7 @@ const Team = () => {
       className="container py-24 sm:py-32"
     >
       <h2 className="text-3xl md:text-4xl font-bold">
-        <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
+        <span className="bg-gradient-to-b from-[#F596D3] to-[#D247BF] text-transparent bg-clip-text">
           Our Dedicated{" "}
         </span>
         Crew
