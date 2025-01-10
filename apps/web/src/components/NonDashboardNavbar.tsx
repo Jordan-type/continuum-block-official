@@ -2,7 +2,7 @@
 
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { Bell, BookOpen } from "lucide-react";
+import { Bell, BookOpen, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -27,7 +27,7 @@ const NonDashboardNavbar = () => {
                 <span className="hidden sm:inline">Search Courses</span>
                 <span className="sm:hidden">Search</span>
               </Link>
-              <BookOpen
+              <SearchIcon
                 className="nondashboard-navbar__search-icon"
                 size={18}
               />
