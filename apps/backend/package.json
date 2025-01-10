@@ -5,6 +5,9 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "private": true,
+  "engines": {
+    "node": "18.18.0"
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "prestart": "pnpm run build",
