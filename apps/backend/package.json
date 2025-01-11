@@ -11,7 +11,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "prestart": "pnpm run build",
-    "build": "rimraf dist && tsup",
+    "build": "pnpm add tsup && rimraf dist && tsup",
     "start": "pnpm run build && node dist/index.js",
     "dev": "pnpm run build && ts-node-dev --respawn --transpile-only ./src/index.ts",
     "dynamodb": "java -Djava.library.path=C:/dynamodb-local/DynamoDBLocal_lib -jar C:/dynamodb-local/DynamoDBLocal.jar -sharedDb -dbPath ./dynamodb-data",
