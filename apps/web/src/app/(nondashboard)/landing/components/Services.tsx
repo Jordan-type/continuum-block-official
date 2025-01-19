@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 import { MagnifierIcon, WalletIcon, ChartIcon } from "@/components/ui/Icons";
 
 interface ServiceProps {
@@ -84,7 +85,7 @@ export const Services = () => {
           </div>
         </div>
 
-        <img
+        <Image
           src="/cube-leg.png"
           className="w-[300px] md:w-[500px] lg:w-[600px] object-contain"
           alt="About services"
