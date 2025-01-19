@@ -135,6 +135,8 @@ const Team = () => {
                 <Image
                   src={imageUrl}
                   alt={`${name} ${position}`}
+                  width={150}
+                  height={150}
                   className="absolute -top-12 rounded-full w-24 h-24 aspect-square object-cover"
                 />
                 <CardTitle className="text-center">{name}</CardTitle>

@@ -45,6 +45,8 @@ const HeroCards = () => {
           <Image
             src="https://i.pravatar.cc/150?img=58"
             alt="user avatar"
+            width={150}
+            height={150}
             className="absolute grayscale-[0%] -top-12 rounded-full w-24 h-24 aspect-square object-cover"
           />
           <CardTitle className="text-center">Leo Miranda</CardTitle>
