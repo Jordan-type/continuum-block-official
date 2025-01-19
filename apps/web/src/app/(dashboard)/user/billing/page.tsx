@@ -17,24 +17,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatPrice } from "@/lib/utils";
-import { useGetTransactionsQuery } from "@/state/api";
+// import { useGetTransactionsQuery } from "@/state/api";
 import { useUser } from "@clerk/nextjs";
 import React, { useState } from "react";
 
 const UserBilling = () => {
   const [paymentType, setPaymentType] = useState("all");
   const { user, isLoaded } = useUser();
-  const { data: transactions, isLoading: isLoadingTransactions } =
-    useGetTransactionsQuery(user?.id || "", {
-      skip: !isLoaded || !user,
-    });
+  // const { data: transactions, isLoading: isLoadingTransactions } =
+  //   useGetTransactionsQuery(user?.id || "", {
+  //     skip: !isLoaded || !user,
+  //   });
 
-  const filteredData =
-    transactions?.filter((transaction) => {
-      const matchesTypes =
-        paymentType === "all" || transaction.paymentProvider === paymentType;
-      return matchesTypes;
-    }) || [];
+  // const filteredData =
+  //   transactions?.filter((transaction) => {
+  //     const matchesTypes =
+  //       paymentType === "all" || transaction.paymentProvider === paymentType;
+  //     return matchesTypes;
+  //   }) || [];
 
   if (!isLoaded) return <Loading />;
   if (!user) return <div>Please sign in to view your billing information.</div>;
@@ -64,7 +64,7 @@ const UserBilling = () => {
         </div>
 
         <div className="billing__grid">
-          {isLoadingTransactions ? (
+          {/* {isLoadingTransactions ? (
             <Loading />
           ) : (
             <Table className="billing__table">
@@ -107,7 +107,7 @@ const UserBilling = () => {
                 )}
               </TableBody>
             </Table>
-          )}
+          )} */}
         </div>
       </div>
     </div>

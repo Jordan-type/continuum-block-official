@@ -57,13 +57,13 @@ const ChaptersSidebar = () => {
         <h2 className="chapters-sidebar__title">{course.title}</h2>
         <hr className="chapters-sidebar__divider" />
       </div>
-      {course.sections.map((section, index) => (
+      {course.sections.map((section: Section, index: number) => (
         <Section
           key={section.sectionId}
           section={section}
           index={index}
           sectionProgress={userProgress.sections.find(
-            (s) => s.sectionId === section.sectionId
+            (s: { sectionId: string }) => s.sectionId === section.sectionId
           )}
           chapterId={chapterId as string}
           courseId={courseId as string}
