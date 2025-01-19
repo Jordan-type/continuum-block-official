@@ -12,6 +12,8 @@ export const About = () => {
           <Image
             src="/growth.png"
             alt=""
+            width={300}
+            height={300}
             className="w-[300px] object-contain rounded-lg"
           />
           <div className="bg-green-0 flex flex-col justify-between">
