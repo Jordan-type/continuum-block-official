@@ -2,8 +2,8 @@ import express, { Router } from "express";
 import { requireAuth } from "@clerk/express" 
 
 
-// controller
-import { listTransactions, createStripePaymentIntent, createTransaction } from "../../modules/transactions/transaction.controller";
+// controller // createStripePaymentIntent, createTransaction
+import { listTransactions } from "../../modules/transactions/transaction.controller";
 
 import generateAccessToken from "../../middlewares/generateToken"
 import { initiateSTKPush  } from "../../services/handleSTKPush"

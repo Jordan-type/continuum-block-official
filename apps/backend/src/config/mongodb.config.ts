@@ -1,20 +1,14 @@
 import mongoose from 'mongoose';
 
-const isProduction = process.env.NODE_ENV === 'production';
+// Use the correct environment variable name as specified in your .env file
+const productionDbUri = process.env.PRO_MONGO_URI as string | undefined;
 
-const localDbUri = process.env.DEV_MONGO_URI || '';
-const productionDbUri = process.env.PRO_MONGODB_URI || '';
+// Default to an empty string if the URI is not provided
+const dbUrl = productionDbUri || '';
+console.log(`Connecting to database: ${dbUrl}`);
 
-const dbUrl = isProduction ? productionDbUri : localDbUri;
-
-if (!isProduction) {
-    console.log('Running in development mode. Connecting to local MongoDB...');
-  } else {
-    console.log('Running in production mode. Connecting to cloud MongoDB...');
-}
-
-const connectDB = async () => {
-    const options = {
+const connectDB = async (): Promise<void> => {
+    const options: mongoose.ConnectOptions = {
         socketTimeoutMS: 30000,
         maxPoolSize: 50,
         autoIndex: false, // Don't build indexes

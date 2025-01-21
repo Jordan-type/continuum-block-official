@@ -5,13 +5,13 @@ import Course from "../courses/model";
 import Transaction from "./model";
 import CourseProgress from "../course-progress/model";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error(
-    "STRIPE_SECRET_KEY os required but was not found in env variables"
-  );
-}
+// if (!process.env.STRIPE_SECRET_KEY) {
+//   throw new Error(
+//     "STRIPE_SECRET_KEY os required but was not found in env variables"
+//   );
+// }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const listTransactions = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -31,35 +31,35 @@ const listTransactions = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-const createStripePaymentIntent = async (req: Request, res: Response ): Promise<void> => {
-  try {
-    let { amount } = req.body;
+// const createStripePaymentIntent = async (req: Request, res: Response ): Promise<void> => {
+//   try {
+//     let { amount } = req.body;
 
-    if (!amount || amount <= 0) {
-        amount = 50;
-    }
+//     if (!amount || amount <= 0) {
+//         amount = 50;
+//     }
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: "usd",
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: "never",
-      },
-    });
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount,
+//       currency: "usd",
+//       automatic_payment_methods: {
+//         enabled: true,
+//         allow_redirects: "never",
+//       },
+//     });
 
-    res.json({
-      message: "",
-      data: {
-        clientSecret: paymentIntent.client_secret,
-      },
-    });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error creating stripe payment intent", error });
-  }
-};
+//     res.json({
+//       message: "",
+//       data: {
+//         clientSecret: paymentIntent.client_secret,
+//       },
+//     });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Error creating stripe payment intent", error });
+//   }
+// };
 
 const createTransaction = async (req: Request, res: Response): Promise<void> => {
   const { userId, courseId, transactionId, amount, paymentProvider } = req.body;
@@ -124,6 +124,6 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
 
 export {
     listTransactions,
-    createStripePaymentIntent,
-    createTransaction
+    // createStripePaymentIntent,
+    // createTransaction
 }
