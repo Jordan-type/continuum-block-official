@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 
-// Use the correct environment variable name as specified in your .env file
+// use the correct environment variable name as specified in your .env file
 const productionDbUri = process.env.PRO_MONGO_URI as string | undefined;
 
-// Default to an empty string if the URI is not provided
+// default to an empty string if the URI is not provided
 const dbUrl = productionDbUri || '';
-console.log(`Connecting to database: ${dbUrl}`);
 
 const connectDB = async (): Promise<void> => {
     const options: mongoose.ConnectOptions = {
