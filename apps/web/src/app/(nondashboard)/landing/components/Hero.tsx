@@ -1,9 +1,14 @@
+"use client"
+
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from '@/state/twitterApi';
 import { Button, buttonVariants } from "../../../../components/ui/button";
 import HeroCards from "../../../../components/HeroCards";
+import { Tweet, UserMentions, User, Mention } from '@/types/type';
 
 // const LoadingSkeleton = () => {
 //   return (
@@ -38,9 +43,31 @@ import HeroCards from "../../../../components/HeroCards";
 //   );
 // };
 
-
-
 const Hero = () => {
+  const [tweets, setTweets] = useState<Tweet[]>([]);
+  const username = "type_jordan";
+  const { data: userData, isFetching: isFetchingUser } = useGetUserByUsernameQuery(username);
+
+  const userId = userData?.id;
+  const { data: mentionsData, isFetching: isFetchingMentions } = useGetUserMentionsByIdQuery(userId || '', {
+    skip: !userId,  // Only run this query if userId is available
+  });
+
+  useEffect(() => {
+    if (!isFetchingMentions && mentionsData && mentionsData.data) {
+      const adaptedTweets = mentionsData.data.map((mention: Mention) => ({
+        id: mention.id,
+        text: mention.text,
+        user: {
+          name: userData?.name || "Jordan Muthemba",
+          username: userData?.username || "type_jordan",
+          profile_image_url: userData?.profile_image_url || "https://i.pravatar.cc/150?u=" + mention.id,
+        }
+      }));
+      setTweets(adaptedTweets);
+    }
+  }, [mentionsData, isFetchingMentions, userData]);
+
 
   // if (isLoading) return <LoadingSkeleton />;
 
@@ -116,7 +143,7 @@ const Hero = () => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.9, delay: 0.5 }}
       >
-        <HeroCards />
+        <HeroCards tweets={tweets} />
       </motion.div>
 
       {/* Shadow effect */}

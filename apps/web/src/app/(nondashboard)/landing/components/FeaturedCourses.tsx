@@ -48,9 +48,9 @@ const FeaturedCourses = () => {
       transition={{ duration: 0.5 }}
     >
       <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
-        Many{" "}
+        Accees{" "}
         <span className="bg-gradient-to-b from-[#F596D3] to-[#D247BF] text-transparent bg-clip-text">
-          Great Courses
+          Our Great Courses
         </span>
       </h2>
 

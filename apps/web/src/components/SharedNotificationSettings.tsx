@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  NotificationSettingsFormData,
-  notificationSettingsSchema,
-} from "@/lib/schemas";
+import { NotificationSettingsFormData,notificationSettingsSchema, } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUpdateUserMutation } from "@/state/api";
 import { useUser } from "@clerk/nextjs";
