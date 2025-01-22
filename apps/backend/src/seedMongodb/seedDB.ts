@@ -52,7 +52,7 @@ const seedCourseProgress = async () => {
 };
 
 export default async function seed() {
-  const uri = process.env.DEV_MONGO_URI || "mongodb://localhost:27017/continuum-block";
+  const uri = process.env.PRO_MONGO_URI || "mongodb+srv://admin:11b6n9yRhlJvmVa0@cluster0.b5vuw.mongodb.net/continuum-block?retryWrites=true&w=majority&family=4";
 
   try {
     await mongoose.connect(uri, {
@@ -61,6 +61,9 @@ export default async function seed() {
       autoIndex: false,
     });
     console.log("Connected to MongoDB");
+
+    // await Promise.all([seedCourses()]); // seedTransactions()
+    // console.log("MongoDB: All data seeded successfully");    
 
     await Promise.all([seedCourseProgress(), ]); // seedCourseProgress(),
     console.log("MongoDB: All data seeded successfully");

@@ -13,32 +13,38 @@ import { Check, Linkedin } from "lucide-react";
 import { LightBulbIcon } from "./ui/Icons";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import { Tweet } from "@/types/type"
+
+interface HeroCardsProps {
+  tweets: Tweet[]; // Accept tweets as a prop
+}
+
+const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
 
 
-
-const HeroCards = () => {
   return (
     <div className="hidden lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
       {/* Testimonial */}
-      <Card className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+      {tweets.map((tweet) => (
+      <Card key={tweet.id} className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader className="flex flex-row items-center gap-4 pb-2">
           <Avatar>
             <AvatarImage
-              alt=""
-              src="https://github.com/shadcn.png"
+              alt={tweet.user.name}
+              src={tweet.user.profile_image_url}
             />
-            <AvatarFallback>SH</AvatarFallback>
+            <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
           </Avatar>
 
           <div className="flex flex-col">
-            <CardTitle className="text-lg">John Doe React</CardTitle>
-            <CardDescription>@john_doe</CardDescription>
+            <CardTitle className="text-lg">{tweet.user.name}</CardTitle>
+            <CardDescription>@{tweet.user.username}</CardDescription>
           </div>
         </CardHeader>
 
-        <CardContent>This landing page is awesome!</CardContent>
+        <CardContent>{tweet.text}</CardContent>
       </Card>
-
+      ))}
       {/* Team */}
       <Card className="absolute right-[20px] top-4 w-80 flex flex-col justify-center items-center drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader className="mt-8 flex justify-center items-center pb-2">
