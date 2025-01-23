@@ -12,6 +12,7 @@ import {
 import { Check, Linkedin } from "lucide-react";
 import { LightBulbIcon } from "./ui/Icons";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Image from "next/image";
 import { Tweet } from "@/types/type"
 
@@ -20,13 +21,21 @@ interface HeroCardsProps {
 }
 
 const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
+  console.log("Rendering HeroCards with tweets:", tweets);
+
+  // if (tweets.length === 0) {
+  //   return <div>No tweets to display</div>;
+  // }
 
 
   return (
     <div className="hidden lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
       {/* Testimonial */}
+      <Carousel>
+        <CarouselContent>
       {tweets.map((tweet) => (
-      <Card key={tweet.id} className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+        <CarouselItem key={tweet.id}>
+      <Card  className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader className="flex flex-row items-center gap-4 pb-2">
           <Avatar>
             <AvatarImage
@@ -44,7 +53,10 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
 
         <CardContent>{tweet.text}</CardContent>
       </Card>
+      </CarouselItem>
       ))}
+      </CarouselContent>
+      </Carousel>
       {/* Team */}
       <Card className="absolute right-[20px] top-4 w-80 flex flex-col justify-center items-center drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader className="mt-8 flex justify-center items-center pb-2">

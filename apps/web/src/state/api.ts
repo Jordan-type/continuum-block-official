@@ -4,6 +4,8 @@ import { User } from "@clerk/nextjs/server";
 import { Clerk } from "@clerk/clerk-js";
 import { toast } from "sonner";
 
+import { Mention, TweetUser } from "@/types/type";
+
 const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: any) => {
   const baseQuery = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -126,6 +128,20 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       }),
     }),
 
+    /* TWEETS */
+    getUserByUsername: build.query<TweetUser, string>({
+      query: (username: string) => ({
+        url: `tweets/user/by/username/${username}`,
+        method: "GET"
+      })
+    }),
+    getUserMentionsById: build.query<Mention, string>({
+      query: (userId: string) => ({
+        url: `tweets/user/${userId}/mentions`,
+        method: "GET"
+      })
+    }),
+
     /* USER COURSE PROGRESS */
     getUserEnrolledCourses: build.query({
       query: (userId: string) => ({
@@ -186,6 +202,9 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
 export const {
   useCreateUserMutation,
   useUpdateUserMutation,
+
+  useGetUserMentionsByIdQuery,
+  useGetUserByUsernameQuery,
 
   useCreateCourseMutation,
   useListCoursesQuery,

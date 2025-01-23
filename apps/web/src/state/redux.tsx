@@ -7,13 +7,11 @@ import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import globalReducer from "@/state";
 import { api } from "@/state/api";
-import { twitterApi } from "@/state/twitterApi";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
   global: globalReducer,
   [api.reducerPath]: api.reducer,
-  [twitterApi.reducerPath]: twitterApi.reducer, 
 });
 
 export const makeStore = () => {
@@ -42,8 +40,7 @@ export const makeStore = () => {
           ],
         },
       })
-      .concat(api.middleware)
-      .concat(twitterApi.middleware),
+      .concat(api.middleware),
   });
 };
 
