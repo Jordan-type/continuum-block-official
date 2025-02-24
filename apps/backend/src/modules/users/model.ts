@@ -21,7 +21,6 @@ const userSchema = new Schema(
     },
     imgUrl: { type: String },
     avatar: { public_id: String, url: String },
-    userType: { type: String, default: "student" }, // user, student, teacher
     isVerified: { type: Boolean, default: false },
     courses: [{ courseId: String }],
     clerkMetadata: { type: mongoose.Schema.Types.Mixed, default: {} }, // Store additional Clerk data like publicMetadata

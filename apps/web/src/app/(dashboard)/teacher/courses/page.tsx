@@ -33,11 +33,8 @@ const Courses = () => {
     if (!courses) return [];
 
     return courses.filter((course) => {
-      const matchesSearch = course.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || course.category === selectedCategory;
+      const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }, [courses, searchTerm, selectedCategory]);
@@ -49,7 +46,9 @@ const Courses = () => {
   };
 
   const handleDelete = async (course: Course) => {
+    console.log("Attempting to delete course with ID:", course._id);
     if (window.confirm("Are you sure you want to delete this course?")) {
+      
       await deleteCourse(course._id).unwrap();
     }
   };
@@ -57,10 +56,7 @@ const Courses = () => {
   const handleCreateCourse = async () => {
     if (!user) return;
 
-    const result = await createCourse({
-      teacherId: user.id,
-      teacherName: user.fullName || "Unknown Teacher",
-    }).unwrap();
+    const result = await createCourse({teacherId: user.id, teacherName: user.fullName || "Unknown Teacher",}).unwrap();
     router.push(`/teacher/courses/${result.courseId}`, {
       scroll: false,
     });

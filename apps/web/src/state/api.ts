@@ -102,29 +102,27 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
     }),
 
     updateCourse: build.mutation({
-      query: ({ courseId, formData }) => ({
-        url: `courses/${courseId}`,
+      query: ({ courseId, updateData }) => ({
+        url: `courses/update/${courseId}`,
         method: "PUT",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: updateData,
       }),
       invalidatesTags: (result, error, { courseId }) => [{ type: "Courses", id: courseId }],
     }),
 
     deleteCourse: build.mutation({
       query: (courseId: string) => ({
-        url: `courses/${courseId}`,
+        url: `courses/delete/${courseId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Courses"],
     }),
 
     getUploadVideoUrl: build.mutation({
-      query: ({ courseId, sectionId, chapterId }) => ({
+      query: ({ courseId, sectionId, chapterId, formData }) => ({
         url: `courses/${courseId}/sections/${sectionId}/chapters/${chapterId}/get-upload-url`,
         method: "POST",
+        body: formData,
       }),
     }),
 

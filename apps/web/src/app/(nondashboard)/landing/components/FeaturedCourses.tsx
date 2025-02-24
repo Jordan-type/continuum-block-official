@@ -83,7 +83,7 @@ const FeaturedCourses = () => {
       >
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses &&
-            courses.slice(0, 4).map((course, index) => (
+            courses.slice(0, 6).map((course, index) => (
               <motion.div
                 key={course._id}
                 initial={{ y: 50, opacity: 0 }}

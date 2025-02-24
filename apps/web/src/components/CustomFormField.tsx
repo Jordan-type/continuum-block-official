@@ -57,6 +57,7 @@ interface FormFieldProps {
   multiple?: boolean;
   isIcon?: boolean;
   initialValue?: string | number | boolean | string[];
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CustomFormField: React.FC<FormFieldProps> = ({
@@ -73,6 +74,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
   multiple = false,
   isIcon = false,
   initialValue,
+  onChange,
 }) => {
   const { control } = useFormContext();
 
@@ -80,6 +82,16 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
     field: ControllerRenderProps<FieldValues, string>
   ) => {
     switch (type) {
+      case "file":
+        return (
+          <input
+            type="file"
+            onChange={onChange}
+            accept={accept}
+            multiple={multiple}
+            className={`border-none bg-customgreys-darkGrey p-4 ${inputClassName}`}
+          />
+        );
       case "textarea":
         return (
           <Textarea

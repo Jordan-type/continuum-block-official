@@ -6,13 +6,15 @@ const router: Router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // controller
-import { createCourse, listCourses, getCourse, updateCourse, deleteCourse, getUploadVideoUrl } from "../../modules/courses/course.controller";
+import { imageMulter, videoMulter  } from "../../utils/fileUploader";
+import { createCourse, listCourses, getCourse, updateCourseImage, updateCourse, getUploadVideoUrl, deleteCourse } from "../../modules/courses/course.controller";
 
 router.post("/create", requireAuth(), createCourse)
 router.get("/all-courses", listCourses);
 router.get("/:courseId", getCourse);
-router.put("/:courseId", requireAuth(), upload.single("image"), updateCourse);
-router.delete("/:courseId", requireAuth(), deleteCourse);
-router.post("/:courseId/sections/:sectionId/chapters/:chapterId/get-upload-url", requireAuth(), getUploadVideoUrl);
+router.put("/update-image/:courseId", imageMulter, updateCourseImage);
+router.put("/update/:courseId", requireAuth(), updateCourse); // imageMulter,
+router.post("/:courseId/sections/:sectionId/chapters/:chapterId/get-upload-url",  videoMulter,  getUploadVideoUrl);
+router.delete("/delete/:courseId", requireAuth(), deleteCourse);
 
-export default router;
+export default router;              
