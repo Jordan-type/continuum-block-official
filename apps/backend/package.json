@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "private": true,
   "engines": {
-    "node": "18.18.0"
+    "node": ">=18.18.0"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -21,13 +21,11 @@
   "author": "jordan-type",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.716.0",
     "@clerk/clerk-sdk-node": "^5.1.4",
     "@clerk/express": "^1.3.31",
     "@types/morgan": "^1.9.9",
     "@types/node-fetch": "^2.6.12",
     "@types/socket.io": "^3.0.2",
-    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",

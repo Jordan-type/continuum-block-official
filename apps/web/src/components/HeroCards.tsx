@@ -12,9 +12,15 @@ import {
 import { Check, Linkedin } from "lucide-react";
 import { LightBulbIcon } from "./ui/Icons";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import Image from "next/image";
-import { Tweet } from "@/types/type"
+import { Tweet } from "@/types/type";
 
 interface HeroCardsProps {
   tweets: Tweet[]; // Accept tweets as a prop
@@ -27,35 +33,33 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
   //   return <div>No tweets to display</div>;
   // }
 
-
   return (
-    <div className="hidden lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
+    <div className="lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
       {/* Testimonial */}
-      <Carousel>
-        <CarouselContent>
-      {tweets.map((tweet) => (
-        <CarouselItem key={tweet.id}>
-      <Card  className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
-        <CardHeader className="flex flex-row items-center gap-4 pb-2">
-          <Avatar>
-            <AvatarImage
-              alt={tweet.user.name}
-              src={tweet.user.profile_image_url}
-            />
-            <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
-          </Avatar>
+      <Carousel className="w-full h-auto overflow-hidden">
+        <CarouselContent className="flex transition-transform duration-300 ease-in-out">
+          {tweets.map((tweet) => (
+            <CarouselItem key={tweet.id} className="flex-none w-full h-auto">
+              <Card className="m-4 drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+                <CardHeader className="flex items-center gap-4 pb-2">
+                  <Avatar>
+                    <AvatarImage
+                      alt={tweet.user.name}
+                      src={tweet.user.profile_image_url}
+                    />
+                    <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
+                  </Avatar>
 
-          <div className="flex flex-col">
-            <CardTitle className="text-lg">{tweet.user.name}</CardTitle>
-            <CardDescription>@{tweet.user.username}</CardDescription>
-          </div>
-        </CardHeader>
-
-        <CardContent>{tweet.text}</CardContent>
-      </Card>
-      </CarouselItem>
-      ))}
-      </CarouselContent>
+                  <div className="flex flex-col">
+                    <CardTitle className="text-lg">{tweet.user.name}</CardTitle>
+                    <CardDescription>@{tweet.user.username}</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>{tweet.text}</CardContent>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
       </Carousel>
       {/* Team */}
       <Card className="absolute right-[20px] top-4 w-80 flex flex-col justify-center items-center drop-shadow-xl shadow-black/10 dark:shadow-white/10">
@@ -136,10 +140,7 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
         <CardHeader>
           <CardTitle className="flex item-center justify-between">
             Free
-            <Badge
-              variant="secondary"
-              className="text-sm text-primary"
-            >
+            <Badge variant="secondary" className="text-sm text-primary">
               Most popular
             </Badge>
           </CardTitle>
@@ -154,7 +155,9 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
         </CardHeader>
 
         <CardContent>
-          <Button className="landing__cta-button w-full">Start Free Trial</Button>
+          <Button className="landing__cta-button w-full">
+            Start Free Trial
+          </Button>
         </CardContent>
 
         <hr className="w-4/5 m-auto mb-4" />
@@ -163,10 +166,7 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
           <div className="space-y-4">
             {["4 Team member", "4 GB Storage", "Upto 6 pages"].map(
               (benefit: string) => (
-                <span
-                  key={benefit}
-                  className="flex"
-                >
+                <span key={benefit} className="flex">
                   <Check className="text-green-500" />{" "}
                   <h3 className="ml-2">{benefit}</h3>
                 </span>

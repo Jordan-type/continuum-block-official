@@ -20,54 +20,34 @@ interface SociaNetworkslProps {
 }
 
 const teamList: TeamProps[] = [
-  {
-    imageUrl: "https://i.pravatar.cc/150?img=35",
-    name: "Emma Smith",
-    position: "Product Manager",
-    socialNetworks: [
-      {
-        name: "Linkedin",
-        url: "https://www.linkedin.com/in/leopoldo-miranda/",
-      },
-      {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
-      },
-      {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
-      },
-    ],
-  },
+  // {
+  //   imageUrl: "https://i.pravatar.cc/150?img=35",
+  //   name: "Emma Smith",
+  //   position: "Product Manager",
+  //   socialNetworks: [
+  //     {
+  //       name: "Linkedin",
+  //       url: "https://www.linkedin.com/in/leopoldo-miranda/",
+  //     },
+  //     {
+  //       name: "Facebook",
+  //       url: "https://www.facebook.com/",
+  //     },
+  //     {
+  //       name: "Instagram",
+  //       url: "https://www.instagram.com/",
+  //     },
+  //   ],
+  // },
   {
     imageUrl: "https://i.pravatar.cc/150?img=60",
     name: "Jordan Muthemba",
-    position: "Tech Lead",
+    position: "Smart Contract Developer & Blockchain Trainer",
     socialNetworks: [
       {
         name: "Linkedin",
         url: "https://www.linkedin.com/in/leopoldo-miranda/",
       },
-      {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
-      },
-      {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
-      },
-    ],
-  },
-  {
-    imageUrl: "https://i.pravatar.cc/150?img=36",
-    name: "Rachel Chege",
-    position: "Frontend Developer",
-    socialNetworks: [
-      {
-        name: "Linkedin",
-        url: "https://www.linkedin.com/in/leopoldo-miranda/",
-      },
-
       {
         name: "Instagram",
         url: "https://www.instagram.com/",
@@ -124,7 +104,7 @@ const Team = () => {
       our pioneers are on the front lines, ensuring Continuum Block remains at the cutting edge of blockchain technology.
       </p>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 gap-y-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 gap-y-10 justify-items-center">
         {teamList.map(
           ({ imageUrl, name, position, socialNetworks }: TeamProps) => (
             <Card
@@ -146,7 +126,7 @@ const Team = () => {
               </CardHeader>
 
               <CardContent className="text-center pb-2">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <p>&quot;Blockchain isn&rsquo;t just a technological evolution; it&rsquo;s a cultural revolution. It challenges our conventional views on data security and transactions, promising a future where transparency and trust are the norm, not the exception. As we stand on the brink of this technological frontier, it&rsquo;s crucial we navigate not just with the intent to innovate, but also with a commitment to ethical practices that benefit all.&quot;</p>
               </CardContent>
 
               <CardFooter>

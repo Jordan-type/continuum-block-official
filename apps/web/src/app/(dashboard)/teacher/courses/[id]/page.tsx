@@ -5,38 +5,32 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { courseSchema } from "@/lib/schemas";
-import {
-  centsToDollars,
-  createCourseFormData,
-  uploadAllVideos,
-} from "@/lib/utils";
+import { centsToDollars, createCourseFormData, uploadAllVideos, } from "@/lib/utils";
 import { openSectionModal, setSections } from "@/state";
-import {
-  useGetCourseQuery,
-  useUpdateCourseMutation,
-  useGetUploadVideoUrlMutation,
-} from "@/state/api";
+import { useGetCourseQuery, useUpdateCourseMutation, useGetUploadVideoUrlMutation, } from "@/state/api";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import DroppableComponent from "./Droppable";
 import ChapterModal from "./ChapterModal";
 import SectionModal from "./SectionModal";
+import { set } from "zod";
 
 const CourseEditor = () => {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
-  const { data: course, isLoading, refetch } = useGetCourseQuery(id);
+  const [preview, setPreview] = useState<string | undefined>(undefined);
+  const {data: course, isLoading, refetch } = useGetCourseQuery(id);
   const [updateCourse] = useUpdateCourseMutation();
   const [getUploadVideoUrl] = useGetUploadVideoUrlMutation();
 
   const dispatch = useAppDispatch();
   const { sections } = useAppSelector((state) => state.global.courseEditor);
-
+  
   const methods = useForm<CourseFormData>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -57,28 +51,35 @@ const CourseEditor = () => {
         coursePrice: centsToDollars(course.price),
         courseStatus: course.status === "Published",
       });
+      setPreview(course.image);
       dispatch(setSections(course.sections || []));
     }
   }, [course, methods]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = async (data: CourseFormData) => {
+
+    console.log("Form submission data:", data);
+    
     try {
-      const updatedSections = await uploadAllVideos(
-        sections,
-        id,
-        getUploadVideoUrl
-      );
+      const updatedSections = await uploadAllVideos(sections, id, getUploadVideoUrl);
+      console.log("Updated sections data:", updatedSections);
 
-      const formData = createCourseFormData(data, updatedSections);
+      const formData = createCourseFormData(data, updatedSections); // for the updated sections of the course
+      console.log("FormData to be sent to server:", formData); 
 
-      await updateCourse({
-        courseId: id,
-        formData,
-      }).unwrap();
+      const updateData = {
+        title: data.courseTitle,
+        description: data.courseDescription,
+        price: data.coursePrice, // Ensure this is a number already, maybe convert before sending
+        category: data.courseCategory,
+        status: data.courseStatus ? "Published" : "Draft",
+        sections: updatedSections // Make sure this includes all sections and their chapters
+      };
 
+      await updateCourse({ courseId: id, updateData,}).unwrap(); // actual course update
       refetch();
     } catch (error) {
-      console.error("Failed to update course:", error);
+      console.log("Failed to update course:", error);
     }
   };
 
@@ -95,7 +96,7 @@ const CourseEditor = () => {
       </div>
 
       <Form {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form onSubmit={methods.handleSubmit(onSubmit)} encType="multipart/form-data">
           <Header
             title="Course Setup"
             subtitle="Complete all fields and save your course"
@@ -113,13 +114,8 @@ const CourseEditor = () => {
                   }`}
                   inputClassName="data-[state=checked]:bg-green-500"
                 />
-                <Button
-                  type="submit"
-                  className="bg-primary-700 hover:bg-primary-600"
-                >
-                  {methods.watch("courseStatus")
-                    ? "Update Published Course"
-                    : "Save Draft"}
+                <Button type="submit" className="bg-primary-700 hover:bg-primary-600">
+                  {methods.watch("courseStatus") ? "Update Published Course" : "Save Draft"}
                 </Button>
               </div>
             }
@@ -151,17 +147,16 @@ const CourseEditor = () => {
                   type="select"
                   placeholder="Select category here"
                   options={[
+                    { value: "web development", label: "Web Development" },
+                    { value: "blockchain", label: "Blockchain" },
                     { value: "technology", label: "Technology" },
-                    { value: "science", label: "Science" },
+                    { value: "artificial intelligence", label: "Artificial Intelligence", },
                     { value: "mathematics", label: "Mathematics" },
-                    {
-                      value: "Artificial Intelligence",
-                      label: "Artificial Intelligence",
-                    },
+                    { value: "data science", label: "Data Science" },
                   ]}
                   initialValue={course?.category}
                 />
-
+                
                 <CustomFormField
                   name="coursePrice"
                   label="Course Price"
