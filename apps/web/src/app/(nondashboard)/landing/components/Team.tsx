@@ -20,54 +20,34 @@ interface SociaNetworkslProps {
 }
 
 const teamList: TeamProps[] = [
-  {
-    imageUrl: "https://i.pravatar.cc/150?img=35",
-    name: "Emma Smith",
-    position: "Product Manager",
-    socialNetworks: [
-      {
-        name: "Linkedin",
-        url: "https://www.linkedin.com/in/leopoldo-miranda/",
-      },
-      {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
-      },
-      {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
-      },
-    ],
-  },
+  // {
+  //   imageUrl: "https://i.pravatar.cc/150?img=35",
+  //   name: "Emma Smith",
+  //   position: "Product Manager",
+  //   socialNetworks: [
+  //     {
+  //       name: "Linkedin",
+  //       url: "https://www.linkedin.com/in/leopoldo-miranda/",
+  //     },
+  //     {
+  //       name: "Facebook",
+  //       url: "https://www.facebook.com/",
+  //     },
+  //     {
+  //       name: "Instagram",
+  //       url: "https://www.instagram.com/",
+  //     },
+  //   ],
+  // },
   {
     imageUrl: "https://i.pravatar.cc/150?img=60",
-    name: "John Doe",
-    position: "Tech Lead",
+    name: "Jordan Muthemba",
+    position: "Smart Contract Developer & Blockchain Trainer",
     socialNetworks: [
       {
         name: "Linkedin",
         url: "https://www.linkedin.com/in/leopoldo-miranda/",
       },
-      {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
-      },
-      {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
-      },
-    ],
-  },
-  {
-    imageUrl: "https://i.pravatar.cc/150?img=36",
-    name: "Ashley Ross",
-    position: "Frontend Developer",
-    socialNetworks: [
-      {
-        name: "Linkedin",
-        url: "https://www.linkedin.com/in/leopoldo-miranda/",
-      },
-
       {
         name: "Instagram",
         url: "https://www.instagram.com/",
@@ -108,23 +88,23 @@ const Team = () => {
   };
 
   return (
-    <section
-      id="team"
-      className="container py-24 sm:py-32"
-    >
-      <h2 className="text-3xl md:text-4xl font-bold">
+    <section id="team" className="container py-24 sm:py-32">
+      <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
         <span className="bg-gradient-to-b from-[#F596D3] to-[#D247BF] text-transparent bg-clip-text">
-          Our Dedicated{" "}
+        Continuum Block Pioneers{" "}
         </span>
-        Crew
+        The Architects of Innovation
       </h2>
 
-      <p className="mt-4 mb-10 text-xl text-muted-foreground">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis
-        dolor pariatur sit!
+      <p className="md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground">
+      Meet the Continuum Block Pioneers, a group of visionary developers, strategists, and thinkers dedicated to reshaping the landscape of blockchain technology. 
+      Our team is not just built on expertise but on a foundation of passion and a relentless pursuit of innovation. 
+      Each member brings a unique blend of skills and experiences, driving us forward as we develop groundbreaking solutions and foster a decentralized future. 
+      From coding new protocols to strategizing the blockchain&apos;s integration into everyday life, 
+      our pioneers are on the front lines, ensuring Continuum Block remains at the cutting edge of blockchain technology.
       </p>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 gap-y-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 gap-y-10 justify-items-center">
         {teamList.map(
           ({ imageUrl, name, position, socialNetworks }: TeamProps) => (
             <Card
@@ -134,7 +114,7 @@ const Team = () => {
               <CardHeader className="mt-8 flex justify-center items-center pb-2">
                 <Image
                   src={imageUrl}
-                  alt={`${name} ${position}`}
+                  alt={`${name} ${position.replace(/'/g, "&apos;")}`}
                   width={150}
                   height={150}
                   className="absolute -top-12 rounded-full w-24 h-24 aspect-square object-cover"
@@ -146,7 +126,7 @@ const Team = () => {
               </CardHeader>
 
               <CardContent className="text-center pb-2">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <p>&quot;Blockchain isn&rsquo;t just a technological evolution; it&rsquo;s a cultural revolution. It challenges our conventional views on data security and transactions, promising a future where transparency and trust are the norm, not the exception. As we stand on the brink of this technological frontier, it&rsquo;s crucial we navigate not just with the intent to innovate, but also with a commitment to ethical practices that benefit all.&quot;</p>
               </CardContent>
 
               <CardFooter>

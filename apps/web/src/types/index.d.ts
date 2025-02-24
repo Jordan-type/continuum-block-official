@@ -20,7 +20,7 @@ declare global {
     lastName?: string;
     username?: string;
     email: string;
-    publicMetadata: {
+    publicMetadata: { 
       userType: "teacher" | "student";
     };
     privateMetadata: {
@@ -205,6 +205,7 @@ declare global {
     courseCategory: string;
     coursePrice: string;
     courseStatus: boolean;
+    sections: Section[];
   }
 }
 

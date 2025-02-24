@@ -4,6 +4,8 @@ import { User } from "@clerk/nextjs/server";
 import { Clerk } from "@clerk/clerk-js";
 import { toast } from "sonner";
 
+import { Mention, TweetUser } from "@/types/type";
+
 const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: any) => {
   const baseQuery = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -100,30 +102,42 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
     }),
 
     updateCourse: build.mutation({
-      query: ({ courseId, formData }) => ({
-        url: `courses/${courseId}`,
+      query: ({ courseId, updateData }) => ({
+        url: `courses/update/${courseId}`,
         method: "PUT",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: updateData,
       }),
       invalidatesTags: (result, error, { courseId }) => [{ type: "Courses", id: courseId }],
     }),
 
     deleteCourse: build.mutation({
       query: (courseId: string) => ({
-        url: `courses/${courseId}`,
+        url: `courses/delete/${courseId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Courses"],
     }),
 
     getUploadVideoUrl: build.mutation({
-      query: ({ courseId, sectionId, chapterId }) => ({
+      query: ({ courseId, sectionId, chapterId, formData }) => ({
         url: `courses/${courseId}/sections/${sectionId}/chapters/${chapterId}/get-upload-url`,
         method: "POST",
+        body: formData,
       }),
+    }),
+
+    /* TWEETS */
+    getUserByUsername: build.query<TweetUser, string>({
+      query: (username: string) => ({
+        url: `tweets/user/by/username/${username}`,
+        method: "GET"
+      })
+    }),
+    getUserMentionsById: build.query<Mention, string>({
+      query: (userId: string) => ({
+        url: `tweets/user/${userId}/mentions`,
+        method: "GET"
+      })
     }),
 
     /* USER COURSE PROGRESS */
@@ -186,6 +200,9 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
 export const {
   useCreateUserMutation,
   useUpdateUserMutation,
+
+  useGetUserMentionsByIdQuery,
+  useGetUserByUsernameQuery,
 
   useCreateCourseMutation,
   useListCoursesQuery,

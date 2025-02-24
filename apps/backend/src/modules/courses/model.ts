@@ -24,7 +24,7 @@ const sectionSchema = new Schema({
 });
 
 const courseSchema = new Schema({
-    teacherId: {type: String, required: true },
+    teacherId: { type: String, required: true },
     teacherName: { type: String, required: true, },
     title: { type: String, required: true, },
     description: { type: String, },
@@ -34,9 +34,14 @@ const courseSchema = new Schema({
     level: { type: String, required: true, enum: ["Beginner", "Intermediate", "Advanced"],},
     status: { type: String, required: true, enum: ["Draft", "Published"], },
     sections: { type: Array, schema: [sectionSchema],},
-    enrollments: { type: Array, schema: [ new Schema({userId: { type: String, required: true, }, }), ],},
+    enrollments: { type: Array, schema: [ 
+        new Schema({userId: 
+            { 
+                type: String, required: true, 
+            }, 
+        }), ],
+    },
 }, { timestamps: true, });
 
 const Course = mongoose.model("Courses", courseSchema);
-
 export default Course;

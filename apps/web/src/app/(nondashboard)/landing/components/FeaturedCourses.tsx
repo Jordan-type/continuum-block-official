@@ -48,9 +48,9 @@ const FeaturedCourses = () => {
       transition={{ duration: 0.5 }}
     >
       <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
-        Accees{" "}
+        Start Your{" "}
         <span className="bg-gradient-to-b from-[#F596D3] to-[#D247BF] text-transparent bg-clip-text">
-          Our Great Courses
+          Learning Journey with Our Expert Courses
         </span>
       </h2>
 
@@ -83,7 +83,7 @@ const FeaturedCourses = () => {
       >
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses &&
-            courses.slice(0, 4).map((course, index) => (
+            courses.slice(0, 6).map((course, index) => (
               <motion.div
                 key={course._id}
                 initial={{ y: 50, opacity: 0 }}

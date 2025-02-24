@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { getAuth } from "@clerk/express";
 import { v4 as uuidv4 } from "uuid";
-import AWS from "aws-sdk";
-import Course from "./model";
+import fs from "fs";
 
-const s3 = new AWS.S3();
+import  { uploadFileToCloudinary, cloudinary } from "../../config/cloudinary.config";	
+import Course from "./model";
 
 const createCourse = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -69,16 +69,14 @@ const listCourses = async (req: Request, res: Response): Promise<void> => {
 const getCourse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { courseId } = req.params;
-        console.log("req.params", req.params);
 
         const course = await Course.findById(courseId);
-        console.log("Fetched course:", course);
 
         if (!course) {
             res.status(404).json({
                 message: "Course not found",
             })
-
+            
             return
         }
         
@@ -95,10 +93,53 @@ const getCourse = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-const updateCourse = async (req: Request, res: Response): Promise<void> => {
+const updateCourseImage = async (req: Request, res: Response): Promise<void> => {
     try {
         const { courseId } = req.params;
         const updateData = { ...req.body };
+        const { userId } = getAuth(req);
+
+        const course = await Course.findById(courseId);
+        if (!course) {
+            res.status(404).json({
+                message: "Course not found"
+            });
+            return;
+        }
+
+        if (course.teacherId.toString() !== userId) {
+            res.status(403).json({
+                message: "Not authorized to update this course"
+            });
+            return;
+        }
+
+        // UPLOAD IMAGE TO CLOUDINARY
+        if (req.file) {
+            const result = await uploadFileToCloudinary(req.file.path, {
+                folder: "course_images",
+                public_id: courseId + "_image" // Optional: to have a custom public ID
+            });
+            updateData.image = result.url;  // Assuming `image` field in your course schema
+            fs.unlinkSync(req.file.path); // Delete the file locally after uploading
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Error updating course image",
+            error: error
+        });
+    }
+}
+
+const updateCourse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { courseId } = req.params;
+        const { title, description, price, sections, category, status } = req.body;
+        // const updateData = { ...req.body };
+        console.log("Update Course API called with courseId:", req.params);
+        console.log("<====update body===>", req.body);  // Other form fields
         const { userId } = getAuth(req);
 
         const course = await Course.findById(courseId);
@@ -116,24 +157,31 @@ const updateCourse = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        if (updateData.price) {
-            const price = parseInt(updateData.price);
-            if (isNaN(price)) {
+        // Prepare updated data
+        const updateData: any = {};
+        if (title) updateData.title = title;
+        if (description) updateData.description = description;
+        if (category) updateData.category = category;
+        if (status) updateData.status = status;
+
+
+        if (price) {
+            const numericPrice = parseInt(price);
+            if (isNaN(numericPrice)) {
               res.status(400).json({
                 message: "Invalid price format",
                 error: "Price must be a valid number",
               });
               return;
             }
-            updateData.price = price * 100;
+            updateData.price = numericPrice * 100;
         }
 
-        if (updateData.sections) {
-            const sectionsData =
-              typeof updateData.sections === "string"
-                ? JSON.parse(updateData.sections)
-                : updateData.sections;
-      
+        if (sections) {
+            const sectionsData = typeof sections === "string" ? JSON.parse(sections) : sections;
+
+            console.log("Sections data:", sectionsData);
+
             updateData.sections = sectionsData.map((section: any) => ({
               ...section,
               sectionId: section.sectionId || uuidv4(),
@@ -144,17 +192,62 @@ const updateCourse = async (req: Request, res: Response): Promise<void> => {
             }));
           }
       
-          Object.assign(course, updateData);
-          await course.save();
+
+        console.log("Final update data:", updateData);
+        await Course.findByIdAndUpdate(courseId, updateData, { new: true });
+        const updatedCourse = await Course.findById(courseId);
       
           res.json({ 
             message: "Course updated successfully", 
-            data: course 
+            data: updatedCourse 
         });
     } catch(error) {
+        console.log("<====error====>", error)
         res.status(500).json({ 
             message: "Error updating course", 
             error 
+        });
+    }
+}
+
+const getUploadVideoUrl = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const file = req.file;
+        console.log("file", file);
+
+        if (!file) {
+            res.status(400).json({
+                message: "No file uploaded"
+            });
+            return;
+        }
+
+        const filePath = file.path;  // This depends on your multer setup to provide the local path
+        const options = {
+            folder: "continuum_block_videos", 
+            resource_type: "video" as "video",
+            public_id: `videos/${uuidv4()}/${file.originalname}`,
+            overwrite: true, // Depending on your requirement
+        };
+
+        // Upload the file directly to Cloudinary
+        const result = await cloudinary.uploader.upload(filePath, options);
+
+        // Optionally delete the file if it's temporarily stored locally
+        fs.unlinkSync(filePath);
+
+        res.json({
+            message: "Video uploaded successfully",
+            data: {
+                uploadUrl: result.public_id,
+                videoUrl: result.secure_url // Use secure_url to ensure you use https
+            }
+        });
+    } catch (error) {
+        console.error("Error uploading video:", error);
+        res.status(500).json({
+            message: "Error uploading video",
+            error
         });
     }
 }
@@ -165,6 +258,7 @@ const deleteCourse = async (req: Request, res: Response): Promise<void> => {
         const { userId } = getAuth(req);
 
         const course = await Course.findById(courseId);
+        console.log("course===>",course);
         if (!course) {
             res.status(404).json({ 
                 message: "Course not found" 
@@ -179,13 +273,14 @@ const deleteCourse = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        await Course.deleteOne({courseId})
+        await Course.findByIdAndDelete(courseId);
 
         res.json({ 
             message: "Course deleted successfully", 
             data: course 
         });
     } catch (error) {
+        console.log("error===>",error);
         res.status(500).json({ 
             message: "Error deleting course", 
             error 
@@ -193,50 +288,13 @@ const deleteCourse = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-const getUploadVideoUrl = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { fileName, fileType } = req.body;
-        
-        if (!fileName || !fileType) {
-            res.status(400).json({
-                message: "File name and type are required" 
-            });
-            return;
-        }
-
-        const uniqueId = uuidv4();
-        const s3Key = `videos/${uniqueId}/${fileName}`;
-
-        const s3Params = {
-            Bucket: process.env.S3_BUCKET_NAME || "",
-            Key: s3Key,
-            Expires: 60,
-            ContentType: fileType,
-        };
-
-        const uploadUrl = s3.getSignedUrl("putObject", s3Params);
-        const videoUrl = `${process.env.CLOUDFRONT_DOMAIN}/videos/${uniqueId}/${fileName}`;
-
-        res.json({
-            message: "Upload URL generated successfully",
-            data: { 
-                uploadUrl, 
-                videoUrl 
-            },
-          });
-    } catch(error) {
-        res.status(500).json({ 
-            message: "Error generating upload URL",
-            error 
-        });
-    }
-}
 
 export {
     createCourse,
     listCourses,
     getCourse,
+    updateCourseImage,
     updateCourse,
-    deleteCourse,
-    getUploadVideoUrl
+    getUploadVideoUrl,
+    deleteCourse
 }

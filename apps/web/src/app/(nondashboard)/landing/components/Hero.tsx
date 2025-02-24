@@ -5,10 +5,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from '@/state/twitterApi';
+import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from '@/state/api';
 import { Button, buttonVariants } from "../../../../components/ui/button";
 import HeroCards from "../../../../components/HeroCards";
-import { Tweet, UserMentions, User, Mention } from '@/types/type';
+import { Tweet, Mention } from '@/types/type';
 
 // const LoadingSkeleton = () => {
 //   return (
@@ -54,19 +54,26 @@ const Hero = () => {
   });
 
   useEffect(() => {
-    if (!isFetchingMentions && mentionsData && mentionsData.data) {
-      const adaptedTweets = mentionsData.data.map((mention: Mention) => ({
+    console.log("User Data:", userData);
+    console.log("Mentions Data:", mentionsData);
+    if (!isFetchingMentions && mentionsData && userData && !isFetchingUser) {
+      const adaptedTweets = Array.isArray(mentionsData) ? mentionsData.map((mention: Mention) => ({
         id: mention.id,
         text: mention.text,
         user: {
+          id: userData?.id || 'default_id',
           name: userData?.name || "Jordan Muthemba",
           username: userData?.username || "type_jordan",
           profile_image_url: userData?.profile_image_url || "https://i.pravatar.cc/150?u=" + mention.id,
         }
-      }));
+      })) : [];
       setTweets(adaptedTweets);
     }
-  }, [mentionsData, isFetchingMentions, userData]);
+  }, [mentionsData, isFetchingMentions, userData, isFetchingUser]);
+
+  useEffect(() => {
+    console.log('Tweets:', tweets); // Check what's actually in your state
+  }, [tweets]);
 
 
   // if (isLoading) return <LoadingSkeleton />;
