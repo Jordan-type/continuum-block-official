@@ -7,14 +7,13 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // controller
 import { imageMulter, videoMulter  } from "../../utils/fileUploader";
-import { createCourse, listCourses, getCourse, updateCourseImage, updateCourse, getUploadVideoUrl, deleteCourse } from "../../modules/courses/course.controller";
+import { createCourse, listCourses, getCourse, updateCourse, getUploadVideoUrl, deleteCourse } from "../../modules/courses/course.controller";
 
 router.post("/create", requireAuth(), createCourse)
 router.get("/all-courses", listCourses);
 router.get("/:courseId", getCourse);
-router.put("/update-image/:courseId", imageMulter, updateCourseImage);
-router.put("/update/:courseId", requireAuth(), updateCourse); // imageMulter,
-router.post("/:courseId/sections/:sectionId/chapters/:chapterId/get-upload-url",  videoMulter,  getUploadVideoUrl);
+router.put("/update/:courseId", requireAuth(), imageMulter, updateCourse); // imageMulter,
+router.post("/:courseId/sections/:sectionId/chapters/:chapterId/get-upload-url", requireAuth(), videoMulter,  getUploadVideoUrl);
 router.delete("/delete/:courseId", requireAuth(), deleteCourse);
 
 export default router;              

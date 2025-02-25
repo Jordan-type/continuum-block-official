@@ -139,24 +139,24 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
       <Card className="absolute top-[150px] left-[50px] w-72  drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader>
           <CardTitle className="flex item-center justify-between">
-            Free
+            Introduction to Git and GitHub
             <Badge variant="secondary" className="text-sm text-primary">
-              Most popular
+              Free – Most Popular
             </Badge>
           </CardTitle>
           <div>
-            <span className="text-3xl font-bold">$0</span>
+            <span className="text-3xl font-bold">$0.00</span>
             <span className="text-muted-foreground"> /month</span>
           </div>
 
           <CardDescription>
-            Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.
+            Master Git and GitHub for free! Learn version control, collaborate like a pro, and build foundational skills for modern development with Jordan Muthemba.
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           <Button className="landing__cta-button w-full">
-            Start Free Trial
+            Enroll Now
           </Button>
         </CardContent>
 
@@ -164,7 +164,7 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
 
         <CardFooter className="flex">
           <div className="space-y-4">
-            {["4 Team member", "4 GB Storage", "Upto 6 pages"].map(
+            {["Learn version control basics", "Collaborate on projects effectively", "Access 7 practical lessons"].map(
               (benefit: string) => (
                 <span key={benefit} className="flex">
                   <Check className="text-green-500" />{" "}

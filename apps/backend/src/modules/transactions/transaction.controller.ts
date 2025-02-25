@@ -66,7 +66,7 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
 
   try {
     // 1. get course info
-    const course = await Course.findOne(courseId);
+    const course = await Course.findById(courseId);
 
     if (!course) {
       res.status(404).json({ 
@@ -75,18 +75,21 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    // 2. create transaction record
+    // 2. Check if the course is free
+    const isFreeCourse = course.price === 0;
+
+    // 3. create transaction record
     const newTransaction = new Transaction({
       dateTime: new Date().toISOString(),
       userId,
       courseId,
-      transactionId,
-      amount,
-      paymentProvider,
+      transactionId: isFreeCourse ? `free_${Date.now()}` : transactionId,
+      amount: isFreeCourse ? 0 : amount,
+      paymentProvider: isFreeCourse ? "free" : paymentProvider,
     });
     await newTransaction.save();
 
-    // 3. create initial course progress
+    // 4. create initial course progress
     const initialProgress = new CourseProgress({
       userId,
       courseId,
@@ -104,8 +107,10 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
 
     await initialProgress.save();
 
-    // 4. add enrollment to relevant course
-    await Course.updateOne( { courseId }, { $ADD: { enrollments: [{ userId }], }, });
+    // 5. add enrollment to relevant course
+    if (isFreeCourse) {
+      await Course.findByIdAndUpdate(courseId, { $push: { enrollments: userId } });
+    }
 
     res.json({
       message: "Purchased Course successfully",
@@ -115,6 +120,7 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
       },
     });
   } catch (error) {
+    console.log("Error creating transaction and enrollment:", error);
     res.status(500).json({
       message: "Error creating transaction and enrollment",
       error,
@@ -125,5 +131,5 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
 export {
     listTransactions,
     // createStripePaymentIntent,
-    // createTransaction
+    createTransaction
 }

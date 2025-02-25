@@ -3,7 +3,7 @@ import { requireAuth } from "@clerk/express"
 
 
 // controller // createStripePaymentIntent, createTransaction
-import { listTransactions } from "../../modules/transactions/transaction.controller";
+import { listTransactions, createTransaction } from "../../modules/transactions/transaction.controller";
 
 import generateAccessToken from "../../middlewares/generateToken"
 import { initiateSTKPush  } from "../../services/handleSTKPush"
@@ -15,7 +15,7 @@ router.get("/", listTransactions);
 router.post('/mpesa/stkpush', generateAccessToken, initiateSTKPush);
 router.post('/callback', stkPushCallback);
 
-// router.post("/", createTransaction);
+router.post("/", createTransaction);
 // router.post("/stripe/payment-intent", createStripePaymentIntent);
 
 export default router;

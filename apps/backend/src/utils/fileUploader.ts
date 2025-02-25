@@ -43,13 +43,11 @@ const pdffileFilter = (req: Request, file: File, cb: FileFilterCallback): void =
 };
 
 // Multer instances for handling file uploads
-const imageCoverMulter: RequestHandler = multer({ storage: ImageCoverfileStorage, fileFilter: ImagefileFilter }).single('course_cover_image');
-const imageMulter: RequestHandler = multer({ storage: ImagefileStorage, fileFilter: ImagefileFilter }).single('courses_image');
+const imageMulter: RequestHandler = multer({ storage: ImagefileStorage, fileFilter: ImagefileFilter }).single('image');
 const videoMulter: RequestHandler = multer({ storage: VideofileStorage, fileFilter: VideofileFilter }).single('video');
 const pdfMulter: RequestHandler = multer({ storage: pdffileStorage, fileFilter: pdffileFilter }).single('portfolio_pdf');
 
 export { 
-    imageCoverMulter, 
     imageMulter, 
     videoMulter, 
     pdfMulter

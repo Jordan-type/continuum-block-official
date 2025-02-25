@@ -1,6 +1,5 @@
 import express, { Request, Response, Router } from "express";
 
-
 const fetchTwitterAPI = async (url: string) => {
   const token = process.env.TWITTER_BEARER_TOKEN;
   console.log("token", token);
