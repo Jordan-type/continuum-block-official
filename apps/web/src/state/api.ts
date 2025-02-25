@@ -105,7 +105,7 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       query: ({ courseId, updateData }) => ({
         url: `courses/update/${courseId}`,
         method: "PUT",
-        body: updateData,
+        body: updateData as FormData,
       }),
       invalidatesTags: (result, error, { courseId }) => [{ type: "Courses", id: courseId }],
     }),
@@ -139,6 +139,28 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
         method: "GET"
       })
     }),
+
+    /* BUY COURSE TRANSACTIONS */
+    getTransactions: build.query<Transaction[], string>({
+      query: (userId) => `transactions?userId=${userId}`,
+    }),
+
+    // createStripePaymentIntent: build.mutation<{ clientSecret: string }, { amount: number }>({
+    //   query: ({ amount }) => ({
+    //     url: `/transactions/stripe/payment-intent`,
+    //     method: "POST",
+    //     body: { amount },
+    //   }),
+    // }),
+
+    createTransaction: build.mutation<Transaction, Partial<Transaction>>({
+      query: (transaction) => ({
+        url: "transactions",
+        method: "POST",
+        body: transaction,
+      }),
+    }),
+
 
     /* USER COURSE PROGRESS */
     getUserEnrolledCourses: build.query({
@@ -189,12 +211,6 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
     }),
   }),
 
-
-    /* BUY COURSE TRANSACTIONS */
-
-
-
-
   });
 
 export const {
@@ -210,6 +226,10 @@ export const {
   useUpdateCourseMutation,
   useDeleteCourseMutation,
   useGetUploadVideoUrlMutation,
+
+  useGetTransactionsQuery,
+  useCreateTransactionMutation,
+  // useCreateStripePaymentIntentMutation,
 
   useGetUserEnrolledCoursesQuery,
   useGetUserCourseProgressQuery,

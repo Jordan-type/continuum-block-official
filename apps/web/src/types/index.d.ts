@@ -53,11 +53,12 @@ declare global {
   }
 
   interface Transaction {
+    _id: string;
     userId: string;
     transactionId: string;
     dateTime: string;
     courseId: string;
-    paymentProvider: "stripe";
+    paymentProvider: "free" | "stripe";
     paymentMethodId?: string;
     amount: number; // Stored in cents
     savePaymentMethod?: boolean;
@@ -205,6 +206,7 @@ declare global {
     courseCategory: string;
     coursePrice: string;
     courseStatus: boolean;
+    courseImage: string | File;
     sections: Section[];
   }
 }

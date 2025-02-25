@@ -5,7 +5,7 @@ const transactionSchema = new Schema(
       userId: { type: String, hashKey: true, required: true, },
       dateTime: { type: String, required: true, },
       courseId: { type: Schema.Types.ObjectId, ref: "Courses", required: true, index: { name: "CourseTransactionsIndex", type: "global", }, },
-      paymentProvider: { type: String, enum: ["stripe", "M-Pesa", "PayPal"], required: true, },
+      paymentProvider: { type: String, enum: ["free", "stripe", "M-Pesa", "PayPal"], required: true, },
       status: { type: String, enum: ['Pending', 'Completed', 'Failed', 'Refunded'], default: 'Pending' },
       resultInfo: {
         resultStatus: { type: String, required: false },
