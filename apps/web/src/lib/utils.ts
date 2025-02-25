@@ -293,12 +293,18 @@ export const customDataGridStyles = {
 // sections: Section[]
 export const createCourseFormData = (data: CourseFormData, sections: Section[]): FormData => {
   const formData = new FormData();
-  console.log("form data>>>>", data)
+  console.log("<<<<=== form data  image ===>>>>", data.courseImage)
   formData.append("title", data.courseTitle);
   formData.append("description", data.courseDescription);
   formData.append("category", data.courseCategory);
   formData.append("price", data.coursePrice.toString());
   formData.append("status", data.courseStatus ? "Published" : "Draft");
+
+  if (data.courseImage instanceof File) {
+    formData.append("image", data.courseImage); // Match backend's 'image'
+  } else if (typeof data.courseImage === "string" && data.courseImage) {
+    formData.append("image", data.courseImage); // For existing URL, if needed
+  }
 
   const sectionsWithVideos = sections.map((section) => ({
     ...section,

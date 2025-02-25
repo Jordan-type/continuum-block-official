@@ -5,7 +5,7 @@
 //   loadStripe,
 //   StripeElementsOptions,
 // } from "@stripe/stripe-js";
-// // import { useCreateStripePaymentIntentMutation } from "@/state/api";
+// import { useCreateStripePaymentIntentMutation } from "@/state/api";
 // import { useCurrentCourse } from "@/hooks/useCurrentCourse";
 // import Loading from "@/components/Loading";
 
@@ -32,21 +32,21 @@
 
 // const StripeProvider = ({ children }: { children: React.ReactNode }) => {
 //   const [clientSecret, setClientSecret] = useState<string | "">("");
-//   // const [createStripePaymentIntent] = useCreateStripePaymentIntentMutation();
+//   const [createStripePaymentIntent] = useCreateStripePaymentIntentMutation();
 //   const { course } = useCurrentCourse();
 
-//   // useEffect(() => {
-//   //   if (!course) return;
-//   //   const fetchPaymentIntent = async () => {
-//   //     const result = await createStripePaymentIntent({
-//   //       amount: course?.price ?? 9999999999999,
-//   //     }).unwrap();
+//   useEffect(() => {
+//     if (!course) return;
+//     const fetchPaymentIntent = async () => {
+//       const result = await createStripePaymentIntent({
+//         amount: course?.price ?? 9999999999999,
+//       }).unwrap();
 
-//   //     setClientSecret(result.clientSecret);
-//   //   };
+//       setClientSecret(result.clientSecret);
+//     };
 
-//   //   fetchPaymentIntent();
-//   // }, [createStripePaymentIntent, course?.price, course]);
+//     fetchPaymentIntent();
+//   }, [createStripePaymentIntent, course?.price, course]);
 
 //   const options: StripeElementsOptions = {
 //     clientSecret,

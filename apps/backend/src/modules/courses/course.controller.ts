@@ -3,7 +3,7 @@ import { getAuth } from "@clerk/express";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 
-import  { uploadFileToCloudinary, cloudinary } from "../../config/cloudinary.config";	
+import  { cloudinary } from "../../config/cloudinary.config";	
 import Course from "./model";
 
 const createCourse = async (req: Request, res: Response): Promise<void> => {
@@ -93,53 +93,15 @@ const getCourse = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-const updateCourseImage = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { courseId } = req.params;
-        const updateData = { ...req.body };
-        const { userId } = getAuth(req);
-
-        const course = await Course.findById(courseId);
-        if (!course) {
-            res.status(404).json({
-                message: "Course not found"
-            });
-            return;
-        }
-
-        if (course.teacherId.toString() !== userId) {
-            res.status(403).json({
-                message: "Not authorized to update this course"
-            });
-            return;
-        }
-
-        // UPLOAD IMAGE TO CLOUDINARY
-        if (req.file) {
-            const result = await uploadFileToCloudinary(req.file.path, {
-                folder: "continuum_block",
-                public_id: courseId + "_image" // Optional: to have a custom public ID
-            });
-            updateData.image = result.url;  // Assuming `image` field in your course schema
-            fs.unlinkSync(req.file.path); // Delete the file locally after uploading
-        }
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Error updating course image",
-            error: error
-        });
-    }
-}
-
 const updateCourse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { courseId } = req.params;
         const { title, description, price, sections, category, status } = req.body;
-        // const updateData = { ...req.body };
+        let image = req.file ? req.file.path : null;
+
         console.log("Update Course API called with courseId:", req.params);
-        console.log("<====update body===>", req.body);  // Other form fields
+        console.log("<====update body===>", req.body);
+        console.log("<====update image===>", image);   
         const { userId } = getAuth(req);
 
         const course = await Course.findById(courseId);
@@ -163,8 +125,17 @@ const updateCourse = async (req: Request, res: Response): Promise<void> => {
         if (description) updateData.description = description;
         if (category) updateData.category = category;
         if (status) updateData.status = status;
-
-
+        
+        // UPLOAD IMAGE TO CLOUDINARY
+        if (image) {
+            const result = await cloudinary.uploader.upload(image, {
+                folder: "continuum_block",
+                public_id: courseId + "_image" // Optional: to have a custom public ID
+            });
+            updateData.image = result.url;  // Assuming `image` field in your course schema
+            fs.unlinkSync(image); // Delete the file locally after uploading
+        }
+        
         if (price) {
             const numericPrice = parseInt(price);
             if (isNaN(numericPrice)) {
@@ -293,7 +264,6 @@ export {
     createCourse,
     listCourses,
     getCourse,
-    updateCourseImage,
     updateCourse,
     getUploadVideoUrl,
     deleteCourse
