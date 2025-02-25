@@ -117,7 +117,7 @@ const updateCourseImage = async (req: Request, res: Response): Promise<void> => 
         // UPLOAD IMAGE TO CLOUDINARY
         if (req.file) {
             const result = await uploadFileToCloudinary(req.file.path, {
-                folder: "course_images",
+                folder: "continuum_block",
                 public_id: courseId + "_image" // Optional: to have a custom public ID
             });
             updateData.image = result.url;  // Assuming `image` field in your course schema
@@ -224,7 +224,7 @@ const getUploadVideoUrl = async (req: Request, res: Response): Promise<void> => 
 
         const filePath = file.path;  // This depends on your multer setup to provide the local path
         const options = {
-            folder: "continuum_block_videos", 
+            folder: "continuum_block", 
             resource_type: "video" as "video",
             public_id: `videos/${uuidv4()}/${file.originalname}`,
             overwrite: true, // Depending on your requirement
