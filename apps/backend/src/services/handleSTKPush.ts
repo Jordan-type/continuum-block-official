@@ -85,6 +85,7 @@ const initiateSTKPush = async (req: RequestExtended, res: Response): Promise<voi
   try {
     // Convert USD amount to KES
     const kshAmount = await convertUsdToKes(amount);
+    console.log(`Converting ${amount} USD to KES: ${kshAmount} KES`)
     
     // 1. Generate a unique hash for the callback URL to secure it
     const callbackHash = crypto.randomBytes(20).toString("hex");
