@@ -88,7 +88,7 @@ const initiateSTKPush = async (req: RequestExtended, res: Response): Promise<voi
     
     // 1. Generate a unique hash for the callback URL to secure it
     const callbackHash = crypto.randomBytes(20).toString("hex");
-    const baseCallbackURL = "https://9061-41-209-60-98.ngrok-free.app/api/v1/transactions/callback";
+    const baseCallbackURL = "https://continuum-block-official.onrender.com/api/v1/transactions/callback";
     const callbackURL = `${baseCallbackURL}/${callbackHash}`;
     
     // 2. Create a pending transaction record
