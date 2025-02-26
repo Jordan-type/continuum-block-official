@@ -4,8 +4,8 @@ import { Response, Request, NextFunction } from "express";
 export type RequestExtended = Request & {token? : string}
 
 const generateAccessToken = async (req: RequestExtended, res: Response, next: NextFunction) => {
-    const consumerKey = process.env.CONSUMER_KEY_SANDBOX;
-    const consumerSecret = process.env.CONSUMER_SECRET_SANDBOX;
+    const consumerKey = process.env.MPESA_CONSUMER_KEY;
+    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
     const authLink = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
     if (!consumerKey || !consumerSecret) {
