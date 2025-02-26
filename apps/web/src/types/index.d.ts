@@ -60,7 +60,7 @@ declare global {
     courseId: string;
     paymentProvider: "free" | "stripe";
     paymentMethodId?: string;
-    amount: number; // Stored in cents
+    amount: sring; // Stored in cents
     savePaymentMethod?: boolean;
   }
 

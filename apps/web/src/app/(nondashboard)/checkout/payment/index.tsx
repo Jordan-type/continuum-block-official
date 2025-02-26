@@ -10,24 +10,23 @@ import CoursePreview from "@/components/CoursePreview";
 import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCreateTransactionMutation, useInitiateMpesaPaymentMutation } from "@/state/api";
+import { centsToDollars } from "@/lib/utils";
 import { toast } from "sonner";
 import { CustomFormField } from "@/components/CustomFormField";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form";
-import { useForm } from "react-hook-form"; // Import Form and useForm
+import { useForm } from "react-hook-form";
+import { paymentSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod"; // Import zod for validation
 
-// Define a schema for the phone number (optional, for validation)
-const paymentSchema = z.object({
-  phone: z.string().regex(/^(\+254|254)?7\d{8}$/, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX"),
-});
 
-type PaymentFormData = z.infer<typeof paymentSchema>;
+type PaymentFormData = {
+  phone: string;
+};
 
 const PaymentPageContent = () => {
-//   const stripe = useStripe();
-//   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phone, setPhone] = useState("");
+
   const methods = useForm<PaymentFormData>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
@@ -42,27 +41,21 @@ const PaymentPageContent = () => {
   const { user } = useUser();
   const { signOut } = useClerk();
 
-  const [phone, setPhone] = useState(""); // State for phone number
-  const [email, setEmail] = useState(""); // State for email (optional, for confirmation)
-
-  // Validate Kenyan phone number
-  const validatePhoneNumber = (phone: string): boolean => {
-    const phoneRegex = /^(\+254|254)?7\d{8}$/;
-    return phoneRegex.test(phone);
-  };
-
+  console.log("Current state - isSubmitting:", isSubmitting, "phone:", phone);
 
   const handleFreeEnrollment = async () => {
     try {
+        const priceInDollars = centsToDollars(course?.price);
+
         const transactionData: Partial<Transaction> = {
             transactionId: `free_${Date.now()}`,
             userId: user?.id,
             courseId: courseId,
             paymentProvider: 'free',
-            amount: course?.price || 0,
+            amount: priceInDollars || 0,
         };
       await createTransaction(transactionData).unwrap();
-      toast.success('Enrolled in course for free!');
+      toast.success(`Enrolled in course for free! (Price: $${priceInDollars})`);
       navigateToStep(3); // Navigate to the completion page
     } catch (error) {
       console.log("Error enrolling in free course:", error);
@@ -70,28 +63,26 @@ const PaymentPageContent = () => {
     }
   };
 
-  const handleMpesaPayment = async () => {
-    if (!course || !user?.id || !phone) return;
+  const handleMpesaPayment = async (data: PaymentFormData) => {
+    console.log("Form data: ==>>", data);
+    if (!course || !user?.id || !data.phone) return;
+
+    const priceInDollars = centsToDollars(course.price); // Convert cents to dollars for logging/display
+    console.log("M-Pesa payment price in dollars:", priceInDollars);
 
     setIsSubmitting(true);
 
-    if (!validatePhoneNumber(phone)) {
-      toast.error("Invalid Kenyan phone number format. Use +2547XXXXXXXX, 2547XXXXXXXX, or 07XXXXXXXX");
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
       const response = await initiateMpesaPayment({
-        phone, 
-        amount: course.price, // Send USD amount, backend converts to KES
+        phone: data.phone, 
+        amount: priceInDollars, // Send USD amount, backend converts to KES
         courseId: courseId,
         userId: user.id,
       }).unwrap();
 
       console.log("resopnse ===>>>",response);
 
-      toast.success("M-Pesa payment initiated. Check your phone for the prompt!");
+      toast.success(`M-Pesa payment initiated for $${priceInDollars}. Check your phone for the prompt!`);
       // You can poll or wait for the callback to update the transaction status
       // For now, navigate to step 3 after a delay or upon callback confirmation
       setTimeout(() => navigateToStep(3), 5000); // Delay for testing (remove in production)
@@ -137,8 +128,8 @@ const PaymentPageContent = () => {
 
 
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (data: PaymentFormData) => {
+    console.log("Form values before submit:", data);
 
     if (!course) return;
 
@@ -148,7 +139,7 @@ const PaymentPageContent = () => {
     }
 
     // handleStripePaymentEnrollment();
-    handleMpesaPayment();
+    handleMpesaPayment(data);
     
     // Implement your payment logic here for paid courses
     // toast.error("Paid courses are not yet supported.");
@@ -171,8 +162,8 @@ const PaymentPageContent = () => {
 
         {/* Pyament Form */}
         <div className="payment__form-container">
-        <Form {...methods}>
-          <form id="payment-form" onSubmit={handleSubmit} className="payment__form">
+          <Form {...methods}>
+          <form id="payment-form" onSubmit={methods.handleSubmit(handleSubmit)} className="payment__form">
             <div className="payment__content">
               <h1 className="payment__title">Checkout</h1>
               <p className="payment__subtitle">
@@ -196,18 +187,18 @@ const PaymentPageContent = () => {
                     <CustomFormField
                       name="phone"
                       label="Phone Number (M-Pesa)"
-                      type="number"
+                      type="tel"
                       className="w-full rounded mt-4"
                       labelClassName="font-normal text-white-50"
                       inputClassName="py-3"
                       value={phone}
-                      placeholder="(e.g., +2547XXXXXXXX, 2547XXXXXXXX, or 07XXXXXXXX)"
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="(e.g., +2547XXXXXXXX, 2547XXXXXXXX)"
                     />
                     <Button
-                      type="button"
+                      type="submit"
                       className="payment__submit w-full mt-4"
-                      onClick={handleMpesaPayment}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !methods.watch("phone")}
                     >
                       {isSubmitting ? "Processing..." : "Pay with M-Pesa"}
                     </Button>
