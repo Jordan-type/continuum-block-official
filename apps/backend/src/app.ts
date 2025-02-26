@@ -8,7 +8,6 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
-// import setupDynamoDB from "./config/dynamodb.config";
 
 export const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
@@ -16,9 +15,6 @@ export const clerkClient = createClerkClient({
 
 // import routes v1
 import { routeV1 } from './routes/index'
-
-// Initialize DynamoDB
-// setupDynamoDB();
 
 // api requests limit
 const limiter = rateLimit({
