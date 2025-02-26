@@ -11,9 +11,21 @@ const config = {
     extend: {
       container: {
         center: true,
-        padding: "2rem",
+        padding: {
+          DEFAULT: "1rem", // Default padding for mobile (smaller screens)
+          sm: "2rem",
+          md: "2.5rem",
+          lg: "4rem",
+          xl: "5rem",
+          "2xl": "6rem",
+        },
         screens: {
-          "2xl": "1400px",
+          "xs": "320px", // Extra small screens (phones, e.g., iPhone SE)
+          "sm": "640px", // Small screens (phones, e.g., iPhone 12)
+          "md": "768px", // Medium screens (tablets, small laptops)
+          "lg": "1024px", // Large screens (laptops)
+          "xl": "1280px", // Extra large screens (desktops)
+          "2xl": "1400px", // 2x Extra large screens (large desktops)
         },
       },
       colors: {
@@ -142,6 +154,36 @@ const config = {
         lg: ["1.125rem", { lineHeight: "1.75rem" }],
         xl: ["1.25rem", { lineHeight: "1.75rem" }],
         "2xl": ["1.5rem", { lineHeight: "2rem" }],
+        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
+        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
+        "5xl": ["3rem", { lineHeight: "3.5rem" }], // Adjusted for mobile readability
+        "6xl": ["3.75rem", { lineHeight: "4rem" }],
+      },
+      spacing: {
+        "0.5": "0.125rem", // 2px (extra small for mobile)
+        "1.5": "0.375rem", // 6px
+        "2.5": "0.625rem", // 10px
+        "3.5": "0.875rem", // 14px
+      },
+      width: {
+        "1/8": "12.5%",
+        "3/8": "37.5%",
+        "5/8": "62.5%",
+        "7/8": "87.5%",
+      },
+      height: {
+        "1/8": "12.5%",
+        "3/8": "37.5%",
+        "5/8": "62.5%",
+        "7/8": "87.5%",
+      },
+      maxWidth: {
+        "screen-xs": "320px", // Extra small screens
+        "screen-sm": "640px",
+        "screen-md": "768px",
+        "screen-lg": "1024px",
+        "screen-xl": "1280px",
+        "screen-2xl": "1400px",
       },
     },
   },

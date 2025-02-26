@@ -7,6 +7,7 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
