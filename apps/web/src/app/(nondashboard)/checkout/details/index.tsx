@@ -35,7 +35,7 @@ const CheckoutDetailsPage = () => {
 
     try {
       const response = await initiateMpesaPayment({
-        phone: data.email.split("@")[0] + "@example.com", // Should be actual phone number
+        phone: data.email.split("@")[0] + "@example.com", // TODO add be actual phone number nstead of email
         amount: selectedCourse.price,
         courseId: selectedCourse._id,
         userId: "current-user-id", // Replace with actual user ID from Clerk or auth
