@@ -1,4 +1,6 @@
-import React from "react";
+"use client"
+
+import React, { useState } from "react";
 // import StripeProvider from "./StripeProvider";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCheckoutNavigation } from "@/hooks/useCheckoutNavigation";
@@ -7,13 +9,16 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import CoursePreview from "@/components/CoursePreview";
 import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCreateTransactionMutation } from "@/state/api";
+import { useCreateTransactionMutation, useInitiateMpesaPaymentMutation } from "@/state/api";
 import { toast } from "sonner";
 
 const PaymentPageContent = () => {
 //   const stripe = useStripe();
 //   const elements = useElements();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [createTransaction] = useCreateTransactionMutation();
+  const [initiateMpesaPayment] = useInitiateMpesaPaymentMutation();
+
   const { navigateToStep } = useCheckoutNavigation();
   const { course, courseId } = useCurrentCourse();
   const { user } = useUser();
@@ -22,7 +27,6 @@ const PaymentPageContent = () => {
 
   const handleFreeEnrollment = async () => {
     try {
-
         const transactionData: Partial<Transaction> = {
             transactionId: `free_${Date.now()}`,
             userId: user?.id,
@@ -36,6 +40,31 @@ const PaymentPageContent = () => {
     } catch (error) {
       console.log("Error enrolling in free course:", error);
       toast.error("Failed to enroll in free course");
+    }
+  };
+
+  const handleMpesaPayment = async () => {
+    if (!course || !user?.id) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await initiateMpesaPayment({
+        phone: "+254712380880", // Replace with actual user phone input (e.g., from form)
+        amount: course.price, // Send USD amount, backend converts to KES
+        courseId: courseId,
+        userId: user.id,
+      }).unwrap();
+
+      console.log(response);
+
+      toast.success("M-Pesa payment initiated. Check your phone for the prompt!");
+      // You can poll or wait for the callback to update the transaction status
+      // For now, navigate to step 3 after a delay or upon callback confirmation
+      setTimeout(() => navigateToStep(3), 5000); // Delay for testing (remove in production)
+    } catch (error) {
+      console.error("Error initiating M-Pesa payment:", error);
+      toast.error("Failed to initiate M-Pesa payment");
     }
   };
 
@@ -76,14 +105,18 @@ const PaymentPageContent = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!course) return;
+
     if (course.price === 0) {
-        handleFreeEnrollment();
-        return;
-      }
-  
-      // Implement your payment logic here for paid courses
-      toast.error("Paid courses are not yet supported.");
-      // navigateToStep(3); // Uncomment this when payment logic is implemented  
+      handleFreeEnrollment();
+      return;
+    }
+
+    // handleStripePaymentEnrollment();
+    handleMpesaPayment();
+    
+    // Implement your payment logic here for paid courses
+    // toast.error("Paid courses are not yet supported.");
   };
 
   const handleSignOutAndNavigate = async () => {
@@ -111,22 +144,22 @@ const PaymentPageContent = () => {
             <div className="payment__content">
               <h1 className="payment__title">Checkout</h1>
               <p className="payment__subtitle">
-                {course.price > 0 ? "Fill out the payment details below to complete your purchase." : "Confirm your free course enrollment below."}
+                {course.price > 0 ? "Initiate M-Pesa payment to complete your purchase." : "Confirm your free course enrollment below."}
               </p>
 
-              {/* <div className="payment__method">
+              <div className="payment__method">
                 <h3 className="payment__method-title">Payment Method</h3>
-
-                <div className="payment__card-container">
-                  <div className="payment__card-header">
-                    <CreditCard size={24} />
-                    <span>Credit/Debit Card</span>
-                  </div>
-                  <div className="payment__card-element">
-                    <PaymentElement />
-                  </div>
-                </div>
-              </div> */}
+                {course.price > 0 && (
+                  <Button
+                    type="button"
+                    className="payment__submit w-full"
+                    onClick={handleMpesaPayment}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Processing..." : "Pay with M-Pesa"}
+                  </Button>
+                )}
+              </div>
             </div>
           </form>
         </div>
@@ -146,7 +179,7 @@ const PaymentPageContent = () => {
         {/* disabled={!stripe || !elements || course.price === 0} */}
 
         <Button form="payment-form" type="submit" className="payment__submit"  >
-            {course.price > 0 ? 'Proceed to Pay' : 'Enroll for Free'}
+            {course.price > 0 ? 'Proceed with M-Pesa' : 'Enroll for Free'}
         </Button>
       </div>
     </div>

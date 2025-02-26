@@ -287,64 +287,50 @@ input[type="color"] {
 }
 
 /* Landing Skeleton */
+/* Skeleton Styles to Match FeaturedCourses */
 .landing-skeleton {
-  @apply w-3/4;
+  @apply w-3/4; /* Remove or adjust if not needed, as we’re using container now */
 }
 
-.landing-skeleton__hero {
-  @apply flex justify-between items-center mt-12 h-[500px] rounded-lg bg-customgreys-secondarybg;
-}
-
-.landing-skeleton__hero-content {
-  @apply basis-1/2 px-16 mx-auto;
-}
-
-.landing-skeleton__title {
-  @apply h-8 w-48 mb-4;
-}
-
-.landing-skeleton__subtitle {
-  @apply h-4 w-96 mb-2;
-}
-
-.landing-skeleton__subtitle-secondary {
-  @apply h-4 w-72 mb-8;
-}
-
-.landing-skeleton__button {
-  @apply w-40 h-10;
-}
-
-.landing-skeleton__hero-image {
-  @apply basis-1/2 h-full rounded-r-lg;
-}
-
-.landing-skeleton__featured {
-  @apply mx-auto py-12 mt-10;
-}
-
-.landing-skeleton__featured-title {
-  @apply h-6 w-48 mb-4;
-}
-
+/* Ensure skeleton matches FeaturedCourses title */
+.landing-skeleton__featured-title,
 .landing-skeleton__featured-description {
-  @apply h-4 w-full max-w-2xl mb-8;
+  @apply bg-customgreys-secondarybg; /* Match the background of the FeaturedCourses cards */
+  @apply rounded-lg; /* Rounded corners for consistency */
 }
 
+/* Match the title height and width */
+.landing-skeleton__featured-title {
+  @apply h-10 w-3/4 max-w-2xl mx-auto md:text-center;
+}
+
+/* Match the description height and width */
+.landing-skeleton__featured-description {
+  @apply h-6 w-full max-w-3xl mx-auto md:w-3/4 mt-4 mb-8;
+}
+
+/* Match the tags layout and styling */
 .landing-skeleton__tags {
-  @apply flex flex-wrap gap-4 mb-8;
+  @apply flex flex-wrap md:justify-center gap-4 mb-8;
 }
 
 .landing-skeleton__tag {
-  @apply w-24 h-6 rounded-full;
+  @apply h-8 w-32 px-3 py-1 bg-customgreys-secondarybg rounded-full; /* Match landing__tag */
 }
 
+/* Match the course cards layout and styling */
 .landing-skeleton__courses {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+  @apply grid md:grid-cols-2 lg:grid-cols-3 gap-8; /* Match landing__featured grid */
 }
 
 .landing-skeleton__course-card {
-  @apply h-[300px] rounded-lg;
+  @apply h-[340px] xl:h-[380px] rounded-lg bg-customgreys-secondarybg; /* Match course-card-search */
+  @apply border-2 border-transparent; /* Match the border style of course-card-search */
+}
+
+/* Ensure the skeleton background matches the FeaturedCourses card background */
+.Skeleton {
+  @apply bg-customgreys-secondarybg animate-pulse; /* Default Skeleton animation from ShadCN */
 }
 
 /* Checkout Details Page */
