@@ -1,5 +1,29 @@
 import * as z from "zod";
 
+import { parsePhoneNumberWithError } from "libphonenumber-js";
+
+export const paymentSchema = z.object({
+  phone: z
+    .string()
+    .refine((phone) => {
+      try {
+        const phoneNumber = parsePhoneNumberWithError(phone, "KE");
+        return phoneNumber.isValid();
+      } catch (error) {
+        return false;
+      }
+    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX"),
+});
+
+export const validatePhoneNumber = (phone: string): boolean => {
+  try {
+    const phoneNumber = parsePhoneNumberWithError(phone, "KE");
+    return phoneNumber.isValid();
+  } catch (error) {
+    return false;
+  }
+};
+
 // Course Editor Schemas
 export const courseSchema = z.object({
   courseTitle: z.string().min(1, "Title is required"),

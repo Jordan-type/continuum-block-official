@@ -39,6 +39,7 @@ interface FormFieldProps {
   type?:
     | "text"
     | "email"
+    | "tel"
     | "textarea"
     | "number"
     | "select"
@@ -82,6 +83,23 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
     field: ControllerRenderProps<FieldValues, string>
   ) => {
     switch (type) {
+      case "tel": // Handle 'tel' for phone numbers
+        return (
+          <div className="relative">
+            <Input
+            type="tel"
+            placeholder={placeholder}
+            {...field}
+            className={`border-none bg-customgreys-primarybg p-4 ${inputClassName}`}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(value); // Ensure this updates the form state
+              // console.log(`Phone value changed for ${name}:`, value); // Debug
+            }}
+            value={field.value || ""} // Explicitly bind the value
+          />
+          </div>
+        );
       case "file":
         return (
           <input
