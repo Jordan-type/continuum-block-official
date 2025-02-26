@@ -141,18 +141,6 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
     }),
 
     /* BUY COURSE TRANSACTIONS */
-    getTransactions: build.query<Transaction[], string>({
-      query: (userId) => `transactions?userId=${userId}`,
-    }),
-
-    // createStripePaymentIntent: build.mutation<{ clientSecret: string }, { amount: number }>({
-    //   query: ({ amount }) => ({
-    //     url: `/transactions/stripe/payment-intent`,
-    //     method: "POST",
-    //     body: { amount },
-    //   }),
-    // }),
-
     createTransaction: build.mutation<Transaction, Partial<Transaction>>({
       query: (transaction) => ({
         url: "transactions",
@@ -161,6 +149,28 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       }),
     }),
 
+    getTransactions: build.query<Transaction[], string>({
+      query: (userId) => `transactions?userId=${userId}`,
+    }),
+
+
+    
+    // createStripePaymentIntent: build.mutation<{ clientSecret: string }, { amount: number }>({
+    //   query: ({ amount }) => ({
+    //     url: `/transactions/stripe/payment-intent`,
+    //     method: "POST",
+    //     body: { amount },
+    //   }),
+    // }),
+
+    /* M-PESA PAYMENT INTEGRATION */
+    initiateMpesaPayment: build.mutation<any, { phone: string; amount: number; courseId: string; userId: string }>({
+      query: (paymentData) => ({
+        url: "transactions/mpesa/stkpush",
+        method: "POST",
+        body: paymentData,
+      }),
+    }),
 
     /* USER COURSE PROGRESS */
     getUserEnrolledCourses: build.query({
@@ -227,8 +237,9 @@ export const {
   useDeleteCourseMutation,
   useGetUploadVideoUrlMutation,
 
-  useGetTransactionsQuery,
   useCreateTransactionMutation,
+  useGetTransactionsQuery,
+  useInitiateMpesaPaymentMutation,
   // useCreateStripePaymentIntentMutation,
 
   useGetUserEnrolledCoursesQuery,

@@ -13,11 +13,14 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import SignUpComponent from "@/components/SignUp";
 import SignInComponent from "@/components/SignIn";
+import { useInitiateMpesaPaymentMutation } from "@/state/api";
+import { toast } from "sonner";
 
 const CheckoutDetailsPage = () => {
   const { course: selectedCourse, isLoading, isError } = useCurrentCourse();
   const searchParams = useSearchParams();
   const showSignUp = searchParams.get("showSignUp") === "true";
+  const [initiateMpesaPayment] = useInitiateMpesaPaymentMutation();
 
   const methods = useForm<GuestFormData>({
     resolver: zodResolver(guestSchema),
@@ -25,6 +28,26 @@ const CheckoutDetailsPage = () => {
       email: "",
     },
   });
+
+  const handleGuestCheckout = async (data: GuestFormData) => {
+    console.log(data);
+    if (!selectedCourse) return;
+
+    try {
+      const response = await initiateMpesaPayment({
+        phone: data.email.split("@")[0] + "@example.com", // Should be actual phone number
+        amount: selectedCourse.price,
+        courseId: selectedCourse._id,
+        userId: "current-user-id", // Replace with actual user ID from Clerk or auth
+      }).unwrap();
+
+      toast.success("M-Pesa payment initiated. Check your phone for the prompt!");
+    } catch (error) {
+      console.error("Error initiating M-Pesa payment:", error);
+      toast.error("Failed to initiate M-Pesa payment");
+    }
+  };
+
 
   if (isLoading) return <Loading />;
   if (isError) return <div>Failed to fetch course data</div>;

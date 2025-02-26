@@ -7,24 +7,22 @@ import CourseCardSearch from "@/components/CourseCardSearch";
 
 const LoadingSkeleton = () => {
   return (
-    <div className="landing-skeleton">
-      <div className="landing-skeleton__featured">
-        <Skeleton className="landing-skeleton__featured-title" />
-        <Skeleton className="landing-skeleton__featured-description" />
+    <section className="container py-24 sm:py-32 space-y-8">
+        <Skeleton className="h-10 w-3/4 max-w-2xl mx-auto md:text-center" />
+        <Skeleton className="h-6 w-full max-w-3xl mx-auto md:w-3/4 mt-4 mb-8" />
 
-        <div className="landing-skeleton__tags">
+        <div className="flex flex-wrap md:justify-center gap-4">
           {[1, 2, 3, 4, 5].map((_, index) => (
-            <Skeleton key={index} className="landing-skeleton__tag" />
+            <Skeleton key={index} className="h-8 w-32 px-3 py-1 rounded-full bg-customgreys-secondarybg" />
           ))}
         </div>
 
-        <div className="landing-skeleton__courses">
-          {[1, 2, 3, 4].map((_, index) => (
-            <Skeleton key={index} className="landing-skeleton__course-card" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[1, 2, 3, 4, 5, 6].map((_, index) => (
+            <Skeleton key={index} className="h-[340px] xl:h-[380px] rounded-lg bg-customgreys-secondarybg border-2 border-transparent animate-pulse" />
           ))}
         </div>
-      </div>
-    </div>
+    </section>
   );
 };
 

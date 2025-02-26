@@ -7,41 +7,31 @@ import { useRouter } from "next/navigation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from '@/state/api';
 import { Button, buttonVariants } from "../../../../components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import HeroCards from "../../../../components/HeroCards";
 import { Tweet, Mention } from '@/types/type';
 
-// const LoadingSkeleton = () => {
-//   return (
-//     <div className="landing-skeleton">
-//       <div className="landing-skeleton__hero">
-//         <div className="landing-skeleton__hero-content">
-//           <Skeleton className="landing-skeleton__title" />
-//           <Skeleton className="landing-skeleton__subtitle" />
-//           <Skeleton className="landing-skeleton__subtitle-secondary" />
-//           <Skeleton className="landing-skeleton__button" />
-//         </div>
-//         <Skeleton className="landing-skeleton__hero-image" />
-//       </div>
+const LoadingSkeleton = () => {
+  return (
 
-//       <div className="landing-skeleton__featured">
-//         <Skeleton className="landing-skeleton__featured-title" />
-//         <Skeleton className="landing-skeleton__featured-description" />
+<section className="container grid lg:grid-cols-2 place-items-center py-20 md:py-32 gap-10">
+      <div className="text-center lg:text-start space-y-6">
+        <Skeleton className="h-14 w-3/4 max-w-4xl mx-auto lg:mx-0" /> {/* Title (text-5xl md:text-6xl) */}
+        <Skeleton className="h-6 w-full max-w-xl mx-auto lg:mx-0 md:w-10/12" /> {/* Description (text-xl) */}
 
-//         <div className="landing-skeleton__tags">
-//           {[1, 2, 3, 4, 5].map((_, index) => (
-//             <Skeleton key={index} className="landing-skeleton__tag" />
-//           ))}
-//         </div>
+        <div className="space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row justify-center lg:justify-start">
+          <Skeleton className="h-10 w-40" /> {/* Get Started button */}
+          <Skeleton className="h-10 w-48" /> {/* Github Resources button */}
+        </div>
+      </div>
+      
+      {/* Hero cards sections */}
 
-//         <div className="landing-skeleton__courses">
-//           {[1, 2, 3, 4].map((_, index) => (
-//             <Skeleton key={index} className="landing-skeleton__course-card" />
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+      {/* Shadow effect (optional skeleton for shadow) */}
+      <Skeleton className="absolute inset-0 bg-black bg-opacity-10 z-[-1] rounded-lg" />
+    </section>
+  );
+};
 
 const Hero = () => {
   const [tweets, setTweets] = useState<Tweet[]>([]);
@@ -52,6 +42,9 @@ const Hero = () => {
   const { data: mentionsData, isFetching: isFetchingMentions } = useGetUserMentionsByIdQuery(userId || '', {
     skip: !userId,  // Only run this query if userId is available
   });
+
+  // Combine loading states from both hooks
+  const isLoading = isFetchingUser || isFetchingMentions;
 
   useEffect(() => {
     console.log("User Data:", userData);
@@ -76,7 +69,7 @@ const Hero = () => {
   }, [tweets]);
 
 
-  // if (isLoading) return <LoadingSkeleton />;
+  if (isLoading) return <LoadingSkeleton />;
 
   return (
     <motion.section
