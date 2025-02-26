@@ -30,6 +30,18 @@ const limiter = rateLimit({
 
 const app: Express = express();
 
+const corsOptions = {
+  origin: [
+    "https://continuum-block-official-web.vercel.app",
+    "http://localhost:3000", // Local frontend
+    "https://your-ngrok-url", // Ngrok for local testing
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
@@ -37,7 +49,6 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
 app.use(clerkMiddleware());
 app.use(limiter);
 
