@@ -164,7 +164,7 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
     // }),
 
     /* M-PESA PAYMENT INTEGRATION */
-    initiateMpesaPayment: build.mutation<any, { phone: string; amount: string; courseId: string; userId: string }>({
+    initiateMpesaPayment: build.mutation<any, { phone: string; amount: number; courseId: string; userId: string }>({
       query: (paymentData) => ({
         url: "transactions/mpesa/stkpush",
         method: "POST",
