@@ -20,9 +20,6 @@ export const convertUsdToKes = async (usdAmount: number): Promise<number> => {
         exchangeRate = 130; // Fallback rate ($1 = KES 130)
       }
     }
-
-    const kesAmount = usdAmount * (exchangeRate ?? 130);
-    console.log(`Converting ${usdAmount} USD to KES: ${kesAmount} KES`);
   
-    return Number(kesAmount.toFixed(2));
+    return Math.round(usdAmount * (exchangeRate ?? 130));
   };

@@ -58,6 +58,7 @@ const generateMpesaCredentials = (): MpesaCredentials => {
 
 const initiateSTKPush = async (req: RequestExtended, res: Response): Promise<void> => { 
     const { phone, amount, courseId, userId } = req.body;
+    console.log(`Initiating M-Pesa STK Push for user ${userId} to pay in USD ${amount} for course ${courseId}`)
 
     // Validate inputs
     if (!phone || !amount || !courseId || !userId) {
@@ -74,18 +75,19 @@ const initiateSTKPush = async (req: RequestExtended, res: Response): Promise<voi
       });
    }
    
-   // Validate amount (minimum KES 1 for M-Pesa)
-   if (amount < 1) {
+   // Validate amount (minimum USD 0.01, converted to at least KES 1)
+   const amountInCents = Math.round(parseFloat(amount) / 100); // Convert USD to cents (e.g., 100 USD = 1.00 cents)
+   if (amountInCents < 1) { // Check minimum after conversion to cents
     res.status(400).json({
-      message: "Amount must be at least KES 1",
+      message: "Amount must be at least USD 0.01 (equivalent to KES 1 or more)",
     });
   }
 
 
   try {
     // Convert USD amount to KES
-    const kshAmount = await convertUsdToKes(amount);
-    console.log(`Converting ${amount} USD to KES: ${kshAmount} KES`)
+    const kshAmount = await convertUsdToKes(amountInCents); // Convert 100 cents to 130 KES
+    // console.log(`Converting ${amountInCents} cents (${amount} USD) to KES: ${kshAmount} KES`);
     
     // 1. Generate a unique hash for the callback URL to secure it
     const callbackHash = crypto.randomBytes(20).toString("hex");
