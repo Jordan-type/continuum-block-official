@@ -32,7 +32,6 @@ const CheckoutWizard = () => {
     <div className="checkout">
       <WizardStepper currentStep={checkoutStep} />
       <div className="checkout__content">{renderStep()}</div>
-      <h1>Payments Details</h1>
     </div>
   );
 };

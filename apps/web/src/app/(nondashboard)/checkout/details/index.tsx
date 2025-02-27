@@ -8,38 +8,74 @@ import { useCurrentCourse } from "@/hooks/useCurrentCourse";
 import { GuestFormData, guestSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import SignUpComponent from "@/components/SignUp";
 import SignInComponent from "@/components/SignIn";
-import { useInitiateMpesaPaymentMutation } from "@/state/api";
+import { formatPrice } from "@/lib/utils";
+import { useCreateTransactionMutation, useInitiateMpesaPaymentMutation } from "@/state/api";
+import { useCheckoutNavigation } from "@/hooks/useCheckoutNavigation";
 import { toast } from "sonner";
 
 const CheckoutDetailsPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phone, setPhone] = useState("");
+
+  const { navigateToStep } = useCheckoutNavigation();
   const { course: selectedCourse, isLoading, isError } = useCurrentCourse();
   const searchParams = useSearchParams();
   const showSignUp = searchParams.get("showSignUp") === "true";
+
+  const [createTransaction] = useCreateTransactionMutation();
   const [initiateMpesaPayment] = useInitiateMpesaPaymentMutation();
 
   const methods = useForm<GuestFormData>({
     resolver: zodResolver(guestSchema),
     defaultValues: {
       email: "",
+      phone: "",
     },
   });
 
-  const handleGuestCheckout = async (data: GuestFormData) => {
-    console.log(data);
+  const handleFreeEnrollmentGuestCheckout = async (data: GuestFormData | undefined) => {
+    try {
+      const transactionData: Partial<Transaction> = {
+        transactionId: `free_${Date.now()}`,
+        userId: "guest",
+        courseId: selectedCourse._id,
+        paymentProvider: 'free',
+        amount: selectedCourse.price || 0,
+      };
+      
+      console.log("Free guest enrollment transaction data:", transactionData);
+      await createTransaction(transactionData).unwrap();
+      toast.success(`Enrolled in course for free! (Price: ${formatPrice(selectedCourse.price)})`);
+      navigateToStep(3); // Navigate to the completion page
+    } catch (error) {
+      console.log("Error enrolling in free course:", error);
+      toast.error("Failed to enroll in free course");
+    }
+  }
+
+  const handleMpesaGuestCheckout = async (data: GuestFormData) => {
+    console.log("Form data: ==>>", formatPrice(selectedCourse.price), data);
+    if (!selectedCourse || !selectedCourse.phone) return;
+
+    const normalizedPhone = data.phone.replace(/^(\+254|254)/, "254"); // Normalize phone to 2547XXXXXXXX
+    console.log("Normalized phone for M-Pesa:", normalizedPhone); // Debug
+
     if (!selectedCourse) return;
 
     try {
       const response = await initiateMpesaPayment({
-        phone: data.email.split("@")[0] + "@example.com", // TODO add be actual phone number nstead of email
+        phone: normalizedPhone,
         amount: selectedCourse.price,
         courseId: selectedCourse._id,
-        userId: "current-user-id", // Replace with actual user ID from Clerk or auth
+        userId: "guest", // Replace with actual user ID from Clerk or auth
       }).unwrap();
+
+      console.log("M-Pesa payment initiated:", response);
 
       toast.success("M-Pesa payment initiated. Check your phone for the prompt!");
     } catch (error) {
@@ -47,6 +83,19 @@ const CheckoutDetailsPage = () => {
       toast.error("Failed to initiate M-Pesa payment");
     }
   };
+
+  const handleSubmit = async (data: GuestFormData | undefined) => { 
+    if (!data) return;
+    setIsSubmitting(true);
+
+    if (selectedCourse.price === 0) {
+      await handleFreeEnrollmentGuestCheckout(data);
+    } else {
+      await handleMpesaGuestCheckout(data);
+    }
+  }
+
+
 
 
   if (isLoading) return <Loading />;
@@ -65,14 +114,12 @@ const CheckoutDetailsPage = () => {
           <div className="checkout-details__guest">
             <h2 className="checkout-details__title">Guest Checkout</h2>
             <p className="checkout-details__subtitle">
-              Enter email to receive course access details and order
-              confirmation. You can create an account after purchase.
+              {selectedCourse.price > 0 ? "Enter your details to initiate M-Pesa payment and complete your purchase." : "Confirm your free course enrollment below."}
             </p>
             <Form {...methods}>
-              <form
-                onSubmit={methods.handleSubmit((data) => { console.log(data); })}
-                className="checkout-details__form"
-              >
+              <form id="payment-form" className="checkout-details__form" onSubmit={methods.handleSubmit((data) => { console.log(data); })} >
+              {selectedCourse.price > 0 && (
+                <>
                 <CustomFormField
                   name="email"
                   label="Email address"
@@ -81,8 +128,32 @@ const CheckoutDetailsPage = () => {
                   labelClassName="font-normal text-white-50"
                   inputClassName="py-3"
                 />
-                <Button type="submit" className="checkout-details__submit">
-                  Continue as Guest
+                
+                <CustomFormField
+                  name="phone"
+                  label="Phone Number (M-Pesa)"
+                  type="tel"
+                  className="w-full rounded mt-4"
+                  labelClassName="font-normal text-white-50"
+                  inputClassName="py-3"
+                  value={phone}
+                  onChange={(e) => {
+                    const newPhone = e.target.value;
+                    setPhone(newPhone);
+                    console.log("Phone state updated to:", newPhone); // Debug state update
+                  }}
+                  disabled={isSubmitting}
+                  placeholder="(e.g., +2547XXXXXXXX, 2547XXXXXXXX)"
+                />
+                </>
+              )}
+              <Button 
+                type={selectedCourse.price === 0 ? "button" : "submit"}
+                onClick={selectedCourse.price === 0 ? () => handleFreeEnrollmentGuestCheckout : undefined}
+                className="checkout-details__submit"
+                disabled={isSubmitting || (selectedCourse.price > 0 && !methods.watch("phone"))}
+              >
+                {isSubmitting ? "Processing..." : selectedCourse.price > 0 ? "Pay with M-Pesa" : "Enroll for Free"}
                 </Button>
               </form>
             </Form>

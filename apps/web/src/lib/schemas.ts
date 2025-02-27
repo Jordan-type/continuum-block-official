@@ -1,28 +1,5 @@
 import * as z from "zod";
-
 import { parsePhoneNumberWithError } from "libphonenumber-js";
-
-export const paymentSchema = z.object({
-  phone: z
-    .string()
-    .refine((phone) => {
-      try {
-        const phoneNumber = parsePhoneNumberWithError(phone, "KE");
-        return phoneNumber.isValid();
-      } catch (error) {
-        return false;
-      }
-    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX"),
-});
-
-export const validatePhoneNumber = (phone: string): boolean => {
-  try {
-    const phoneNumber = parsePhoneNumberWithError(phone, "KE");
-    return phoneNumber.isValid();
-  } catch (error) {
-    return false;
-  }
-};
 
 // Course Editor Schemas
 export const courseSchema = z.object({
@@ -53,10 +30,43 @@ export const sectionSchema = z.object({
 
 export type SectionFormData = z.infer<typeof sectionSchema>;
 
+export const paymentSchema = z.object({
+  phone: z
+    .string()
+    .refine((phone) => {
+      try {
+        const phoneNumber = parsePhoneNumberWithError(phone,{ defaultCountry: 'US'});
+        return phoneNumber.isValid();
+      } catch (error) {
+        return false;
+      }
+    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX")
+});
+
+
 // Guest Checkout Schema
 export const guestSchema = z.object({
   email: z.string().email("Invalid email address"),
+  phone: z
+    .string()
+    .refine((phone) => {
+      try {
+        const phoneNumber = parsePhoneNumberWithError(phone,{ defaultCountry: 'US'});
+        return phoneNumber.isValid();
+      } catch (error) {
+        return false;
+      }
+    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX")
 });
+
+export const validatePhoneNumber = (phone: string): boolean => {
+  try {
+    const phoneNumber = parsePhoneNumberWithError(phone,{ defaultCountry: 'US'});
+    return phoneNumber.isValid();
+  } catch (error) {
+    return false;
+  }
+};
 
 export type GuestFormData = z.infer<typeof guestSchema>;
 
