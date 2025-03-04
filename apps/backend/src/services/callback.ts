@@ -123,12 +123,7 @@ async function handleTransactionResult(ResultCode: number, mpesaReceiptNumber: s
         success: true,
       });
     } else {
-      const status =
-        ResultCode === 1
-          ? "failed (Insufficient funds)"
-          : ResultCode === 1032
-          ? "failed (Canceled by user)"
-          : "failed (Unknown error)";
+      const status = ResultCode === 1 ? "failed (Insufficient funds)" : ResultCode === 1032 ? "failed (Canceled by user)" : "failed (Unknown error)";
 
       transaction.status = "Failed";
       transaction.resultInfo.resultStatus = status;
