@@ -1,10 +1,6 @@
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+"use client";
+
+import { Card, CardHeader, CardContent, CardTitle, CardFooter, } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { formatPrice } from "@/lib/utils";

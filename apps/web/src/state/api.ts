@@ -92,6 +92,15 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       providesTags: ["Courses"],
     }),
 
+    listCoursesByIds: build.query<Course[], string[]>({
+      query: (courseIds) => ({
+        url: "courses/by-ids",
+        method: "POST",
+        body: { courseIds },
+      }),
+      providesTags: ["Courses"],
+    }),
+
     getCourse: build.query({
       query: (id: string) => ({
         url: `courses/${id}`,
@@ -189,6 +198,30 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       providesTags: ["CourseProgress"],
     }),
 
+    getUserCourseProgressBatch: build.query<CourseProgress[], { userId: string; courseIds: string[] }>({
+      query: ({ userId, courseIds }) => ({
+        url: `course-progress/${userId}/courses/batch`,
+        method: "POST",
+        body: { courseIds },
+      }),
+      providesTags: ["CourseProgress"],
+    }),
+
+    // Optional: Add leaderboard endpoints if you want to include them
+    getLearningLeaderboard: build.query({
+      query: () => ({
+        url: "course-progress/leaderboard",
+        method: "GET",
+      }),
+    }),
+
+    getCourseLeaderboard: build.query({
+      query: (courseId: string) => ({
+        url: `course-progress/leaderboard/course/${courseId}`,
+        method: "GET",
+      }),
+    }),
+
     updateUserCourseProgress: build.mutation({
       query: ({ userId, courseId, progressData }: { userId: string; courseId: string; progressData: any }) => ({
         url: `course-progress/${userId}/courses/${courseId}`,
@@ -219,6 +252,12 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
         }
       },
     }),
+
+
+
+
+
+
   }),
 
   });
@@ -232,6 +271,7 @@ export const {
 
   useCreateCourseMutation,
   useListCoursesQuery,
+  useListCoursesByIdsQuery,
   useGetCourseQuery,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
@@ -244,6 +284,9 @@ export const {
 
   useGetUserEnrolledCoursesQuery,
   useGetUserCourseProgressQuery,
+  useGetUserCourseProgressBatchQuery,
+  useGetLearningLeaderboardQuery, 
+  useGetCourseLeaderboardQuery, 
   useUpdateUserCourseProgressMutation,
 
 } = api;
