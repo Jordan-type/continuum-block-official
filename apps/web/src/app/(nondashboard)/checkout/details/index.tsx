@@ -44,7 +44,7 @@ const CheckoutDetailsPage = () => {
         transactionId: `free_${Date.now()}`,
         userId: "guest",
         courseId: selectedCourse._id,
-        paymentProvider: 'free',
+        paymentProvider: 'Free',
         amount: selectedCourse.price || 0,
       };
       
@@ -143,7 +143,7 @@ const CheckoutDetailsPage = () => {
                     console.log("Phone state updated to:", newPhone); // Debug state update
                   }}
                   disabled={isSubmitting}
-                  placeholder="(e.g., +2547XXXXXXXX, 2547XXXXXXXX)"
+                  placeholder="(e.g., +2547XXXXXXXX)"
                 />
                 </>
               )}

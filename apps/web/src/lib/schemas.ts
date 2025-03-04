@@ -40,7 +40,7 @@ export const paymentSchema = z.object({
       } catch (error) {
         return false;
       }
-    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX")
+    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX")
 });
 
 
@@ -56,7 +56,7 @@ export const guestSchema = z.object({
       } catch (error) {
         return false;
       }
-    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX or 2547XXXXXXXX")
+    }, "Invalid Kenyan phone number format. Use +2547XXXXXXXX")
 });
 
 export const validatePhoneNumber = (phone: string): boolean => {

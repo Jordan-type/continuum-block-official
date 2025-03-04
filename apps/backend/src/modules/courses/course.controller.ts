@@ -66,6 +66,29 @@ const listCourses = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+const listCoursesByIds = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { courseIds } = req.body;
+        if (!courseIds || !Array.isArray(courseIds)) {
+            res.status(400).json({ message: "courseIds must be a non-empty array" });
+            return;
+        }
+        
+        const courses = await Course.find({ _id: { $in: courseIds } }).select("title").exec();
+        res.status(200).json({ 
+            message: "Courses retrieved successfully", 
+            data: courses 
+        });
+    } catch (error) {
+        console.error("Error fetching courses by IDs:", error);
+        res.status(500).json({ 
+            message: "Error fetching courses", 
+            error 
+        });
+    }
+};
+
+
 const getCourse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { courseId } = req.params;
@@ -263,6 +286,7 @@ const deleteCourse = async (req: Request, res: Response): Promise<void> => {
 export {
     createCourse,
     listCourses,
+    listCoursesByIds,
     getCourse,
     updateCourse,
     getUploadVideoUrl,
