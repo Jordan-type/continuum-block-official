@@ -17,9 +17,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatPrice } from "@/lib/utils";
-import { useGetTransactionsQuery } from "@/state/api";
+import { useGetTransactionsQuery, useListCoursesByIdsQuery } from "@/state/api";
 import { useUser } from "@clerk/nextjs";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 const UserBilling = () => {
   const [paymentType, setPaymentType] = useState("all");
@@ -28,6 +28,26 @@ const UserBilling = () => {
     useGetTransactionsQuery(user?.id || "", {
       skip: !isLoaded || !user,
     });
+
+// Get unique courseIds from transactions
+const courseIds = useMemo(() => {
+  return [...new Set(transactions?.map((t) => t.courseId.toString()) || [])];
+}, [transactions]);
+
+// Fetch courses by IDs in a single batch
+const { data: courses, isLoading: isLoadingCourses, isError: isErrorCourses } =
+useListCoursesByIdsQuery(courseIds, {
+  skip: !courseIds.length || isLoadingTransactions,
+});
+
+// Create courseNameMap from batch query
+const courseNameMap = useMemo(() => {
+  const map: { [key: string]: string } = {};
+  courses?.forEach((course) => {
+    map[course._id.toString()] = course.title;
+  });
+  return map;
+}, [courses]);
 
   const filteredData =
     transactions?.filter((transaction) => {
@@ -53,10 +73,10 @@ const UserBilling = () => {
               <SelectItem className="billing__select-item" value="all">
                 All Types
               </SelectItem>
-              <SelectItem className="billing__select-item" value="stripe">
+              <SelectItem className="billing__select-item" value="free">
                 Free
               </SelectItem>
-              <SelectItem className="billing__select-item" value="stripe">
+              <SelectItem className="billing__select-item" value="M-Pesa">
                 M-Pesa
               </SelectItem>
               <SelectItem className="billing__select-item" value="stripe">
@@ -70,28 +90,27 @@ const UserBilling = () => {
         </div>
 
         <div className="billing__grid">
-          {isLoadingTransactions ? (
+          {isLoadingTransactions || isLoadingCourses ? (
             <Loading />
+          ) : isErrorCourses ? (
+            <div>Error loading course title</div>
           ) : (
             <Table className="billing__table">
               <TableHeader className="billing__table-header">
                 <TableRow className="billing__table-header-row">
-                  <TableHead className="billing__table-cell">Date</TableHead>
+                  <TableHead className="billing__table-cell">Course Title</TableHead>
                   <TableHead className="billing__table-cell">Amount</TableHead>
-                  <TableHead className="billing__table-cell">
-                    Payment Method
-                  </TableHead>
+                  <TableHead className="billing__table-cell">Payment Method</TableHead>
+                  <TableHead className="billing__table-cell">Date</TableHead>
+                  <TableHead className="billing__table-cell">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="billing__table-body">
                 {filteredData.length > 0 ? (
                   filteredData.map((transaction) => (
-                    <TableRow
-                      className="billing__table-row"
-                      key={transaction._id}
-                    >
+                    <TableRow className="billing__table-row" key={transaction._id}>
                       <TableCell className="billing__table-cell">
-                        {new Date(transaction.dateTime).toLocaleDateString()}
+                        {courseNameMap[transaction.courseId.toString()] || "Unknown Course"}
                       </TableCell>
                       <TableCell className="billing__table-cell billing__amount">
                         {formatPrice(transaction.amount)}
@@ -99,13 +118,19 @@ const UserBilling = () => {
                       <TableCell className="billing__table-cell">
                         {transaction.paymentProvider}
                       </TableCell>
+                      <TableCell className="billing__table-cell">
+                        {new Date(transaction.dateTime).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="billing__table-cell">
+                        {transaction.status}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow className="billing__table-row">
                     <TableCell
                       className="billing__table-cell text-center"
-                      colSpan={3}
+                      colSpan={5}
                     >
                       No transactions to display
                     </TableCell>

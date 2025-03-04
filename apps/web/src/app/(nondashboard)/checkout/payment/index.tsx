@@ -56,7 +56,7 @@ const PaymentPageContent = () => {
             transactionId: `free_${Date.now()}`,
             userId: user?.id,
             courseId: courseId,
-            paymentProvider: 'free',
+            paymentProvider: 'Free',
             amount: course.price || 0,
         };
       await createTransaction(transactionData).unwrap();
@@ -205,7 +205,7 @@ const PaymentPageContent = () => {
                         console.log("Phone state updated to:", newPhone); // Debug state update
                       }}
                       disabled={isSubmitting}
-                      placeholder="(e.g., +2547XXXXXXXX, 2547XXXXXXXX)"
+                      placeholder="(e.g., +2547XXXXXXXX)"
                     />
                 )}
                 <Button

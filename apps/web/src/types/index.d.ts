@@ -58,10 +58,11 @@ declare global {
     transactionId: string;
     dateTime: string;
     courseId: string;
-    paymentProvider: "free" | "stripe";
+    paymentProvider: "Free" | "Stripe";
     paymentMethodId?: string;
     amount: number // Stored in cents
     savePaymentMethod?: boolean;
+    status: string;
   }
 
   interface DateRange {
@@ -75,7 +76,38 @@ declare global {
     enrollmentDate: string;
     overallProgress: number;
     sections: SectionProgress[];
+    totalPoints?: number;
+    totalPrize?: number;
     lastAccessedTimestamp: string;
+    completionStatus?: string;
+    badges?: string[];
+    engagementScore?: number;
+  }
+
+  interface LeaderboardEntry {
+    userId: string;
+    overallProgress: number;
+    courseCount?: number;
+    totalPoints?: number;
+    totalPrize?: number;
+  }
+
+  interface TopUser {
+    rank: number;
+    username: string;
+    points: number;
+    prize: number;
+    avatar: string;
+  }
+
+  interface SectionProgress {
+    sectionId: string;
+    chapters: ChapterProgress[];
+  }
+  
+  interface ChapterProgress {
+    chapterId: string;
+    completed: boolean;
   }
 
   type CreateUserArgs = Omit<User, "userId">;

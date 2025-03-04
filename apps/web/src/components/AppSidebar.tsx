@@ -1,25 +1,8 @@
 import { useClerk, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import React from "react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import {
-  BookOpen,
-  Briefcase,
-  DollarSign,
-  LogOut,
-  PanelLeft,
-  Settings,
-  User,
-} from "lucide-react";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar";
+import { BookOpen, Briefcase, DollarSign, LogOut, PanelLeft, Settings, User, Trophy} from "lucide-react";
 import Loading from "./Loading";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -34,12 +17,14 @@ const AppSidebar = () => {
   const navLinks = {
     student: [
       { icon: BookOpen, label: "Courses", href: "/user/courses" },
+      { icon: Trophy, label: "Progress", href: "/user/progress" },
       { icon: Briefcase, label: "Billing", href: "/user/billing" },
       { icon: User, label: "Profile", href: "/user/profile" },
       { icon: Settings, label: "Settings", href: "/user/settings" },
     ],
     teacher: [
       { icon: BookOpen, label: "Courses", href: "/teacher/courses" },
+      { icon: Trophy, label: "Progress", href: "/teacher/progress" },
       { icon: DollarSign, label: "Billing", href: "/teacher/billing" },
       { icon: User, label: "Profile", href: "/teacher/profile" },
       { icon: Settings, label: "Settings", href: "/teacher/settings" },

@@ -63,7 +63,7 @@ const ChaptersSidebar = () => {
           section={section}
           index={index}
           sectionProgress={userProgress.sections.find(
-            (s: { sectionId: string }) => s.sectionId === section.sectionId
+            (section: { sectionId: string }) => section.sectionId === section.sectionId
           )}
           chapterId={chapterId as string}
           courseId={courseId as string}
@@ -152,12 +152,7 @@ const Section = ({
   );
 };
 
-const ProgressVisuals = ({
-  section,
-  sectionProgress,
-  completedChapters,
-  totalChapters,
-}: {
+const ProgressVisuals = ({section, sectionProgress, completedChapters, totalChapters, }: {
   section: any;
   sectionProgress: any;
   completedChapters: number;
@@ -193,25 +188,13 @@ const ProgressVisuals = ({
   );
 };
 
-const ChaptersList = ({
-  section,
-  sectionProgress,
-  chapterId,
-  courseId,
-  handleChapterClick,
-  updateChapterProgress,
-}: {
+const ChaptersList = ({section, sectionProgress, chapterId, courseId, handleChapterClick, updateChapterProgress, }: {
   section: any;
   sectionProgress: any;
   chapterId: string;
   courseId: string;
   handleChapterClick: (sectionId: string, chapterId: string) => void;
-  updateChapterProgress: (
-    sectionId: string,
-    chapterId: string,
-    completed: boolean
-  ) => void;
-}) => {
+  updateChapterProgress: (sectionId: string, chapterId: string, completed: boolean ) => void;}) => {
   return (
     <ul className="chapters-sidebar__chapters">
       {section.chapters.map((chapter: any, index: number) => (
@@ -231,16 +214,7 @@ const ChaptersList = ({
   );
 };
 
-const Chapter = ({
-  chapter,
-  index,
-  sectionId,
-  sectionProgress,
-  chapterId,
-  courseId,
-  handleChapterClick,
-  updateChapterProgress,
-}: {
+const Chapter = ({chapter, index, sectionId, sectionProgress, chapterId, courseId, handleChapterClick, updateChapterProgress, }: {
   chapter: any;
   index: number;
   sectionId: string;
@@ -248,12 +222,7 @@ const Chapter = ({
   chapterId: string;
   courseId: string;
   handleChapterClick: (sectionId: string, chapterId: string) => void;
-  updateChapterProgress: (
-    sectionId: string,
-    chapterId: string,
-    completed: boolean
-  ) => void;
-}) => {
+  updateChapterProgress: (sectionId: string, chapterId: string, completed: boolean ) => void; }) => {
   const chapterProgress = sectionProgress?.chapters.find(
     (c: any) => c.chapterId === chapter.chapterId
   );
