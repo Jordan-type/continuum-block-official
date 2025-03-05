@@ -207,19 +207,21 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       providesTags: ["CourseProgress"],
     }),
 
-    // Optional: Add leaderboard endpoints if you want to include them
+    // leaderboard endpoint for a specific user
     getLearningLeaderboard: build.query({
-      query: () => ({
-        url: "course-progress/leaderboard",
+      query: (userId: string) => ({
+        url: `course-progress/leaderboard/${userId}`,
         method: "GET",
       }),
+      providesTags: ["CourseProgress"],
     }),
 
-    getCourseLeaderboard: build.query({
+    getCourseLeaderboard: build.query<LeaderboardEntry[], string>({
       query: (courseId: string) => ({
         url: `course-progress/leaderboard/course/${courseId}`,
         method: "GET",
       }),
+      providesTags: ["CourseProgress"],
     }),
 
     updateUserCourseProgress: build.mutation({
