@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  ChevronDown,
-  ChevronUp,
-  FileText,
-  CheckCircle,
-  Trophy,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, FileText, CheckCircle, Trophy, } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -16,16 +10,8 @@ const ChaptersSidebar = () => {
   const router = useRouter();
   const { setOpen } = useSidebar();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-
-  const {
-    user,
-    course,
-    userProgress,
-    chapterId,
-    courseId,
-    isLoading,
-    updateChapterProgress,
-  } = useCourseProgressData();
+  
+  const { user, course, userProgress, chapterId, courseId, isLoading, updateChapterProgress, } = useCourseProgressData();
 
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -102,8 +88,7 @@ const Section = ({
     completed: boolean
   ) => void;
 }) => {
-  const completedChapters =
-    sectionProgress?.chapters.filter((c: any) => c.completed).length || 0;
+  const completedChapters = sectionProgress?.chapters.filter((c: any) => c.completed).length || 0;
   const totalChapters = section.chapters.length;
   const isExpanded = expandedSections.includes(section.sectionTitle);
 

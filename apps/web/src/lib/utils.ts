@@ -8,6 +8,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Function to truncate userId (e.g., user_2tcF27Xqj8FE9nSEDY00yl7jEhp → user_2tc...Ehp)
+export const truncateUserId = (userId: string): string => {
+  if (userId.length <= 10) return userId;
+  const prefix = userId.slice(0, 8); // Take first 8 characters
+  const suffix = userId.slice(-3);   // Take last 3 characters
+  return `${prefix}...${suffix}`;
+};
+
 // Convert cents to formatted currency string (e.g., 4999 -> "$49.99")
 export function formatPrice(cents: number | undefined): string {
   return new Intl.NumberFormat("en-US", {
