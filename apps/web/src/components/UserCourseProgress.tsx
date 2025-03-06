@@ -86,9 +86,9 @@ const UserProgressDashboard = () => {
       </div>
 
       {/* Top Users 3 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 custom-platform-background">
+      <div className="bg-gray-900 p-4 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-3 gap-4">
         {topUsers.map((user: TopUser) => (
-          <Card key={user.rank} className="bg-gray-800 border-none shadow-md rounded-lg custom-card-3d">
+          <Card key={user.rank} className="bg-gray-800 p-4 shadow rounded-lg flex flex-col items-center space-y-2">
             <CardContent className="p-4 text-center custom-card-content">
               <Image
                 src={"/placeholder.png"}
