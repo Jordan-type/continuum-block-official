@@ -7,6 +7,14 @@ import Course from "../courses/model";
 import calculateOverallProgress from "../../utils/progressUtils"
 import { mergeSections } from "../../utils/mergeSections"
 
+interface LeaderboardEntry {
+  userId: string;
+  overallProgress: number;
+  courseCount: number;
+  totalPoints: number;
+  totalPrize: number;
+}
+
 const getUserEnrolledCourses = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
@@ -140,66 +148,202 @@ const getUserCourseProgressBatch = async (req: Request, res: Response): Promise<
 
 
 // Todo: Add learning leaderBoard
+// const getLearningLeaderboard = async (req: Request, res: Response): Promise<void> => {
+//   const { userId } = req.params;
+//   try {
+    
+//     const auth = getAuth(req);
+//     if (!auth || auth.userId !== userId) {
+//       res.status(403).json({ message: "Access denied" });
+//       return;
+//     }
+
+//     // Count total unique users with course progress
+//     let totalUsers 
+//     let userPosition: number | null = null;
+//     let userData: LeaderboardEntry | undefined;
+
+//     try {
+//       totalUsers = await CourseProgress.distinct("userId").countDocuments().exec();
+//       console.log("totalUsers", totalUsers)
+//     } catch (error) {
+//       console.error("Error calculating totalUsers:", error);
+//       totalUsers = 0;
+//     }
+
+//     const progressData = await CourseProgress.aggregate([
+//       { $group: { 
+//         _id: "$userId",                                // Group by userId 
+//         overallProgress: { $avg: "$overallProgress" }, // Average overall progress across courses 
+//         userCount: { $sum: 1 },                        // Count the number of courses per user 
+//         totalPoints: { $sum: "$totalPoints" },         // Aggregate total points
+//         totalPrize: { $sum: "$totalPrize" },           // Aggregate total prize
+//         },
+//       }, 
+//       { $sort: { overallProgress: -1, totalPoints: -1 } }, // Sort by overallProgress (descending) and limit to top 10 and totalPoints
+//       { $limit: 10 },
+//       { $project: {
+//           userId: "$_id",
+//           overallProgress: { $round: ["$overallProgress", 2] }, // Round to 2 decimal places
+//           courseCount: "$userCount",
+//           totalPoints: 1,
+//           totalPrize: 1,
+//           _id: 0, // Exclude the _id field
+//         },
+//       },
+//     ]).exec();
+
+//     console.log("progressData", progressData)
+
+//     // Optionally anonymize user data or map to user names if available (e.g., via Clerk)
+//     const leaderboard: LeaderboardEntry[]  = progressData.map((entry) => ({
+//       userId: entry.userId, // You might want to map this to a username or pseudonym for privacy
+//       overallProgress: Math.min(entry.overallProgress, 1), // Cap at 1 (100%) to normalize
+//       courseCount: entry.courseCount,
+//       totalPoints: entry.totalPoints, // Default points matching UI
+//       totalPrize: entry.totalPrize  // Default prize matching UI
+//     }));
+
+//     console.log("leaderboard", leaderboard)
+
+//     // Find the specific user's position in the leaderboard (if they exist)
+//     userData = leaderboard.find((entry) => entry.userId === userId);
+//     console.log("userData", userData)
+//     if (userData) {
+//       userPosition = leaderboard.findIndex((entry) => entry.userId === userId) + 1; // 1-based rank
+//     } else {
+//       // If the user isn't in the top 10, fetch their progress to include them
+//       const userProgress = await CourseProgress.aggregate([
+//         { $match: { userId } },
+//         { $group: { 
+//           _id: "$userId",
+//           overallProgress: { $avg: "$overallProgress" },
+//           userCount: { $sum: 1 },
+//           totalPoints: { $sum: "$totalPoints" },
+//           totalPrize: { $sum: "$totalPrize" },
+//         }},
+//         { $project: {
+//           userId: "$_id",
+//           overallProgress: { $round: ["$overallProgress", 2] },
+//           courseCount: "$userCount",
+//           totalPoints: 1,
+//           totalPrize: 1,
+//           _id: 0,
+//         }},
+//       ]).exec();
+    
+//       if (userProgress.length > 0) {
+//         const userEntry = {
+//           userId,
+//           overallProgress: Math.min(userProgress[0].overallProgress, 1), // Cap at 1 (100%)
+//           courseCount: userProgress[0].courseCount,
+//           totalPoints: userProgress[0].totalPoints || Math.min(userProgress[0].overallProgress * 100, 100) * 100,
+//           totalPrize: userProgress[0].totalPrize || Math.min(userProgress[0].overallProgress * 100, 100) * 1000,
+//         };
+//         // Calculate the user's rank by comparing their totalPoints with the entire leaderboard (not just top 10)
+//         const allProgressData = await CourseProgress.aggregate([
+//           { $group: { 
+//             _id: "$userId",
+//             overallProgress: { $avg: "$overallProgress" },
+//             userCount: { $sum: 1 },
+//             totalPoints: { $sum: "$totalPoints" },
+//             totalPrize: { $sum: "$totalPrize" },
+//           }},
+//           { $sort: { totalPoints: -1 } }, // Sort by totalPoints descending for accurate ranking
+//           { $project: {
+//             userId: "$_id",
+//             overallProgress: { $round: ["$overallProgress", 2] },
+//             courseCount: "$userCount",
+//             totalPoints: 1,
+//             totalPrize: 1,
+//             _id: 0,
+//           }},
+//         ]).exec();
+
+//         userPosition = allProgressData.findIndex((entry) => entry._id === userId) + 1 || null;
+//         leaderboard.push(userEntry); // Add the user's data to the leaderboard if not in top 10
+//       }
+//     }
+
+
+//     res.status(200).json({
+//       message: "Learning leaderboard retrieved successfully",
+//       // data: leaderboard,
+//       totalUsers: totalUsers,
+//       userPosition, // Include the user's rank (1-based) or null if not found
+//       userData: userData,     // Include user's data if available
+//     });
+//   } catch (error) {
+//     console.error("Error fetching learning leaderboard:", error);
+//     res.status(500).json({
+//       message: "An error occurred while fetching learning leaderboard",
+//       error,
+//     });
+//   }
+// }
+
 const getLearningLeaderboard = async (req: Request, res: Response): Promise<void> => {
+  const { userId } = req.params;
+  
   try {
     const auth = getAuth(req);
-    if (!auth) {
-      res.status(401).json({ message: "Authentication required" });
+    if (!auth || auth.userId !== userId) {
+      res.status(403).json({ message: "Access denied" });
       return;
     }
 
-    // Count total unique users with course progress
-    const totalUsers = await CourseProgress.distinct("userId").countDocuments().exec();
-
-    const progressData = await CourseProgress.aggregate([
-      { $group: { 
-        _id: "$userId",                                // Group by userId 
-        overallProgress: { $avg: "$overallProgress" }, // Average overall progress across courses 
-        userCount: { $sum: 1 },                        // Count the number of courses per user 
-        totalPoints: { $sum: "$totalPoints" },         // Aggregate total points
-        totalPrize: { $sum: "$totalPrize" },           // Aggregate total prize
-        },
-      }, 
-      { $sort: { overallProgress: -1, totalPoints: -1 } }, // Sort by overallProgress (descending) and limit to top 10 and totalPoints
-      { $limit: 10 },
-      { $project: {
+    // Aggregate pipeline to get comprehensive leaderboard data
+    const aggregationPipeline: mongoose.PipelineStage[] = [
+      {
+        $group: {
+          _id: "$userId",
+          overallProgress: { $avg: "$overallProgress" },
+          courseCount: { $sum: 1 },
+          totalPoints: { $sum: "$totalPoints" },
+          totalPrize: { $sum: "$totalPrize" }
+        }
+      },
+      {
+        $project: {
           userId: "$_id",
-          overallProgress: { $round: ["$overallProgress", 2] }, // Round to 2 decimal places
-          courseCount: "$userCount",
+          overallProgress: { $round: ["$avg", 2] },
+          courseCount: 1,
           totalPoints: 1,
           totalPrize: 1,
-          _id: 0, // Exclude the _id field
-        },
+          _id: 0
+        }
       },
-    ]).exec();
+      { $sort: { totalPoints: -1, overallProgress: -1 } }
+    ];
 
-    console.log("progressData", progressData)
 
-    // Optionally anonymize user data or map to user names if available (e.g., via Clerk)
-    const leaderboard = progressData.map((entry) => ({
-      userId: entry.userId, // You might want to map this to a username or pseudonym for privacy
-      overallProgress: entry.overallProgress,
-      courseCount: entry.courseCount,
-      totalPoints: entry.totalPoints || Math.min(entry.overallProgress * 100, 100) * 100, // Default points matching UI
-      totalPrize: entry.totalPrize || Math.min(entry.overallProgress * 100, 100) * 1000,  // Default prize matching UI
+    // Get full leaderboard data
+    const fullLeaderboardData = await CourseProgress.aggregate(aggregationPipeline).exec();
+
+    // Normalize and cap progress
+    const processedLeaderboard = fullLeaderboardData.map((entry, index) => ({
+      ...entry,
+      overallProgress: Math.min(entry.overallProgress, 1),
+      rank: index + 1
     }));
 
+    const leaderboard = processedLeaderboard.slice(0, 10) // Top 10 entries
     console.log("leaderboard", leaderboard)
-    console.log("totalUsers", totalUsers)
 
+    // Prepare response
     res.status(200).json({
       message: "Learning leaderboard retrieved successfully",
-      data: leaderboard,
-      totalUsers,
+      data: leaderboard
     });
+
   } catch (error) {
     console.error("Error fetching learning leaderboard:", error);
     res.status(500).json({
       message: "An error occurred while fetching learning leaderboard",
-      error,
+      error: error instanceof Error ? error.message : String(error)
     });
   }
-}
+};
 
 // Get course-specific leaderboard (optional, if you want to rank by a specific course)
 const getCourseLeaderboard = async (req: Request, res: Response): Promise<void> => {

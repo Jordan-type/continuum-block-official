@@ -9,7 +9,7 @@ import { getUserEnrolledCourses, getUserCourseProgress, getLearningLeaderboard, 
 router.get("/:userId/enrolled-courses", getUserEnrolledCourses)
 router.get("/:userId/courses/:courseId", getUserCourseProgress)
 router.post("/:userId/courses/batch", getUserCourseProgressBatch);
-router.get("/leaderboard", getLearningLeaderboard)
+router.get("/leaderboard/:userId", requireAuth(), getLearningLeaderboard)
 router.get("/leaderboard/course/:courseId", getCourseLeaderboard)
 router.put("/:userId/courses/:courseId", updateUserCourseProgress);
 

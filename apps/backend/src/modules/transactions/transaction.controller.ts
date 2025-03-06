@@ -85,7 +85,7 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
       courseId,
       transactionId: isFreeCourse ? `free_${Date.now()}` : transactionId,
       amount: isFreeCourse ? 0 : amount,
-      paymentProvider: isFreeCourse ? "free" : paymentProvider,
+      paymentProvider: isFreeCourse ? "Free" : paymentProvider,
     });
     await newTransaction.save();
 
