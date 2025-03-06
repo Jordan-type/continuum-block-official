@@ -15,11 +15,9 @@ const Progress = () => {
     return (
       <div className="user-courses">
         <Header title="My Progress" subtitle="View your courses progress" />
-        <UserProgressDashboard />
+        <UserProgressDashboard/>
       </div>
     );
   };
   
   export default Progress;
-
-  // userId={user.id}

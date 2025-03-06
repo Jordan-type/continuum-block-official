@@ -86,6 +86,7 @@ declare global {
 
   interface LeaderboardEntry {
     userId: string;
+    rank: number;
     overallProgress: number;
     courseCount?: number;
     totalPoints?: number;
@@ -94,10 +95,9 @@ declare global {
 
   interface TopUser {
     rank: number;
-    username: string;
-    points: number;
-    prize: number;
-    avatar: string;
+    userId: string;
+    totalPoints: number;
+    totalPrize: number;
   }
 
   interface SectionProgress {
