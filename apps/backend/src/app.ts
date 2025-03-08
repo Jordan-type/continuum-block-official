@@ -28,6 +28,7 @@ const app: Express = express();
 
 const corsOptions = {
   origin: [
+    "https://www.continuumblock.org",
     "https://continuum-block-official-web.vercel.app",
     "http://localhost:3000", // Local frontend
     "https://your-ngrok-url", // Ngrok for local testing
