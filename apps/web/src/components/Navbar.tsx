@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
+
 const Navbar = ({ isCoursePage }: { isCoursePage: boolean }) => {
   const { user } = useUser();
   const userRole = user?.publicMetadata?.userType as "student" | "teacher";
@@ -42,7 +43,6 @@ const Navbar = ({ isCoursePage }: { isCoursePage: boolean }) => {
             <span className="nondashboard-navbar__notification-indicator"></span>
             <Bell className="nondashboard-navbar__notification-icon" />
           </button>
-
           <UserButton
             appearance={{
               baseTheme: dark,
@@ -53,9 +53,7 @@ const Navbar = ({ isCoursePage }: { isCoursePage: boolean }) => {
             }}
             showName={true}
             userProfileMode="navigation"
-            userProfileUrl={
-              userRole === "teacher" ? "/teacher/profile" : "/user/profile"
-            }
+            userProfileUrl={ userRole === "teacher" ? "/teacher/profile" : "/user/profile"}
           />
         </div>
       </div>

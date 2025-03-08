@@ -86,6 +86,7 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
       transactionId: isFreeCourse ? `free_${Date.now()}` : transactionId,
       amount: isFreeCourse ? 0 : amount,
       paymentProvider: isFreeCourse ? "Free" : paymentProvider,
+      status: isFreeCourse ? 'Completed' : 'Pending',  // Automatically mark as Completed if it's a free course
     });
     await newTransaction.save();
 

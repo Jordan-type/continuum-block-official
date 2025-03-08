@@ -40,7 +40,7 @@ const teamList: TeamProps[] = [
   //   ],
   // },
   {
-    imageUrl: "https://i.pravatar.cc/150?img=60",
+    imageUrl: "https://res.cloudinary.com/dbfydlpwo/image/upload/v1741347307/continuum_block/hzpq5irvpbub7gxiibe0.jpg",
     name: "Jordan Muthemba",
     position: "Smart Contract Developer & Blockchain Trainer",
     socialNetworks: [
@@ -54,21 +54,21 @@ const teamList: TeamProps[] = [
       },
     ],
   },
-  {
-    imageUrl: "https://i.pravatar.cc/150?img=17",
-    name: "Bruce Rogers",
-    position: "Backend Developer",
-    socialNetworks: [
-      {
-        name: "Linkedin",
-        url: "https://www.linkedin.com/in/leopoldo-miranda/",
-      },
-      {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
-      },
-    ],
-  },
+  // {
+  //   imageUrl: "https://i.pravatar.cc/150?img=17",
+  //   name: "Bruce Rogers",
+  //   position: "Backend Developer",
+  //   socialNetworks: [
+  //     {
+  //       name: "Linkedin",
+  //       url: "https://www.linkedin.com/in/leopoldo-miranda/",
+  //     },
+  //     {
+  //       name: "Facebook",
+  //       url: "https://www.facebook.com/",
+  //     },
+  //   ],
+  // },
 ];
 
 
@@ -96,60 +96,61 @@ const Team = () => {
         The Architects of Innovation
       </h2>
 
-      <p className="md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground">
+      <p className="md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground text-center">
       Meet the Continuum Block Pioneers, a group of visionary developers, strategists, and thinkers dedicated to reshaping the landscape of blockchain technology. 
-      Our team is not just built on expertise but on a foundation of passion and a relentless pursuit of innovation. 
-      Each member brings a unique blend of skills and experiences, driving us forward as we develop groundbreaking solutions and foster a decentralized future. 
-      From coding new protocols to strategizing the blockchain&apos;s integration into everyday life, 
-      our pioneers are on the front lines, ensuring Continuum Block remains at the cutting edge of blockchain technology.
+      Our team is not just built on expertise but on a foundation of passion and a relentless pursuit of innovation. Each member brings a unique blend of skills and experiences, driving us forward as we develop groundbreaking solutions and foster a decentralized future. 
+      From coding new protocols to strategizing the blockchain&apos;s integration into everyday life, our pioneers are on the front lines, ensuring Continuum Block remains at the cutting edge of blockchain technology.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 gap-y-10 justify-items-center">
-        {teamList.map(
-          ({ imageUrl, name, position, socialNetworks }: TeamProps) => (
-            <Card
-              key={name}
-              className="bg-muted/50 relative mt-8 flex flex-col justify-center items-center"
-            >
-              <CardHeader className="mt-8 flex justify-center items-center pb-2">
+     <div className="flex justify-center">       {/* grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 gap-y-10 items-center */}
+        {teamList.map(({ imageUrl, name, position, socialNetworks }: TeamProps) => (
+          <Card
+            key={name}
+            className="bg-muted/50 relative mt-8 flex flex-col justify-center items-center max-w-sm"
+          >
+            <CardHeader className="mt-8 flex flex-col justify-center items-center pb-2 pt-12">
+              <div className="relative w-24 h-24">
                 <Image
                   src={imageUrl}
-                  alt={`${name} ${position.replace(/'/g, "&apos;")}`}
+                  alt={`${name} ${position.replace(/'/g, "'")}`}
                   width={150}
                   height={150}
-                  className="absolute -top-12 rounded-full w-24 h-24 aspect-square object-cover"
+                  className="rounded-full w-24 h-24 aspect-square object-cover absolute -top-12"
                 />
-                <CardTitle className="text-center">{name}</CardTitle>
-                <CardDescription className="text-primary">
-                  {position}
-                </CardDescription>
-              </CardHeader>
+              </div>
+              <CardTitle className="text-center mt-12">{name}</CardTitle>
+              <CardDescription className="text-center from-[#F596D3] to-[#D247BF]">
+                {position}
+              </CardDescription>
+            </CardHeader>
 
-              <CardContent className="text-center pb-2">
-              <p>&quot;Blockchain isn&rsquo;t just a technological evolution; it&rsquo;s a cultural revolution. It challenges our conventional views on data security and transactions, promising a future where transparency and trust are the norm, not the exception. As we stand on the brink of this technological frontier, it&rsquo;s crucial we navigate not just with the intent to innovate, but also with a commitment to ethical practices that benefit all.&quot;</p>
-              </CardContent>
+            <CardContent className="text-center pb-2">
+              <p>
+              &quot;Blockchain isn&rsquo;t just a technological evolution; it&rsquo;s a cultural revolution. It challenges our conventional views on data security and transactions, promising a future where transparency and trust
+                are the norm, not the exception. As we stand on the brink of this technological frontier, it&rsquo;s crucial we navigate not just with the intent to innovate, but also with a commitment to ethical practices that benefit all.&quot;
+              </p>
+            </CardContent>
 
-              <CardFooter>
-                {socialNetworks.map(({ name, url }: SociaNetworkslProps) => (
-                  <div key={name}>
-                    <a
-                      rel="noreferrer noopener"
-                      href={url}
-                      target="_blank"
-                      className={buttonVariants({
-                        variant: "ghost",
-                        size: "sm",
-                      })}
-                    >
-                      <span className="sr-only">{name} icon</span>
-                      {socialIcon(name)}
-                    </a>
-                  </div>
-                ))}
-              </CardFooter>
-            </Card>
-          )
-        )}
+            <CardFooter className="flex justify-center gap-2">
+              {socialNetworks.map(({ name, url }: SociaNetworkslProps) => (
+                <div key={name}>
+                  <a
+                    rel="noreferrer noopener"
+                    href={url}
+                    target="_blank"
+                    className={buttonVariants({
+                      variant: "ghost",
+                      size: "sm",
+                    })}
+                  >
+                    <span className="sr-only">{name} icon</span>
+                    {socialIcon(name)}
+                  </a>
+                </div>
+              ))}
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </section>
   );

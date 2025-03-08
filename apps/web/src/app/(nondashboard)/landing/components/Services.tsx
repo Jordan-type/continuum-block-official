@@ -41,7 +41,7 @@ export const Services = () => {
       <div className="grid lg:grid-cols-[1fr,1fr] gap-8 place-items-center">
         <div>
           <h2 className="text-3xl md:text-4xl font-bold">
-            <span className="bg-gradient-to-b from-[#8A2BE2] to-[#9370DB] text-transparent bg-clip-text">
+            <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
               Client-Centric{" "}
             </span>
             Services

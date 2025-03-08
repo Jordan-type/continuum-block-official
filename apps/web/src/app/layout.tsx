@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { Suspense } from "react";
 
+
 const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
