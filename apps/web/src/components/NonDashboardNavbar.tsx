@@ -6,6 +6,7 @@ import { Bell, BookOpen, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
+
 const NonDashboardNavbar = () => {
   const { user } = useUser();
   const userRole = user?.publicMetadata?.userType as "student" | "teacher";
@@ -39,7 +40,6 @@ const NonDashboardNavbar = () => {
             <span className="nondashboard-navbar__notification-indicator"></span>
             <Bell className="nondashboard-navbar__notification-icon" />
           </button>
-
           <SignedIn>
             <UserButton
               appearance={{

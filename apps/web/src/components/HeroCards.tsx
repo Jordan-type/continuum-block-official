@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -16,18 +17,43 @@ interface HeroCardsProps {
 const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
   console.log("Rendering HeroCards with tweets:", tweets);
 
-  // if (tweets.length === 0) {
-  //   return <div>No tweets to display</div>;
-  // }
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-scroll logic
+  useEffect(() => {
+    const autoScroll = () => {
+      if (tweets.length > 0) {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % tweets.length);
+      }
+    };
+
+    intervalRef.current = setInterval(autoScroll, 5000); // Change slide every 5 seconds
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current); // Cleanup on unmount or tweet change
+      }
+    };
+  }, [tweets]);
+
+  // Sync carousel position with currentIndex
+  useEffect(() => {
+    if (carouselRef.current) {
+      const offset = -currentIndex * 340; 
+      carouselRef.current.style.transform = `translateX(${offset}px)`;
+    }
+  }, [currentIndex]);
 
   return (
     <div className="lg:flex flex-row flex-wrap gap-8 relative w-[700px] h-[500px]">
       {/* Testimonial */}
-      <Carousel className="w-full h-auto overflow-hidden">
-        <CarouselContent className="flex transition-transform duration-300 ease-in-out">
+      <Carousel className="absolute w-[340px] -top-[15px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+        <CarouselContent ref={carouselRef} className="flex transition-transform duration-300 ease-in-out" style={{ width: `${tweets.length * 340}px` }} >
           {tweets.map((tweet) => (
-            <CarouselItem key={tweet.id} className="flex-none w-full h-auto">
-              <Card className="m-4 drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+            <CarouselItem key={tweet.id} className="w-[340px] h-auto flex-shrink-0">
+              <Card className="w-full h-auto">
                 <CardHeader className="flex items-center gap-4 pb-2">
                   <Avatar>
                     <AvatarImage
@@ -42,7 +68,7 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
                     <CardDescription>@{tweet.user.username}</CardDescription>
                   </div>
                 </CardHeader>
-                <CardContent>{tweet.text}</CardContent>
+                <CardContent className="max-h-[150px] overflow-y-auto">{tweet.text}</CardContent>
               </Card>
             </CarouselItem>
           ))}
@@ -126,9 +152,9 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
       <Card className="absolute top-[150px] left-[50px] w-72  drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader>
           <CardTitle className="flex item-center justify-between">
-            Introduction to Git and GitHub
-            <Badge variant="secondary" className="text-sm text-primary">
-              Free – Most Popular
+            FREE
+            <Badge variant="secondary" className="text-sm">
+              Most Popular
             </Badge>
           </CardTitle>
           <div>
@@ -137,13 +163,13 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
           </div>
 
           <CardDescription>
-            Master Git and GitHub for free! Learn version control, collaborate like a pro, and build foundational skills for modern development with Jordan Muthemba.
+            Introduction to Git and GitHub
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           <Button className="landing__cta-button w-full">
-            Enroll Now
+            Enroll Now 
           </Button>
         </CardContent>
 
@@ -154,7 +180,7 @@ const HeroCards: React.FC<HeroCardsProps> = ({ tweets }) => {
             {["Learn version control basics", "Collaborate on projects effectively", "Access 7 practical lessons"].map(
               (benefit: string) => (
                 <span key={benefit} className="flex">
-                  <Check className="text-green-500" />{" "}
+                  <Check className="text-primary-500" />{" "}
                   <h3 className="ml-2">{benefit}</h3>
                 </span>
               )

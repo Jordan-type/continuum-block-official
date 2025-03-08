@@ -8,7 +8,7 @@ interface SponsorProps {
 const sponsors: SponsorProps[] = [
   {
     icon: <Radar size={34} />,
-    name: "Sponsor 1",
+    name: "CELO",
   },
   {
     icon: <Radar size={34} />,
@@ -34,11 +34,8 @@ const sponsors: SponsorProps[] = [
 
 export const Sponsors = () => {
   return (
-    <section
-      id="sponsors"
-      className="container pt-24 sm:py-32"
-    >
-      <h2 className="text-center text-md lg:text-xl font-bold mb-8 text-primary">
+    <section id="sponsors" className="container pt-24 sm:py-32">
+      <h2 className="text-center text-md lg:text-xl font-bold mb-8">
        Our Partners
       </h2>
 

@@ -72,39 +72,39 @@ const config = {
           dirtyGrey: "#6e6e6e",
         },
         primary: {
-          "50": "#fdfdff",
-          "100": "#f7f7ff",
-          "200": "#ececff",
-          "300": "#ddddfe",
-          "400": "#cacafe",
-          "500": "#b3b3fd",
-          "600": "#9898fd",
-          "700": "#7878fc",
-          "750": "#5a5be6",
-          "800": "#0404be",
-          "900": "#020255",
-          "950": "#010132",
-          DEFAULT: "hsl(var(--primary))",
+          "50": "#F5E9FB", // Lightest purple shade
+          "100": "#EADDF7",
+          "200": "#D7BDF1",
+          "300": "#C29DEA",
+          "400": "#A87BE2",
+          "500": "#8F5AD9", // Mid-tone purple
+          "600": "#7A44CF",
+          "700": "#690FA2", // Your specified Primary color
+          "800": "#5A0C89",
+          "900": "#4B0970",
+          "950": "#2F0550", // Darkest purple shade
+          DEFAULT: "#690FA2", // "hsl(var(--primary))"
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          "50": "#fcfefe",
-          "100": "#f3fbfa",
-          "200": "#e5f7f4",
-          "300": "#d0f1ec",
-          "400": "#b6e9e1",
-          "500": "#96dfd4",
-          "600": "#70d3c4",
-          "700": "#44c5b2",
-          "800": "#227064",
-          "900": "#123933",
-          "950": "#0c2723",
-          DEFAULT: "hsl(var(--secondary))",
+          "50": "#F8F5FA", // Lightest lavender purple shade
+          "100": "#F2ECF6",
+          "200": "#E8DDEF",
+          "300": "#D8C7E5",
+          "400": "#C8B0DB",
+          "500": "#B899D1", // Mid-tone lavender purple
+          "600": "#A984C6",
+          "700": "#987BBA", // Your specified Secondary color
+          "800": "#80649F",
+          "900": "#6C5586",
+          "950": "#4D3D62", // Darkest lavender purple shade
+          DEFAULT: "#987BBA", //"hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         white: {
           "50": "#d2d2d2",
           "100": "#ffffff",
+          // DEFAULT: "#ffffff",
         },
         tertiary: {
           "50": "#E9B306",
