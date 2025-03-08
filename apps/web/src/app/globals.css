@@ -39,29 +39,29 @@ input[type="color"] {
   :root {
     --sidebar-background: theme("colors.customgreys.primarybg");
     --sidebar-foreground: theme("colors.white.50");
-    --sidebar-primary: theme("colors.primary.700");
+    --sidebar-primary: theme("colors.primary.700"); /* #690FA2 */
     --sidebar-primary-foreground: theme("colors.white.50");
     --sidebar-accent: theme("colors.customgreys.darkerGrey");
     --sidebar-accent-foreground: theme("colors.customgreys.dirtyGrey");
     --sidebar-border: theme("colors.customgreys.secondarybg");
-    --sidebar-ring: theme("colors.primary.700");
+    --sidebar-ring: theme("colors.primary.700"); /* #690FA2 */
     --popover: theme("colors.customgreys.primarybg");
     --popover-foreground: theme("colors.white.50");
 
     --background: theme("colors.customgreys.primarybg");
     --foreground: theme("colors.white.50");
 
-    --primary: theme("colors.primary.700");
+    --primary: theme("colors.primary.700"); /* #690FA2 */
     --primary-foreground: theme("colors.white.50");
 
-    --muted: theme("colors.primary.600");
+    --muted: theme("colors.primary.600"); /* #7A44CF */
     --muted-foreground: theme("colors.customgreys.dirtyGrey");
 
-    --accent: theme("colors.primary.600");
+    --accent: theme("colors.primary.600"); /* #7A44CF */
     --accent-foreground: theme("colors.white.50");
 
     --border: theme("colors.customgreys.secondarybg");
-    --ring: theme("colors.primary.700");
+    --ring: theme("colors.primary.700"); /* #690FA2 */
 
     --card: theme("colors.customgreys.primarybg");
     --card-foreground: theme("colors.white.50");
@@ -70,29 +70,29 @@ input[type="color"] {
   .dark {
     --sidebar-background: theme("colors.customgreys.primarybg");
     --sidebar-foreground: theme("colors.white.50");
-    --sidebar-primary: theme("colors.primary.700");
+    --sidebar-primary: theme("colors.primary.700"); /* #690FA2 */
     --sidebar-primary-foreground: theme("colors.white.50");
     --sidebar-accent: theme("colors.customgreys.darkerGrey");
     --sidebar-accent-foreground: theme("colors.customgreys.dirtyGrey");
     --sidebar-border: theme("colors.customgreys.secondarybg");
-    --sidebar-ring: theme("colors.primary.700");
+    --sidebar-ring: theme("colors.primary.700"); /* #690FA2 */
     --popover: theme("colors.customgreys.primarybg");
     --popover-foreground: theme("colors.white.50");
 
     --background: theme("colors.customgreys.primarybg");
     --foreground: theme("colors.white.50");
 
-    --primary: theme("colors.primary.700");
+    --primary: theme("colors.primary.700"); /* #690FA2 */
     --primary-foreground: theme("colors.white.50");
 
-    --muted: theme("colors.primary.600");
+    --muted: theme("colors.primary.600"); /* #7A44CF */
     --muted-foreground: theme("colors.customgreys.dirtyGrey");
 
-    --accent: theme("colors.primary.600");
+    --accent: theme("colors.primary.600"); /* #7A44CF */
     --accent-foreground: theme("colors.white.50");
 
     --border: theme("colors.customgreys.secondarybg");
-    --ring: theme("colors.primary.700");
+    --ring: theme("colors.primary.700"); /* #690FA2 */
 
     --card: theme("colors.customgreys.primarybg");
     --card-foreground: theme("colors.white.50");
@@ -127,7 +127,7 @@ input[type="color"] {
 }
 
 .search__title {
-  @apply font-normal text-2xl mt-14;
+  @apply font-normal text-2xl mt-14 text-primary-700; /* Updated to primary color */
 }
 
 .search__subtitle {
@@ -143,7 +143,7 @@ input[type="color"] {
 }
 
 .search__selected-course {
-  @apply basis-2/5 min-w-[350px] h-fit border-2 border-primary-600 bg-customgreys-secondarybg overflow-hidden rounded-lg;
+  @apply basis-2/5 min-w-[350px] h-fit border-2 border-primary-700 bg-customgreys-secondarybg overflow-hidden rounded-lg; /* Updated border to primary color */
 }
 
 /* Selected Course Component */
@@ -184,7 +184,7 @@ input[type="color"] {
 }
 
 .selected-course__price {
-  @apply text-primary-500 font-semibold text-2xl;
+  @apply text-white-100 font-semibold text-2xl; /* Updated to primary color */
 }
 
 /* Checkout Pages */
@@ -206,11 +206,11 @@ input[type="color"] {
 }
 
 .completion__icon {
-  @apply mb-4 rounded-full bg-green-500 p-3 inline-flex items-center justify-center;
+  @apply mb-4 rounded-full bg-secondary-700 p-3 inline-flex items-center justify-center; /* Updated to secondary color */
 }
 
 .completion__title {
-  @apply text-4xl font-bold mb-3;
+  @apply text-4xl font-bold mb-3 text-primary-700; /* Updated to primary color */
 }
 
 .completion__message {
@@ -218,7 +218,7 @@ input[type="color"] {
 }
 
 .completion__action {
-  @apply mt-2 flex justify-center bg-secondary-700 rounded-lg px-4 py-2 hover:bg-secondary-600 cursor-pointer;
+  @apply mt-2 flex justify-center bg-secondary-700 rounded-lg px-4 py-2 hover:bg-secondary-600 cursor-pointer; /* Updated to secondary color */
 }
 
 /* Landing Page */
@@ -235,7 +235,7 @@ input[type="color"] {
 }
 
 .landing__title {
-  @apply text-4xl font-bold mb-4;
+  @apply text-4xl font-bold mb-4 text-primary-700; /* Updated to primary color */
 }
 
 .landing__description {
@@ -247,7 +247,7 @@ input[type="color"] {
 }
 
 .landing__cta-button {
-  @apply bg-primary-700 hover:bg-primary-600 px-4 py-2 rounded-md;
+  @apply bg-primary-700 hover:bg-primary-600 px-4 py-2 rounded-md text-white-100; /* Updated to primary color */
 }
 
 .landing__hero-images {
@@ -267,7 +267,7 @@ input[type="color"] {
 }
 
 .landing__featured-title {
-  @apply text-2xl font-semibold mb-4;
+  @apply text-2xl font-semibold mb-4 text-primary-700; /* Updated to primary color */
 }
 
 .landing__featured-description {
@@ -279,7 +279,7 @@ input[type="color"] {
 }
 
 .landing__tag {
-  @apply px-3 py-1 bg-customgreys-secondarybg rounded-full text-sm;
+  @apply px-3 py-1 bg-secondary-200 rounded-full text-sm text-secondary-700; /* Updated to secondary color */
 }
 
 .landing__courses {
@@ -287,50 +287,43 @@ input[type="color"] {
 }
 
 /* Landing Skeleton */
-/* Skeleton Styles to Match FeaturedCourses */
 .landing-skeleton {
-  @apply w-3/4; /* Remove or adjust if not needed, as we’re using container now */
+  @apply w-3/4;
 }
 
-/* Ensure skeleton matches FeaturedCourses title */
 .landing-skeleton__featured-title,
 .landing-skeleton__featured-description {
-  @apply bg-customgreys-secondarybg; /* Match the background of the FeaturedCourses cards */
-  @apply rounded-lg; /* Rounded corners for consistency */
+  @apply bg-customgreys-secondarybg;
+  @apply rounded-lg;
 }
 
-/* Match the title height and width */
 .landing-skeleton__featured-title {
   @apply h-10 w-3/4 max-w-2xl mx-auto md:text-center;
 }
 
-/* Match the description height and width */
 .landing-skeleton__featured-description {
   @apply h-6 w-full max-w-3xl mx-auto md:w-3/4 mt-4 mb-8;
 }
 
-/* Match the tags layout and styling */
 .landing-skeleton__tags {
   @apply flex flex-wrap md:justify-center gap-4 mb-8;
 }
 
 .landing-skeleton__tag {
-  @apply h-8 w-32 px-3 py-1 bg-customgreys-secondarybg rounded-full; /* Match landing__tag */
+  @apply h-8 w-32 px-3 py-1 bg-customgreys-secondarybg rounded-full;
 }
 
-/* Match the course cards layout and styling */
 .landing-skeleton__courses {
-  @apply grid md:grid-cols-2 lg:grid-cols-3 gap-8; /* Match landing__featured grid */
+  @apply grid md:grid-cols-2 lg:grid-cols-3 gap-8;
 }
 
 .landing-skeleton__course-card {
-  @apply h-[340px] xl:h-[380px] rounded-lg bg-customgreys-secondarybg; /* Match course-card-search */
-  @apply border-2 border-transparent; /* Match the border style of course-card-search */
+  @apply h-[340px] xl:h-[380px] rounded-lg bg-customgreys-secondarybg;
+  @apply border-2 border-transparent;
 }
 
-/* Ensure the skeleton background matches the FeaturedCourses card background */
 .Skeleton {
-  @apply bg-customgreys-secondarybg animate-pulse; /* Default Skeleton animation from ShadCN */
+  @apply bg-customgreys-secondarybg animate-pulse;
 }
 
 /* Checkout Details Page */
@@ -355,7 +348,7 @@ input[type="color"] {
 }
 
 .checkout-details__title {
-  @apply text-3xl font-bold text-center mb-2;
+  @apply text-3xl font-bold text-center mb-2 text-primary-700; /* Updated to primary color */
 }
 
 .checkout-details__subtitle {
@@ -367,7 +360,7 @@ input[type="color"] {
 }
 
 .checkout-details__submit {
-  @apply w-full my-6 py-3 bg-primary-700 hover:bg-primary-600 text-white-100 rounded shadow text-sm font-semibold;
+  @apply w-full my-6 py-3 bg-primary-700 hover:bg-primary-600 text-white-100 rounded shadow text-sm font-semibold; /* Updated to primary color */
 }
 
 .checkout-details__divider {
@@ -412,7 +405,7 @@ input[type="color"] {
 }
 
 .payment__title {
-  @apply text-2xl font-bold;
+  @apply text-2xl font-bold text-primary-700; /* Updated to primary color */
 }
 
 .payment__subtitle {
@@ -444,7 +437,7 @@ input[type="color"] {
 }
 
 .payment__submit {
-  @apply hover:bg-primary-600 bg-primary-700;
+  @apply hover:bg-primary-600 bg-primary-700; /* Updated to primary color */
 }
 
 /* Billing Page */
@@ -457,7 +450,7 @@ input[type="color"] {
 }
 
 .billing__title {
-  @apply text-2xl font-semibold;
+  @apply text-2xl font-semibold text-primary-700; /* Updated to primary color */
 }
 
 .billing__filters {
@@ -596,7 +589,7 @@ input[type="color"] {
 }
 
 .course__nav-button {
-  @apply border-none bg-primary-700;
+  @apply border-none bg-primary-700; /* Updated to primary color */
 }
 
 .course__nav-button--prev {
@@ -628,7 +621,7 @@ input[type="color"] {
 }
 
 .course__tab {
-  @apply text-md w-20;
+  @apply text-md;
 }
 
 .course__tab-content {
@@ -690,7 +683,7 @@ input[type="color"] {
 }
 
 .chapters-sidebar__title {
-  @apply text-lg font-bold pt-9 pb-6 px-8;
+  @apply text-lg font-bold pt-9 pb-6 px-8 text-primary-700; /* Updated to primary color */
 }
 
 .chapters-sidebar__divider {
@@ -738,11 +731,11 @@ input[type="color"] {
 }
 
 .chapters-sidebar__progress-bar--completed {
-  @apply bg-secondary-700;
+  @apply bg-secondary-700; /* Updated to secondary color */
 }
 
 .chapters-sidebar__trophy {
-  @apply bg-secondary-700 rounded-full p-3 flex items-center justify-center;
+  @apply bg-secondary-700 rounded-full p-3 flex items-center justify-center; /* Updated to secondary color */
 }
 
 .chapters-sidebar__trophy-icon {
@@ -762,7 +755,7 @@ input[type="color"] {
 }
 
 .chapters-sidebar__chapter-check {
-  @apply bg-secondary-700 rounded-full p-1;
+  @apply bg-secondary-700 rounded-full p-1; /* Updated to secondary color */
 }
 
 .chapters-sidebar__check-icon {
@@ -774,7 +767,7 @@ input[type="color"] {
 }
 
 .chapters-sidebar__chapter-number--current {
-  @apply bg-secondary-700 text-gray-800;
+  @apply bg-secondary-700 text-gray-800; /* Updated to secondary color */
 }
 
 .chapters-sidebar__chapter-title {
@@ -786,7 +779,7 @@ input[type="color"] {
 }
 
 .chapters-sidebar__chapter-title--current {
-  @apply text-secondary-700;
+  @apply text-secondary-700; /* Updated to secondary color */
 }
 
 .chapters-sidebar__text-icon {
@@ -860,7 +853,7 @@ input[type="color"] {
 }
 
 .chapter-modal__title {
-  @apply text-2xl font-bold;
+  @apply text-2xl font-bold text-primary-700; /* Updated to primary color */
 }
 
 .chapter-modal__close {
@@ -895,6 +888,10 @@ input[type="color"] {
   @apply flex justify-end space-x-2 mt-6;
 }
 
+.chapter-modal__submit {
+  @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded px-4 py-2; /* Updated to primary color */
+}
+
 /* Section Modal */
 .section-modal {
   @apply flex flex-col;
@@ -905,7 +902,7 @@ input[type="color"] {
 }
 
 .section-modal__title {
-  @apply text-2xl font-bold;
+  @apply text-2xl font-bold text-primary-700; /* Updated to primary color */
 }
 
 .section-modal__close {
@@ -920,13 +917,17 @@ input[type="color"] {
   @apply flex justify-end space-x-2 mt-6;
 }
 
+.section-modal__submit {
+  @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded px-4 py-2; /* Updated to primary color */
+}
+
 /* Teacher Courses Page */
 .teacher-courses {
   @apply w-full h-full;
 }
 
 .teacher-courses__header {
-  @apply bg-primary-700 hover:bg-primary-600;
+  @apply bg-primary-700 hover:bg-primary-600; /* Updated to primary color */
 }
 
 .teacher-courses__grid {
@@ -972,7 +973,7 @@ input[type="color"] {
 }
 
 .course-card__title {
-  @apply text-md lg:text-lg font-semibold line-clamp-2;
+  @apply text-md lg:text-lg font-semibold line-clamp-2 text-white-100; /* Updated to primary color */
 }
 
 .course-card__footer {
@@ -980,11 +981,11 @@ input[type="color"] {
 }
 
 .course-card__category {
-  @apply text-sm bg-customgreys-secondarybg rounded-full px-3 py-2 text-gray-400;
+  @apply text-sm bg-secondary-200 rounded-full px-3 py-2 text-primary-700; /* Updated to secondary color */
 }
 
 .course-card__price {
-  @apply text-primary-500 font-bold text-md;
+  @apply text-white-100 font-bold text-md; /* Updated to primary color */
 }
 
 /* Course Card Search */
@@ -993,7 +994,7 @@ input[type="color"] {
 }
 
 .course-card-search--selected {
-  @apply border-primary-600;
+  @apply border-primary-700; /* Updated to primary color */
 }
 
 .course-card-search--unselected {
@@ -1008,6 +1009,34 @@ input[type="color"] {
   @apply object-cover transition-transform;
 }
 
+.course-card-search__content {
+  @apply p-4 flex flex-col justify-between flex-grow;
+}
+
+.course-card-search__title {
+  @apply font-semibold line-clamp-1 text-white-100; /* Updated to primary color */
+}
+
+.course-card-search__description {
+  @apply text-sm mt-1 line-clamp-2;
+}
+
+.course-card-search__teacher {
+  @apply text-customgreys-dirtyGrey text-sm;
+}
+
+.course-card-search__footer {
+  @apply flex justify-between items-center mt-1;
+}
+
+.course-card-search__price {
+  @apply text-white-100 font-semibold; /* Updated to primary color */
+}
+
+.course-card-search__enrollment {
+  @apply text-customgreys-dirtyGrey text-sm;
+}
+
 /* Course Card Teacher */
 .course-card-teacher {
   @apply w-full h-[400px] p-0 bg-background border-none text-foreground bg-customgreys-primarybg overflow-hidden hover:bg-white-100/10 transition duration-200 flex flex-col;
@@ -1019,6 +1048,26 @@ input[type="color"] {
 
 .course-card-teacher__image {
   @apply rounded-t-lg w-[100%] h-[100%] object-cover transition-transform;
+}
+
+.course-card-teacher__content {
+  @apply w-full pb-6 pt-4 flex-grow flex flex-col justify-between text-gray-400;
+}
+
+.course-card-teacher__title {
+  @apply text-primary-50 text-md md:text-lg line-clamp-2 overflow-hidden;
+}
+
+.course-card-teacher__category {
+  @apply bg-customgreys-dirtyGrey/50 px-2 py-1 mt-3 mb-3 rounded-xl w-fit text-sm;
+}
+
+.course-card-teacher__edit-button {
+  @apply rounded w-full bg-primary-700 border-none hover:bg-primary-600 hover:text-customgreys-primarybg text-white-100 cursor-pointer; /* Updated to primary color */
+}
+
+.course-card-teacher__delete-button {
+  @apply rounded w-full bg-red-600 text-white-100 hover:bg-red-400 hover:text-customgreys-primarybg cursor-pointer;
 }
 
 /* Course Preview */
@@ -1061,7 +1110,7 @@ input[type="color"] {
 }
 
 .footer__link {
-  @apply text-primary-500 mx-2;
+  @apply text-primary-700 mx-2; /* Updated to primary color */
 }
 
 /* Loading */
@@ -1070,11 +1119,11 @@ input[type="color"] {
 }
 
 .loading__spinner {
-  @apply w-6 h-6 animate-spin text-primary-700;
+  @apply w-6 h-6 animate-spin text-primary-700; /* Updated to primary color */
 }
 
 .loading__text {
-  @apply text-sm font-medium text-primary-700;
+  @apply text-sm font-medium text-primary-700; /* Updated to primary color */
 }
 
 /* Navbar */
@@ -1120,7 +1169,7 @@ input[type="color"] {
 }
 
 .toolbar__search {
-  @apply w-full px-5 h-12 bg-customgreys-primarybg placeholder-customgreys-dirtyGrey text-customgreys-dirtyGrey border-none rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
+  @apply w-full px-5 h-12 bg-customgreys-primarybg placeholder-customgreys-dirtyGrey text-customgreys-dirtyGrey border-none rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-700; /* Updated ring to primary color */
 }
 
 .toolbar__select {
@@ -1149,11 +1198,11 @@ input[type="color"] {
 }
 
 .wizard-stepper__circle--completed {
-  @apply bg-green-500;
+  @apply bg-secondary-700; /* Updated to secondary color */
 }
 
 .wizard-stepper__circle--current {
-  @apply bg-primary-700;
+  @apply bg-primary-700; /* Updated to primary color */
 }
 
 .wizard-stepper__circle--upcoming {
@@ -1177,7 +1226,7 @@ input[type="color"] {
 }
 
 .wizard-stepper__line--completed {
-  @apply bg-green-500;
+  @apply bg-secondary-700; /* Updated to secondary color */
 }
 
 .wizard-stepper__line--incomplete {
@@ -1198,7 +1247,7 @@ input[type="color"] {
 }
 
 .nondashboard-navbar__brand {
-  @apply font-bold text-lg sm:text-xl hover:text-customgreys-dirtyGrey;
+  @apply font-bold text-lg sm:text-xl hover:text-customgreys-dirtyGrey text-primary-700; /* Updated to primary color */
 }
 
 .nondashboard-navbar__search-input {
@@ -1218,7 +1267,7 @@ input[type="color"] {
 }
 
 .nondashboard-navbar__notification-indicator {
-  @apply absolute top-0 right-0 bg-blue-500 h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full;
+  @apply absolute top-0 right-0 bg-secondary-700 h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full; /* Updated to secondary color */
 }
 
 .nondashboard-navbar__notification-icon {
@@ -1230,7 +1279,7 @@ input[type="color"] {
 }
 
 .nondashboard-navbar__auth-button--signup {
-  @apply bg-indigo-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md hover:bg-primary-600 hover:text-customgreys-primarybg text-sm sm:text-base;
+  @apply bg-primary-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md hover:bg-primary-600 hover:text-customgreys-primarybg text-sm sm:text-base text-white-100; /* Updated to primary color */
 }
 
 /* Add these classes for group hover effects */
@@ -1258,7 +1307,7 @@ input[type="color"] {
 }
 
 .notification-settings__submit {
-  @apply !mt-8 text-gray-100 bg-primary-700 hover:bg-primary-600;
+  @apply !mt-8 text-gray-100 bg-primary-700 hover:bg-primary-600; /* Updated to primary color */
 }
 
 /* Header */
@@ -1267,7 +1316,7 @@ input[type="color"] {
 }
 
 .header__title {
-  @apply text-3xl font-bold text-white-50;
+  @apply text-3xl font-bold text-primary-700; /* Updated to primary color */
 }
 
 .header__subtitle {
@@ -1288,7 +1337,7 @@ input[type="color"] {
 }
 
 .course-card-teacher__edit-button {
-  @apply rounded w-full bg-primary-700 border-none hover:bg-primary-600 hover:text-customgreys-primarybg text-white-100 cursor-pointer;
+  @apply rounded w-full bg-primary-700 border-none hover:bg-primary-600 hover:text-customgreys-primarybg text-white-100 cursor-pointer; /* Updated to primary color */
 }
 
 .course-card-teacher__delete-button {
@@ -1305,7 +1354,7 @@ input[type="color"] {
 }
 
 .navbar__notification-indicator {
-  @apply absolute top-0 right-0 bg-blue-500 h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full;
+  @apply absolute top-0 right-0 bg-secondary-700 h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full; /* Updated to secondary color */
 }
 
 .navbar__notification-icon {
@@ -1327,7 +1376,7 @@ input[type="color"] {
 }
 
 .course-card-search__title {
-  @apply font-semibold line-clamp-1;
+  @apply font-semibold line-clamp-1 text-white-100; /* Updated to primary color */
 }
 
 .course-card-search__description {
@@ -1343,7 +1392,7 @@ input[type="color"] {
 }
 
 .course-card-search__price {
-  @apply text-primary-500 font-semibold;
+  @apply text-white-100 font-semibold; /* Updated to primary color */
 }
 
 .course-card-search__enrollment {
@@ -1357,15 +1406,15 @@ input[type="color"] {
 
 /* Add Chapter Button */
 .add-chapter-button {
-  @apply border-none text-primary-700;
+  @apply border-none text-primary-700; /* Updated to primary color */
 }
 
 .add-chapter-button__icon {
-  @apply mr-1 h-4 w-4 text-primary-700;
+  @apply mr-1 h-4 w-4 text-primary-700; /* Updated to primary color */
 }
 
 .add-chapter-button__text {
-  @apply text-primary-700;
+  @apply text-primary-700; /* Updated to primary color */
 }
 
 /* AppSidebar */
@@ -1386,7 +1435,7 @@ input[type="color"] {
 }
 
 .app-sidebar__title {
-  @apply text-lg font-extrabold group-data-[collapsible=icon]:hidden;
+  @apply text-lg font-extrabold group-data-[collapsible=icon]:hidden text-primary-700; /* Updated to primary color */
 }
 
 .app-sidebar__collapse-icon {
@@ -1414,11 +1463,11 @@ input[type="color"] {
 }
 
 .app-sidebar__active-indicator {
-  @apply absolute right-0 top-0 h-full w-[4px] bg-primary-750;
+  @apply absolute right-0 top-0 h-full w-[4px] bg-primary-700; /* Updated to primary color */
 }
 
 .app-sidebar__signout {
-  @apply text-primary-700 pl-8;
+  @apply text-primary-700 pl-8; /* Updated to primary color */
 }
 
 /* NonDashboard Layout */

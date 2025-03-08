@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useListCoursesQuery } from "@/state/api";
 import { useRouter } from "next/navigation";
 import CourseCardSearch from "@/components/CourseCardSearch";
+import { Badge } from "@/components/ui/badge";
 
 const LoadingSkeleton = () => {
   return (
@@ -25,6 +26,14 @@ const LoadingSkeleton = () => {
     </section>
   );
 };
+
+const courseList: string[] = [
+  "web development",
+  "enterprise IT",
+  "react nextjs",
+  "javascript",
+  "backend development",
+]
 
 const FeaturedCourses = () => {
   const router = useRouter();
@@ -52,23 +61,19 @@ const FeaturedCourses = () => {
         </span>
       </h2>
 
-      <p className="md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground">
+      <p className="md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground text-center">
         From beginner to advanced, in all industries, we have the right courses
         just for you and preparing your entire journey for learning and making
         the most.
       </p>
 
       <div className="flex flex-wrap md:justify-center gap-4">
-        {[
-          "web development",
-          "enterprise IT",
-          "react nextjs",
-          "javascript",
-          "backend development",
-        ].map((tag, index) => (
-          <span key={index} className="landing__tag">
-            {tag}
-          </span>
+        {courseList.map((tag: string, index) => (
+          <div key={index}>
+            <Badge variant="secondary" className="text-sm">
+             {tag}
+            </Badge>
+          </div>
         ))}
       </div>
 
