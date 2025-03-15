@@ -11,27 +11,44 @@ import SelectedCourse from "./SelectedCourse";
 const Search = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const { data: courses, isLoading, isError } = useListCoursesQuery({});
+  const query = searchParams.get("query")?.toLowerCase() || ""; // Get the search query from the URL
+  const { data: allCourses, isLoading, isError } = useListCoursesQuery({});
+  const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (courses) {
+    if (allCourses) {
+      let filteredCourses = allCourses.filter(
+        (course: Course  )=> course.status !== 'Draft');
+
+      // Further filter by search query if provided
+      if (query) {
+        filteredCourses = filteredCourses.filter(
+          (course: Course) =>
+            course.title.toLowerCase().includes(query) ||
+            (course.description &&
+              course.description.toLowerCase().includes(query))
+        );
+      }
+
+      setCourses(filteredCourses);
+
       if (id) {
-        const course = courses.find((c) => c._id === id);
-        setSelectedCourse(course || courses[0]);
+        const course = filteredCourses.find((c) => c._id === id);
+        setSelectedCourse(course || filteredCourses[0]);
       } else {
-        setSelectedCourse(courses[0]);
+        setSelectedCourse(filteredCourses[0]);
       }
     }
-  }, [courses, id]);
+  }, [allCourses, id, query]);
 
   if (isLoading) return <Loading />;
   if (isError || !courses) return <div>Failed to fetch courses</div>;
 
   const handleCourseSelect = (course: Course) => {
     setSelectedCourse(course);
-    router.push(`/search?id=${course._id}`, {
+    router.push(`/search?id=${course._id}${query ? `&query=${query}` : ""}`, {
       scroll: false,
     });
   };
@@ -51,12 +68,12 @@ const Search = () => {
     >
       <h1 className="search__title">List of available courses</h1>
       <h2 className="search__subtitle">{courses.length} courses avaiable</h2>
-      <div className="search__content">
+      <div className="search__content grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">
         <motion.div
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="search__courses-grid"
+          className="search__courses-grid max-h-[calc(100vh-200px)] overflow-y-auto"
         >
           {courses.map((course) => (
             <CourseCardSearch
@@ -73,7 +90,7 @@ const Search = () => {
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="search__selected-course"
+            className="search__selected-course max-h-[calc(100vh-200px)] overflow-y-auto"
           >
             <SelectedCourse
               course={selectedCourse}

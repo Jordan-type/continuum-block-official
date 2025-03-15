@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "
 import { Input } from "@/components/ui/input";
 import { courseSchema } from "@/lib/schemas";
 import { centsToDollars, createCourseFormData, uploadAllVideos, } from "@/lib/utils";
-import { openSectionModal, setSections } from "@/state";
+import { openSectionModal, openAddQuestionsModal, setSections } from "@/state";
 import { useGetCourseQuery, useUpdateCourseMutation, useGetUploadVideoUrlMutation, } from "@/state/api";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import DroppableComponent from "./Droppable";
 import ChapterModal from "./ChapterModal";
 import SectionModal from "./SectionModal";
+import AddQuestionsModal from "./AddQuestionsModal";
 import { set } from "zod";
 
 const CourseEditor = () => {
@@ -38,6 +39,7 @@ const CourseEditor = () => {
     defaultValues: {
       courseTitle: "",
       courseDescription: "",
+      courseLevel: "",
       courseCategory: "",
       coursePrice: "0",
       courseStatus: false,
@@ -45,11 +47,21 @@ const CourseEditor = () => {
     },
   });
 
+  // Remove useFieldArray since we no longer use quizQuestions
+  // const { fields, append, remove } = useFieldArray({
+  //   control: methods.control,
+  //   name: "quizQuestions",
+  // });
+  const [selectedSectionIndex, setSelectedSectionIndex] = useState<number | null>(null);
+  // Remove selectedChapterIndex since we’re creating new chapters
+  // const [selectedChapterIndex, setSelectedChapterIndex] = useState<number | null>(null);
+
   useEffect(() => {
     if (course) {
       methods.reset({
         courseTitle: course.title,
         courseDescription: course.description,
+        courseLevel: course.level,
         courseCategory: course.category,
         coursePrice: centsToDollars(course.price),
         courseStatus: course.status === "Published",
@@ -64,7 +76,12 @@ const CourseEditor = () => {
     console.log("Form submission data:", data);
 
     try {
-      const updatedSections = await uploadAllVideos(sections, id, getUploadVideoUrl);
+      // Use the sections directly from the Redux state (no quizQuestions merging needed)
+      let updatedSections = JSON.parse(JSON.stringify(sections));
+      console.log("Sections with quiz chapters before video upload:", JSON.stringify(updatedSections, null, 2));
+
+      // Upload videos if necessary
+      updatedSections = await uploadAllVideos(sections, id, getUploadVideoUrl);
       console.log("Updated sections data:", updatedSections);
 
       const formData = createCourseFormData(data, updatedSections); // for the updated sections of the course
@@ -87,6 +104,11 @@ const CourseEditor = () => {
     } catch (error) {
       console.log("Failed to update course:", error);
     }
+  };
+
+  const addQuizChapter = () => {
+    if (selectedSectionIndex === null) return;
+    dispatch(openAddQuestionsModal({ sectionIndex: selectedSectionIndex }));
   };
 
   return (
@@ -159,7 +181,7 @@ const CourseEditor = () => {
                   name="courseCategory"
                   label="Course Category"
                   type="select"
-                  placeholder="Select category here"
+                  placeholder="Select category"
                   options={[
                     { value: "web development", label: "Web Development" },
                     { value: "blockchain", label: "Blockchain" },
@@ -172,6 +194,19 @@ const CourseEditor = () => {
                     { value: "data science", label: "Data Science" },
                   ]}
                   initialValue={course?.category}
+                />
+                
+                <CustomFormField
+                  name="courseLevel"
+                  label="Course Level"
+                  type="select"
+                  placeholder="Select level"
+                  options={[ 
+                    { value: "Beginner", label: "Beginner" },
+                    { value: "Intermediate", label: "Intermediate" },
+                    { value: "Advanced", label: "Advanced"},
+                  ]}
+                  initialValue={course?.level}
                 />
 
                 <CustomFormField
@@ -285,6 +320,36 @@ const CourseEditor = () => {
               ) : (
                 <p>No sections available</p>
               )}
+
+              {/* Add Quiz Question Form */}
+              <div className="mt-6">
+                <h3 className="text-xl font-semibold text-secondary-foreground mb-4">Add Quiz Chapter</h3>
+                <div className="space-y-4">
+                  <select
+                    onChange={(e) => {
+                      const sectionIdx = parseInt(e.target.value);
+                      setSelectedSectionIndex(sectionIdx);
+                    }}
+                    className="w-full p-2 mt-2 border border-gray-300 rounded-lg bg-customgreys-primarybg"
+                  >
+                    <option value="">Select Section to Add Quiz Chapter</option>
+                    {sections.map((section, sectionIdx) => (
+                      <option key={section.sectionId} value={sectionIdx}>
+                        Section {sectionIdx + 1}: {section.sectionTitle}
+                      </option>
+                    ))}
+                  </select>
+
+                  <Button
+                    type="button"
+                    onClick={addQuizChapter}
+                    className="bg-primary-700 hover:bg-primary-600 mt-4"
+                    disabled={selectedSectionIndex === null}
+                  >
+                    Add New Quiz Chapter
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </form>
@@ -292,6 +357,7 @@ const CourseEditor = () => {
 
       <ChapterModal />
       <SectionModal />
+      <AddQuestionsModal />
     </div>
   );
 };

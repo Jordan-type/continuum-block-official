@@ -38,6 +38,7 @@ const CourseCard = ({ course, onGoToCourse }: CourseCardProps) => {
 
         <CardFooter className="course-card__footer">
           <div className="course-card__category">{course.category}</div>
+          <div className="course-card__category">{course.level}</div>
           <span className="course-card__price">
             {formatPrice(course.price)}
           </span>

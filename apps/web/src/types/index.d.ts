@@ -138,8 +138,11 @@ declare global {
     title: string;
     content: string;
     video?: string | File;
+    quiz?: QuizQuestion[];
     freePreview?: boolean;
     type: "Text" | "Quiz" | "Video";
+    comments?: any[];
+    homeworks?: any[];
   }
 
   interface ChapterProgress {
@@ -235,11 +238,18 @@ declare global {
   interface CourseFormData {
     courseTitle: string;
     courseDescription: string;
+    courseLevel: string;
     courseCategory: string;
     coursePrice: string;
     courseStatus: boolean;
     courseImage: string | File;
     sections: Section[];
+  }
+
+  interface QuizQuestion {
+    questionId: string;
+    text: string;
+    options: { optionId: string; text: string; isCorrect: boolean }[];
   }
 }
 
