@@ -3,6 +3,7 @@
 import React from "react";
 import Hero from "./components/Hero";
 import FeaturedCourses from "./components/FeaturedCourses";
+import FeaturedBootcamps from "./components/FeaturedBootcamps";
 import { About } from "./components/About";
 import { Services } from "./components/Services";
 import { Testimonials } from "./components/Testimonials";
@@ -17,6 +18,7 @@ const Landing = () => {
     <Hero/>
     {/* <Sponsors/> */}
     <FeaturedCourses/>
+    <FeaturedBootcamps/>
     <Services/>
     <About/>
     <Testimonials />

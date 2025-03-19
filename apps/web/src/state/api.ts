@@ -53,7 +53,7 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
   }
 };
 
-export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Users", "Courses", "CourseProgress"], endpoints: (build) => ({
+export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Users", "Courses", "Bootcamps", "CourseProgress"], endpoints: (build) => ({
     /* USER CLERK AND MONGODB USER */
     createUser: build.mutation<User,{ userId: string; firstName: string; lastName: string; email: string; userType?: string }>({
       query: (newUser) => ({
@@ -132,6 +132,82 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
         method: "POST",
         body: formData,
       }),
+    }),
+
+    /* BOOTCAMPS */
+    createBootcamp: build.mutation({
+      query: (bootcampData) => ({
+        url: "bootcamps/create",
+        method: "POST",
+        body: bootcampData,
+      }),
+      invalidatesTags: ["Bootcamps"],
+    }),
+
+    listBootcamps: build.query<Bootcamp[], { type?: string }>({
+      query: ({ type }) => ({
+        url: "bootcamps/all-bootcamps",
+        params: { type },
+      }),
+      providesTags: ["Bootcamps"],
+    }),
+
+    getBootcamp: build.query({
+      query: (id) => ({
+        url: `bootcamps/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Bootcamps", id }],
+    }),
+
+    updateBootcamp: build.mutation({
+      query: ({ bootcampId, updateData }) => ({
+        url: `bootcamps/update/${bootcampId}`,
+        method: "PUT",
+        body: updateData as FormData,
+      }),
+      invalidatesTags: (result, error, { bootcampId }) => [{ type: "Bootcamps", id: bootcampId }],
+    }),
+
+    deleteBootcamp: build.mutation({
+      query: (bootcampId) => ({
+        url: `bootcamps/${bootcampId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Bootcamps"],
+    }),
+
+    addCourseToBootcamp: build.mutation<Bootcamp,{ bootcampId: string; courseId: string }>({
+      query: ({ bootcampId, courseId }) => ({
+        url: "bootcamps/add-course",
+        method: "POST",
+        body: { bootcampId, courseId },
+      }),
+      invalidatesTags: (result, error, { bootcampId }) => [{ type: "Bootcamps", id: bootcampId }],
+    }),
+
+    enrollMemberInBootcamp: build.mutation<
+      Bootcamp,
+      { bootcampId: string; memberId: string }
+    >({
+      query: ({ bootcampId, memberId }) => ({
+        url: "bootcamps/enroll-member",
+        method: "POST",
+        body: { bootcampId, memberId },
+      }),
+      invalidatesTags: (result, error, { bootcampId }) => [{ type: "Bootcamps", id: bootcampId }],
+    }),
+
+    removeMemberFromBootcamp: build.mutation<
+      Bootcamp,
+      { bootcampId: string; memberId: string }
+    >({
+      query: ({ bootcampId, memberId }) => ({
+        url: "bootcamps/remove-member",
+        method: "POST",
+        body: { bootcampId, memberId },
+      }),
+      invalidatesTags: (result, error, { bootcampId }) => [{ type: "Bootcamps", id: bootcampId }],
     }),
 
     /* TWEETS */
@@ -277,6 +353,15 @@ export const {
   useUpdateCourseMutation,
   useDeleteCourseMutation,
   useGetUploadVideoUrlMutation,
+
+  useCreateBootcampMutation,
+  useListBootcampsQuery,
+  useGetBootcampQuery,
+  useUpdateBootcampMutation,
+  useDeleteBootcampMutation,
+  useAddCourseToBootcampMutation,
+  useEnrollMemberInBootcampMutation,
+  useRemoveMemberFromBootcampMutation,
 
   useCreateTransactionMutation,
   useGetTransactionsQuery,
