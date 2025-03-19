@@ -17,11 +17,7 @@ import React, { useMemo, useState } from "react";
 const Courses = () => {
   const router = useRouter();
   const { user } = useUser();
-  const {
-    data: courses,
-    isLoading,
-    isError,
-  } = useListCoursesQuery({ category: "all" });
+  const {data: courses, isLoading, isError,} = useListCoursesQuery({ category: "all" });
 
   const [createCourse] = useCreateCourseMutation();
   const [deleteCourse] = useDeleteCourseMutation();
@@ -46,11 +42,8 @@ const Courses = () => {
   };
 
   const handleDelete = async (course: Course) => {
-    console.log("Attempting to delete course with ID:", course._id);
-    if (window.confirm("Are you sure you want to delete this course?")) {
-      
-      await deleteCourse(course._id).unwrap();
-    }
+    console.log("Attempting to delete course with ID:", course._id);      
+    await deleteCourse(course._id).unwrap();
   };
 
   const handleCreateCourse = async () => {
