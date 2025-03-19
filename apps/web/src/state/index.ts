@@ -7,6 +7,9 @@ interface InitialStateTypes {
     isSectionModalOpen: boolean;
     selectedSectionIndex: number | null;
     selectedChapterIndex: number | null;
+    isAddQuestionsModalOpen: boolean; // New property
+    selectedSectionIndexForQuiz: number | null; // New property
+    selectedChapterIndexForQuiz: number | null; // New property
   };
 }
 
@@ -17,6 +20,9 @@ const initialState: InitialStateTypes = {
     isSectionModalOpen: false,
     selectedSectionIndex: null,
     selectedChapterIndex: null,
+    isAddQuestionsModalOpen: false, // Initialize new property
+    selectedSectionIndexForQuiz: null, // Initialize new property
+    selectedChapterIndexForQuiz: null, // Initialize new property
   },
 };
 
@@ -96,6 +102,16 @@ export const globalSlice = createSlice({
         1
       );
     },
+    openAddQuestionsModal: (state, action: PayloadAction<{ sectionIndex: number }>) => {
+      state.courseEditor.isAddQuestionsModalOpen = true;
+      state.courseEditor.selectedSectionIndexForQuiz = action.payload.sectionIndex;
+      state.courseEditor.selectedChapterIndexForQuiz = null;
+    },
+    closeAddQuestionsModal: (state) => {
+      state.courseEditor.isAddQuestionsModalOpen = false;
+      state.courseEditor.selectedSectionIndexForQuiz = null;
+      state.courseEditor.selectedChapterIndexForQuiz = null;
+    },
   },
 });
 
@@ -111,6 +127,8 @@ export const {
   addChapter,
   editChapter,
   deleteChapter,
+  openAddQuestionsModal,
+  closeAddQuestionsModal, // Export the new action
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

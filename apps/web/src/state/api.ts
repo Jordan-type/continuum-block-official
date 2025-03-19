@@ -20,7 +20,6 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
 
   try {
     const result: any = await baseQuery(args, api, extraOptions);
-
     console.log("results....", result)
 
     if (result.error) {
