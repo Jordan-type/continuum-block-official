@@ -5,7 +5,7 @@ import React from "react";
 
 const SelectedCourse = ({ course, handleEnrollNow }: SelectedCourseProps) => {
   return (
-    <div className="selected-course">
+    <div className="selected-course max-h-[calc(100vh-200px)] overflow-y-auto">
       <div>
         <h3 className="selected-course__title">{course.title}</h3>
         <p className="selected-course__author">

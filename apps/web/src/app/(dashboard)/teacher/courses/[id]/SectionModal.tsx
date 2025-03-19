@@ -18,8 +18,7 @@ const SectionModal = () => {
     (state) => state.global.courseEditor
   );
 
-  const section =
-    selectedSectionIndex !== null ? sections[selectedSectionIndex] : null;
+  const section = selectedSectionIndex !== null ? sections[selectedSectionIndex] : null;
 
   const methods = useForm<SectionFormData>({
     resolver: zodResolver(sectionSchema),

@@ -921,6 +921,35 @@ input[type="color"] {
   @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded px-4 py-2; /* Updated to primary color */
 }
 
+/* AddQuestionsModal */
+.add-questions-modal {
+  @apply flex flex-col;
+}
+
+.add-questions-modal__header {
+  @apply flex justify-between items-center mb-4;
+}
+
+.add-questions-modal__title {
+  @apply text-2xl font-bold text-primary-700; /* Match ChapterModal */
+}
+
+.add-questions-modal__close {
+  @apply text-gray-500 hover:text-gray-700;
+}
+
+.add-questions-modal__form {
+  @apply space-y-4;
+}
+
+.add-questions-modal__actions {
+  @apply flex justify-end space-x-2 mt-6;
+}
+
+.add-questions-modal__submit {
+  @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded px-4 py-2; /* Match ChapterModal */
+}
+
 /* Teacher Courses Page */
 .teacher-courses {
   @apply w-full h-full;
@@ -1002,7 +1031,7 @@ input[type="color"] {
 }
 
 .course-card-search__image-container {
-  @apply relative w-auto pt-[56.25%];
+  @apply relative w-auto pt-[56.25%] p-4 overflow-hidden;
 }
 
 .course-card-search__image {
@@ -1110,7 +1139,7 @@ input[type="color"] {
 }
 
 .footer__link {
-  @apply text-primary-700 mx-2; /* Updated to primary color */
+  @apply text-white-100 mx-2; /* Updated to primary color */
 }
 
 /* Loading */
@@ -1564,3 +1593,4 @@ input[type="color"] {
 .dashboard-navbar__sidebar-trigger {
   @apply text-customgreys-dirtyGrey hover:text-white-50 transition-colors;
 }
+

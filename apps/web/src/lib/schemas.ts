@@ -5,6 +5,7 @@ import { parsePhoneNumberWithError } from "libphonenumber-js";
 export const courseSchema = z.object({
   courseTitle: z.string().min(1, "Title is required"),
   courseDescription: z.string().min(1, "Description is required"),
+  courseLevel: z.enum(["Beginner", "Intermediate", "Advanced"]),
   courseCategory: z.string().min(1, "Category is required"),
   coursePrice: z.string(),
   courseStatus: z.boolean(),

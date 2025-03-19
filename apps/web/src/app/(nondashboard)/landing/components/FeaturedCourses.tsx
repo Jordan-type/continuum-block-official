@@ -47,6 +47,9 @@ const FeaturedCourses = () => {
 
   if (isLoading) return <LoadingSkeleton />;
 
+  // Filter courses to show only published ones
+  const publishedCourses = courses?.filter((course) => course.status === "Published");
+
   return (
     <motion.section
       className="container py-24 sm:py-32 space-y-8"
@@ -85,8 +88,8 @@ const FeaturedCourses = () => {
         viewport={{ amount: 0.3, once: true }}
       >
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {courses &&
-            courses.slice(0, 6).map((course, index) => (
+          {publishedCourses &&
+            publishedCourses.slice(0, 6).map((course, index) => (
               <motion.div
                 key={course._id}
                 initial={{ y: 50, opacity: 0 }}

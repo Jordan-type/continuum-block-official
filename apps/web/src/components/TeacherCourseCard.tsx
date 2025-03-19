@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Pencil, Trash2 } from "lucide-react";
 
 const TeacherCourseCard = ({
@@ -19,7 +20,7 @@ const TeacherCourseCard = ({
 }: TeacherCourseCardProps) => {
   return (
     <Card className="course-card-teacher group">
-      <CardHeader className="course-card-teacher__header">
+      <CardHeader className="course-card-teacher__header relative p-4">
         <Image
           src={course.image || "/placeholder.png"}
           alt={course.title}
@@ -28,6 +29,10 @@ const TeacherCourseCard = ({
           className="course-card-teacher__image"
           priority
         />
+         <Badge className={`absolute top-4 right-4 z-10 ${
+          course.level === "Beginner" ? "bg-green-500" : course.level === "Intermediate" ? "bg-blue-500" : "bg-red-500"} text-white rounded-full px-2 py-1 text-sm font-medium`}>
+            {course.level || "Unknown"}
+            </Badge>
       </CardHeader>
 
       <CardContent className="course-card-teacher__content">
@@ -39,6 +44,7 @@ const TeacherCourseCard = ({
           <CardDescription className="course-card-teacher__category">
             {course.category}
           </CardDescription>
+
 
           <p className="text-sm mb-2">
             Status:{" "}
@@ -54,7 +60,7 @@ const TeacherCourseCard = ({
             </span>
           </p>
           {course.enrollments && (
-            <p className="ml-1 mt-1 inline-block text-secondary bg-secondary/10 text-sm font-normal">
+            <p className="ml-1 mt-1 inline-block text-secondary text-sm font-normal">
               <span className="font-bold text-white-100">
                 {course.enrollments.length}
               </span>{" "}
