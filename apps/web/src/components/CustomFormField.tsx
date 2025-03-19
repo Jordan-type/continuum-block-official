@@ -42,6 +42,7 @@ interface FormFieldProps {
     | "tel"
     | "textarea"
     | "number"
+    | "date"
     | "select"
     | "switch"
     | "password"
@@ -59,6 +60,8 @@ interface FormFieldProps {
   isIcon?: boolean;
   initialValue?: string | number | boolean | string[];
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  min?: number; 
+  max?: number; 
 }
 
 export const CustomFormField: React.FC<FormFieldProps> = ({
@@ -76,6 +79,8 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
   isIcon = false,
   initialValue,
   onChange,
+  min,
+  max,
 }) => {
   const { control } = useFormContext();
 
@@ -180,6 +185,25 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
             credits={false}
           />
         );
+        case "date":
+          return (
+            <Input
+              type="date"
+              placeholder={placeholder}
+              {...field}
+              className={`border-none bg-customgreys-primarybg p-4 ${inputClassName}`}
+              disabled={disabled}
+              value={
+                field.value instanceof Date
+                  ? field.value.toISOString().split("T")[0] // Format Date as YYYY-MM-DD
+                  : field.value || ""
+              }
+              onChange={(e) => {
+                const dateValue = e.target.value ? new Date(e.target.value) : null;
+                field.onChange(dateValue); // Convert string to Date
+              }}
+            />
+          );
       case "number":
         return (
           <Input
@@ -188,6 +212,8 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
             {...field}
             className={`border-none bg-customgreys-darkGrey p-4 ${inputClassName}`}
             disabled={disabled}
+            min={min}
+            max={max}
           />
         );
       case "multi-input":

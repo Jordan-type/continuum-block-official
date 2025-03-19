@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pencil, Trash2 } from "lucide-react";
+import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 
 const TeacherCourseCard = ({
   course,
@@ -72,7 +73,6 @@ const TeacherCourseCard = ({
         <div className="w-full xl:flex space-y-2 xl:space-y-0 gap-2 mt-3">
           {isOwner ? (
             <>
-              <div>
                 <Button
                   className="course-card-teacher__edit-button"
                   onClick={() => onEdit(course)}
@@ -80,16 +80,17 @@ const TeacherCourseCard = ({
                   <Pencil className="w-4 h-4 mr-2" />
                   Edit
                 </Button>
-              </div>
-              <div>
-                <Button
-                  className="course-card-teacher__delete-button"
-                  onClick={() => onDelete(course)}
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
-                </Button>
-              </div>
+                <DeleteConfirmationDialog
+                   itemType="course"
+                   itemTitle={course.title}
+                   onConfirm={() => onDelete(course)}
+                   triggerButton={
+                    <Button className="course-card-teacher__delete-button">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  }
+                />
             </>
           ) : (
             <p className="text-sm text-gray-500 italic">View Only</p>
