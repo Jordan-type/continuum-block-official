@@ -138,8 +138,11 @@ declare global {
     title: string;
     content: string;
     video?: string | File;
+    quiz?: QuizQuestion[];
     freePreview?: boolean;
     type: "Text" | "Quiz" | "Video";
+    comments?: any[];
+    homeworks?: any[];
   }
 
   interface ChapterProgress {
@@ -235,12 +238,106 @@ declare global {
   interface CourseFormData {
     courseTitle: string;
     courseDescription: string;
+    courseLevel: string;
     courseCategory: string;
     coursePrice: string;
     courseStatus: boolean;
     courseImage: string | File;
     sections: Section[];
   }
+
+  interface QuizQuestion {
+    questionId: string;
+    text: string;
+    options: { optionId: string; text: string; isCorrect: boolean }[];
+  }
+
+  interface Bootcamp {
+    _id: string;
+    hostedBy: {
+      type: "Organization" | "Individual";
+      name: string;
+      id: string;
+    };
+    title: string;
+    startDate: Date;
+    duration: string;
+    type: "Full-Time" | "Part-Time";
+    liveClasses: {
+      count: number;
+      description: string;
+    };
+    practicalCaseStudy: string;
+    weeklyFeedback: string;
+    certification: string;
+    enrollmentStatus: "Open" | "Closed";
+    courses: { courseId: string; title: string }[];
+    members: { memberId: string; fullName: string; progress: number }[];
+    createdAt: Date;
+    updatedAt: Date;
+    createdBy: string;
+    image?: string; // Optional image field
+    status: "Draft" | "Published";
+  }
+  
+  interface TeacherBootcampCardProps {
+    bootcamp: Bootcamp;
+    onEdit: (bootcamp: Bootcamp) => void;
+    onDelete: (bootcamp: Bootcamp) => void;
+    isOwner: boolean;
+  }
+
+  interface BootcampFormData {
+    title: string;
+    startDate: Date;
+    duration: string;
+    type: boolean;
+    liveClasses: {
+      count: number;
+      description: string;
+    };
+    practicalCaseStudy: string;
+    weeklyFeedback: string;
+    certification: string;
+    enrollmentStatus: boolean;
+    image?: string | File;
+    status: boolean;
+    courses?: { courseId: string; title: string }[];
+    members?: { memberId: string; fullName: string; progress: number }[];
+  }
+
+  interface BootcampModule {
+    moduleId: string;
+    moduleTitle: string;
+    moduleDescription?: string;
+    items: ModuleItem[];
+  }
+
+  interface ModuleItem {
+    itemId: string;
+    title: string;
+    content?: string;
+    type?: "Live" | "CaseStudy" | "Feedback";
+  }
+  interface SearchBootcampCardProps {
+    bootcamp: {
+      _id: string;
+      hostedBy: {
+        type: "Organization" | "Individual";
+        name: string;
+        id: string;
+      };
+      title: string;
+      image?: string;
+      type?: "Full-Time" | "Part-Time";
+      practicalCaseStudy?: string;
+      duration?: string;
+      members?: { memberId: string }[];
+    };
+    isSelected?: boolean;
+    onClick: () => void;
+  }
+
 }
 
 export {};

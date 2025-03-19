@@ -17,6 +17,7 @@ const AppSidebar = () => {
   const navLinks = {
     student: [
       { icon: BookOpen, label: "Courses", href: "/user/courses" },
+      { icon: Briefcase, label: "Bootcamps", href: "/user/bootcamps" },
       { icon: Trophy, label: "Progress", href: "/user/progress" },
       { icon: Briefcase, label: "Billing", href: "/user/billing" },
       { icon: User, label: "Profile", href: "/user/profile" },
@@ -24,6 +25,7 @@ const AppSidebar = () => {
     ],
     teacher: [
       { icon: BookOpen, label: "Courses", href: "/teacher/courses" },
+      { icon: Briefcase, label: "Bootcamps", href: "/teacher/bootcamps" },
       { icon: Trophy, label: "Progress", href: "/teacher/progress" },
       { icon: DollarSign, label: "Billing", href: "/teacher/billing" },
       { icon: User, label: "Profile", href: "/teacher/profile" },

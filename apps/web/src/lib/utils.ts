@@ -8,6 +8,24 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// For display purposes
+export const formatDate = (date: Date | string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+// For <input type="date">
+export const formatDateForInput = (date: Date | string) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 // Function to truncate userId (e.g., user_2tcF27Xqj8FE9nSEDY00yl7jEhp → user_2tc...Ehp)
 export const truncateUserId = (userId: string): string => {
   if (userId.length <= 10) return userId;
@@ -296,6 +314,66 @@ export const customDataGridStyles = {
   "& .MuiTablePagination-actions .MuiIconButton-root": {
     color: "#6e6e6e",
   },
+};
+
+export const createBootcampFormData = (data: BootcampFormData): FormData => {
+  const formData = new FormData();
+
+  // Append basic fields
+  formData.append("title", data.title);
+  formData.append("startDate", data.startDate instanceof Date ? data.startDate.toISOString() : data.startDate); // Convert Date to ISO string
+  formData.append("duration", data.duration);
+  formData.append("type", data.type ? "Full-Time" : "Part-Time"); // Convert boolean to string
+  formData.append("liveClasses[count]", String(data.liveClasses.count)); // Nested object field
+  formData.append("liveClasses[description]", data.liveClasses.description);
+  formData.append("practicalCaseStudy", data.practicalCaseStudy);
+  formData.append("weeklyFeedback", data.weeklyFeedback);
+  formData.append("certification", data.certification);
+  formData.append("enrollmentStatus", data.enrollmentStatus ? "Open" : "Closed"); // Convert boolean to string
+  formData.append("status", data.status ? "Published" : "Draft"); // Add status field
+
+  // Handle courses array
+  if (data.courses && data.courses.length > 0) {
+    data.courses.forEach((course, index) => {
+      formData.append(`courses[${index}][courseId]`, course.courseId);
+      formData.append(`courses[${index}][title]`, course.title);
+    });
+  }
+
+  // Handle members array
+  if (data.members && data.members.length > 0) {
+    data.members.forEach((member, index) => {
+      formData.append(`members[${index}][memberId]`, member.memberId);
+      formData.append(`members[${index}][fullName]`, member.fullName);
+      formData.append(`members[${index}][progress]`, member.progress.toString());
+    });
+  }
+
+  // Handle image (optional)
+  if (data.image instanceof File) {
+    formData.append("image", data.image); // For file upload
+  } else if (typeof data.image === "string" && data.image) {
+    formData.append("image", data.image); // For existing image URL
+  }
+
+  // Log for debugging
+  console.log("FormData created for bootcamp:", {
+    title: data.title,
+    startDate: data.startDate,
+    duration: data.duration,
+    type: data.type,
+    liveClasses: data.liveClasses,
+    practicalCaseStudy: data.practicalCaseStudy,
+    weeklyFeedback: data.weeklyFeedback,
+    certification: data.certification,
+    enrollmentStatus: data.enrollmentStatus,
+    status: data.status,
+    courses: data.courses,
+    members: data.members,
+    image: data.image,
+  });
+
+  return formData;
 };
 
 // sections: Section[]

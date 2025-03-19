@@ -1,5 +1,12 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
+const reviewSchema = new Schema({
+    user: { type: new Schema({ userId: { type: String, required: true, }, name: { type: String }, }), },
+    rating: { type: Number, default: 0,},
+    comment: { type: String, },
+    commentReplies: [Object],
+  });
+
 const quizOptionSchema = new Schema({
     optionId: { type: String, required: true },
     text: { type: String, required: true },
@@ -12,15 +19,6 @@ const quizQuestionSchema = new Schema({
     options: [quizOptionSchema]
 });
 
-const homeworkSubmissionSchema = new Schema({
-    submissionId: { type: String, required: true },
-    userId: { type: Schema.Types.ObjectId, ref: "Users", required: true },
-    chapterId: { type: String, required: true },
-    content: { type: String, required: true },  // This could be text or a link to a file
-    timestamp: { type: Date, default: Date.now },
-    graded: { type: Boolean, default: false },
-    grade: { type: Number }
-});
 
 const commentSchema = new Schema({
   commentId: {type: String,required: true,}, 
@@ -58,11 +56,11 @@ const courseSchema = new Schema({
     level: { type: String, required: true, enum: ["Beginner", "Intermediate", "Advanced"],},
     status: { type: String, required: true, enum: ["Draft", "Published"], },
     sections: { type: Array, schema: [sectionSchema],},
+    reviews: [reviewSchema],
+    ratings: { type: Number, default: 0, },
     enrollments: { type: Array, schema: [ 
         new Schema({userId: 
-            { 
-                type: String, required: true, 
-            }, 
+            { type: String, required: true, }, 
         }), ],
     },
 }, { timestamps: true, });

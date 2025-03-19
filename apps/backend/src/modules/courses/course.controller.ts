@@ -179,10 +179,28 @@ const updateCourse = async (req: Request, res: Response): Promise<void> => {
             updateData.sections = sectionsData.map((section: any) => ({
               ...section,
               sectionId: section.sectionId || uuidv4(),
-              chapters: section.chapters.map((chapter: any) => ({
-                ...chapter,
-                chapterId: chapter.chapterId || uuidv4(),
-              })),
+              chapters: section.chapters.map((chapter: any) => {
+                // Handle quiz questions if present
+                const updatedChapter = { ...chapter, chapterId: chapter.chapterId || uuidv4() };
+                if (chapter.quiz) {
+                  console.log(`Processing quiz for Chapter ${chapter.chapterId || updatedChapter.chapterId}:`, chapter.quiz);
+                  updatedChapter.quiz = chapter.quiz.map((question: any) => {
+                    const updatedQuestion = {
+                      questionId: question.questionId || uuidv4(),
+                      text: question.text,
+                      options: question.options.map((option: any) => ({
+                        optionId: option.optionId || uuidv4(),
+                        text: option.text,
+                        isCorrect: option.isCorrect,
+                      })),
+                    };
+                    console.log(`Updated question for Chapter ${chapter.chapterId || updatedChapter.chapterId}:`, updatedQuestion);
+                    return updatedQuestion;
+                  });
+                  console.log(`Updated quiz questions for Chapter ${chapter.chapterId || updatedChapter.chapterId}:`, updatedChapter.quiz);
+                }
+                return updatedChapter;
+              }),
             }));
           }
       
@@ -278,6 +296,67 @@ const deleteCourse = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ 
             message: "Error deleting course", 
             error 
+        });
+    }
+}
+
+const addReview = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { courseId } = req.params;
+        const { rating, comment } = req.body;
+        const { userId } = getAuth(req);
+
+        // Validate input
+        if (!rating || !comment) {
+            res.status(400).json({
+                message: "Rating and comment are required"
+            });
+            return;
+        }
+        
+        if (rating < 1 || rating > 5) {
+            res.status(400).json({
+                message: "Rating must be between 1 and 5"
+            });
+            return;
+        }
+        
+        // Find the course
+        const course = await Course.findById(courseId);
+        if (!course) {
+            res.status(404).json({
+                message: "Course not found"
+            });
+            return;
+        }
+
+        // Create new review // Assuming req.user has a name property
+        const newReview = {
+            user: { userId, name: "Anonymous"}, 
+            rating,
+            comment,
+            commentReplies: [],
+        };
+
+        // Add the review to the course
+        course.reviews.push(newReview);
+        
+        // Calculate new average rating
+        const totalRatings = course.reviews.reduce((sum, review) => sum + review.rating, 0);
+        course.ratings = course.reviews.length > 0 ? totalRatings / course.reviews.length : 0;
+        
+        // Save the updated course
+        await course.save();
+        
+        res.status(201).json({
+            message: "Review added successfully",
+            data:course
+        });
+    }  catch (error) {
+        console.error("Error adding review:", error);
+        res.status(500).json({
+            message: "Error adding review",
+            error
         });
     }
 }

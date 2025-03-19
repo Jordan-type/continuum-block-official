@@ -1,9 +1,7 @@
 import express, { Router } from "express";
 import { requireAuth } from "@clerk/express";
-import multer from "multer";
 
 const router: Router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
 
 // controller
 import { imageMulter, videoMulter  } from "../../utils/fileUploader";

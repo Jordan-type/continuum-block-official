@@ -921,6 +921,35 @@ input[type="color"] {
   @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded px-4 py-2; /* Updated to primary color */
 }
 
+/* AddQuestionsModal */
+.add-questions-modal {
+  @apply flex flex-col;
+}
+
+.add-questions-modal__header {
+  @apply flex justify-between items-center mb-4;
+}
+
+.add-questions-modal__title {
+  @apply text-2xl font-bold text-primary-700; /* Match ChapterModal */
+}
+
+.add-questions-modal__close {
+  @apply text-gray-500 hover:text-gray-700;
+}
+
+.add-questions-modal__form {
+  @apply space-y-4;
+}
+
+.add-questions-modal__actions {
+  @apply flex justify-end space-x-2 mt-6;
+}
+
+.add-questions-modal__submit {
+  @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded px-4 py-2; /* Match ChapterModal */
+}
+
 /* Teacher Courses Page */
 .teacher-courses {
   @apply w-full h-full;
@@ -1002,7 +1031,7 @@ input[type="color"] {
 }
 
 .course-card-search__image-container {
-  @apply relative w-auto pt-[56.25%];
+  @apply relative w-auto pt-[56.25%] p-4 overflow-hidden;
 }
 
 .course-card-search__image {
@@ -1110,7 +1139,7 @@ input[type="color"] {
 }
 
 .footer__link {
-  @apply text-primary-700 mx-2; /* Updated to primary color */
+  @apply text-white-100 mx-2; /* Updated to primary color */
 }
 
 /* Loading */
@@ -1563,4 +1592,199 @@ input[type="color"] {
 
 .dashboard-navbar__sidebar-trigger {
   @apply text-customgreys-dirtyGrey hover:text-white-50 transition-colors;
+}
+
+/* Teacher Bootcamps Page */
+.teacher-bootcamps {
+  @apply w-full h-full;
+}
+
+.teacher-bootcamps__header {
+  @apply bg-primary-700 hover:bg-primary-600 text-white-100 rounded-md px-4 py-2; /* Matches teacher-courses__header */
+}
+
+.teacher-bootcamps__grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 mt-6 w-full;
+}
+
+
+/* Bootcamp Card Teacher */
+.bootcamp-card-teacher {
+  @apply w-full h-[400px] p-0 bg-background border-none text-foreground bg-customgreys-primarybg overflow-hidden hover:bg-white-100/10 transition duration-200 flex flex-col;
+}
+
+.bootcamp-card-teacher__header {
+  @apply p-0 h-[200px] overflow-hidden relative; /* Adjusted height for better image proportion */
+}
+
+.bootcamp-card-teacher__image {
+  @apply rounded-t-lg w-[100%] h-[100%] object-cover transition-transform;
+}
+
+.bootcamp-card-teacher__content {
+  @apply w-full pb-6 pt-4 flex-grow flex flex-col justify-between text-gray-400;
+}
+
+.bootcamp-card-teacher__title {
+  @apply text-primary-50 text-md md:text-lg line-clamp-2 overflow-hidden;
+}
+
+.bootcamp-card-teacher__duration {
+  @apply bg-customgreys-dirtyGrey/50 px-2 py-1 mt-2 mb-3 rounded-xl w-fit text-sm;
+}
+
+.bootcamp-card-teacher__edit-button {
+  @apply rounded w-full bg-primary-700 border-none hover:bg-primary-600 hover:text-customgreys-primarybg text-white-100 cursor-pointer;
+}
+
+.bootcamp-card-teacher__delete-button {
+  @apply rounded w-full bg-red-600 text-white-100 hover:bg-red-400 hover:text-customgreys-primarybg cursor-pointer;
+}
+
+/* Base modal container */
+.course-modal {
+  @apply bg-customgreys-darkGrey text-white-100 rounded-lg p-6 w-full max-w-md mx-auto;
+}
+
+/* Header section */
+.course-modal__header {
+  @apply flex justify-between items-center mb-4;
+}
+
+.course-modal__title {
+  @apply text-2xl font-semibold text-secondary-foreground;
+}
+
+.course-modal__close {
+  @apply text-customgreys-dirtyGrey hover:text-white-100 transition-colors;
+}
+
+/* Form styling */
+.course-modal__form {
+  @apply space-y-4;
+}
+
+/* Actions (buttons) */
+.course-modal__actions {
+  @apply flex justify-end gap-4 mt-6;
+}
+
+/* Bootcamp Card Search */
+.bootcamp-card-search {
+  @apply bg-customgreys-secondarybg overflow-hidden rounded-lg hover:bg-white-100/10 transition duration-200 flex flex-col cursor-pointer border-2 h-full;
+}
+
+.bootcamp-card-search--selected {
+  border-color: var(--primary); /* primary-700 */
+}
+
+.bootcamp-card-search--unselected {
+  border-color: transparent;
+}
+
+.bootcamp-card-search__image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+}
+
+.bootcamp-card-search__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.bootcamp-card-search:hover .bootcamp-card-search__image {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.bootcamp-card-search__content {
+  @apply p-4 flex flex-col justify-between flex-grow;
+}
+
+.bootcamp-card-search__title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: var(--primary-foreground); /* white-50 */
+  line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.bootcamp-card-search__description {
+  font-size: 0.875rem; /* 14px */
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.75rem; /* 12px */
+}
+
+.bootcamp-card-search__creator {
+  font-size: 0.875rem; /* 14px */
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.bootcamp-card-search__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem; /* 14px */
+}
+
+.bootcamp-card-search__duration {
+  color: var(--foreground); /* white-50 */
+  font-weight: 500;
+}
+
+.bootcamp-card-search__enrollment {
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
+}
+
+/* Badge Styling (already handled by ShadCN's Badge component, but override if needed) */
+.bootcamp-card-search .badge {
+  position: absolute;
+  top: 1rem; /* 16px */
+  right: 1rem; /* 16px */
+  z-index: 10;
+  padding: 0.25rem 0.5rem; /* 4px 8px */
+  border-radius: 9999px; /* full rounding */
+  font-size: 0.75rem; /* 12px */
+  font-weight: 500;
+  color: var(--primary-foreground); /* white-50 */
+}
+
+.bootcamp-card-search .badge.bg-purple-500 {
+  background-color: #8b5cf6; /* Tailwind purple-500 */
+}
+
+.bootcamp-card-search .badge.bg-blue-500 {
+  background-color: #3b82f6; /* Tailwind blue-500 */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .bootcamp-card-search__title {
+    font-size: 1rem; /* 16px */
+  }
+
+  .bootcamp-card-search__description {
+    font-size: 0.75rem; /* 12px */
+  }
+
+  .bootcamp-card-search__creator,
+  .bootcamp-card-search__footer {
+    font-size: 0.75rem; /* 12px */
+  }
+
+  .bootcamp-card-search__image-container {
+    padding-top: 75%; /* Adjust aspect ratio for smaller screens if needed */
+  }
 }

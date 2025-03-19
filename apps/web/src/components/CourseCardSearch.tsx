@@ -1,6 +1,7 @@
-import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { formatPrice } from "@/lib/utils";
 
 const CourseCardSearch = ({
   course,
@@ -16,7 +17,7 @@ const CourseCardSearch = ({
           : "course-card-search--unselected"
       }`}
     >
-      <div className="course-card-search__image-container">
+      <div className="course-card-search__image-container relative p-4">
         <Image
           src={course.image || "/placeholder.png"}
           alt={course.title}
@@ -25,6 +26,10 @@ const CourseCardSearch = ({
           className="course-card-search__image"
           priority
         />
+        <Badge className={`absolute top-4 right-4 z-10 ${
+          course.level === "Beginner" ? "bg-green-500" : course.level === "Intermediate" ? "bg-blue-500" : "bg-red-500"} text-white rounded-full px-2 py-1 text-sm font-medium`}>
+            {course.level || "Unknown"}
+            </Badge>
       </div>
       <div className="course-card-search__content">
         <div>
