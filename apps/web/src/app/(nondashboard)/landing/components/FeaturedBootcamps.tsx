@@ -49,13 +49,9 @@ const FeaturedBootcamps = () => {
   };
 
   if (isLoading) return <LoadingSkeleton />;
-  if (isError || !bootcamps) {
-    console.log("Error fetching bootcamps:", { isError, bootcamps });
-    return <div>Error loading bootcamps. Please try again later.</div>;
-  }
 
   // Filter bootcamps to show only published ones
-  const publishedBootcamps = bootcamps.filter((bootcamp) => bootcamp.status === "Published");
+  const publishedBootcamps = bootcamps?.filter((bootcamp) => bootcamp.status === "Published");
 
   return (
     <motion.section
@@ -93,7 +89,7 @@ const FeaturedBootcamps = () => {
         viewport={{ amount: 0.3, once: true }}
       >
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {publishedBootcamps.length > 0 ? (
+          {publishedBootcamps && (
             publishedBootcamps.slice(0, 6).map((bootcamp, index) => (
               <motion.div
                 key={bootcamp._id}
@@ -108,11 +104,7 @@ const FeaturedBootcamps = () => {
                 />
               </motion.div>
             ))
-          ) : (
-            <p className="text-center col-span-full text-muted-foreground">
-              No published bootcamps available at this time.
-            </p>
-          )}
+            )}
         </div>
       </motion.div>
     </motion.section>
