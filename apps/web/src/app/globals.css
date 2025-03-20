@@ -1788,3 +1788,192 @@ input[type="color"] {
     padding-top: 75%; /* Adjust aspect ratio for smaller screens if needed */
   }
 }
+
+/* Quiz Content */
+.quiz-content {
+  @apply w-full h-full flex flex-col bg-customgreys-secondarybg rounded-lg;
+  /* Ensure it takes the full height of the video container */
+  height: 100%;
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.quiz-content__loading,
+.quiz-content__error,
+.quiz-content__empty {
+  @apply text-center text-gray-500 p-4;
+}
+
+.quiz-content__header {
+  @apply p-4 border-b border-customgreys-dirtyGrey/30;
+}
+
+.quiz-content__title {
+  @apply flex justify-between items-center text-white-50 font-semibold text-lg;
+}
+
+.quiz-content__question-number {
+  @apply text-primary-700; /* Use primary color for emphasis */
+}
+
+.quiz-content__expired-badge {
+  @apply bg-primary-700 text-white-50 px-3 py-1 rounded-md text-sm font-medium;
+}
+
+.quiz-content__body {
+  @apply p-4 flex-grow flex flex-col;
+}
+
+.quiz-content__question-container {
+  @apply flex-grow bg-customgreys-primarybg p-6 rounded-lg;
+}
+
+.quiz-content__question {
+  @apply text-xl md:text-2xl font-bold text-white-50 mb-6;
+}
+
+.quiz-content__options {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.quiz-content__option {
+  @apply w-full py-4 text-md font-medium rounded-lg border-2 border-customgreys-dirtyGrey/50 text-white-50 bg-customgreys-secondarybg;
+  @apply hover:bg-customgreys-darkerGrey hover:border-primary-700 transition-all duration-200;
+}
+
+.quiz-content__option--selected {
+  @apply bg-primary-700 border-primary-700 text-white-100;
+  @apply hover:bg-primary-600 hover:border-primary-600;
+}
+
+.quiz-content__option:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.quiz-content__option-label {
+  @apply mr-2 font-bold;
+}
+
+.quiz-content__actions {
+  @apply mt-6 flex justify-end;
+}
+
+.quiz-content__next-button {
+  @apply bg-primary-700 hover:bg-primary-600 text-white-100 flex items-center gap-2 px-4 py-2 rounded-md font-semibold;
+}
+
+.quiz-content__next-button:disabled {
+  @apply bg-customgreys-dirtyGrey hover:bg-customgreys-dirtyGrey text-gray-500 cursor-not-allowed;
+}
+
+.quiz-content__next-icon {
+  @apply w-5 h-5;
+}
+
+/* Ensure the quiz content fits well in the video container */
+.course__video-container .quiz-content {
+  @apply h-full p-0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .quiz-content__question {
+    @apply text-lg;
+  }
+
+  .quiz-content__options {
+    @apply grid-cols-1;
+  }
+
+  .quiz-content__option {
+    @apply py-3 text-sm;
+  }
+
+  .quiz-content__next-button {
+    @apply px-3 py-2 text-sm;
+  }
+
+  .quiz-content__next-icon {
+    @apply w-4 h-4;
+  }
+}
+
+/* Quiz Results */
+.quiz-results {
+  @apply w-full h-full flex flex-col items-center justify-center bg-customgreys-secondarybg rounded-lg p-6;
+  height: 100%;
+}
+
+.quiz-results__title {
+  @apply text-2xl md:text-3xl font-bold text-primary-700 mb-8;
+}
+
+.quiz-results__score,
+.quiz-results__passing {
+  @apply flex justify-between items-center w-full max-w-md bg-customgreys-primarybg rounded-lg p-4 mb-4;
+}
+
+.quiz-results__label {
+  @apply text-white-50 font-medium text-lg;
+}
+
+.quiz-results__value {
+  @apply text-primary-700 font-bold text-lg;
+}
+
+.quiz-results__points {
+  @apply text-customgreys-dirtyGrey text-lg;
+}
+
+.quiz-results__result {
+  @apply mt-8 text-center;
+}
+
+.quiz-results__result-title {
+  @apply text-xl font-semibold text-white-50 mb-4;
+}
+
+.quiz-results__status {
+  @apply inline-flex items-center gap-2 bg-customgreys-primarybg rounded-full px-4 py-2 text-lg font-medium;
+}
+
+.quiz-results__status--pass {
+  @apply text-green-500;
+}
+
+.quiz-results__status--fail {
+  @apply text-red-500;
+}
+
+.quiz-results__message {
+  @apply mt-4 text-lg text-customgreys-dirtyGrey;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .quiz-results__title {
+    @apply text-xl;
+  }
+
+  .quiz-results__score,
+  .quiz-results__passing {
+    @apply p-3;
+  }
+
+  .quiz-results__label,
+  .quiz-results__value,
+  .quiz-results__points {
+    @apply text-md;
+  }
+
+  .quiz-results__result-title {
+    @apply text-lg;
+  }
+
+  .quiz-results__status {
+    @apply text-md px-3 py-1;
+  }
+
+  .quiz-results__message {
+    @apply text-md;
+  }
+}

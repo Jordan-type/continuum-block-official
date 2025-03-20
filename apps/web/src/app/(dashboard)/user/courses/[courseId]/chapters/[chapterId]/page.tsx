@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import ReactPlayer from "react-player";
 import Loading from "@/components/Loading";
 import { useCourseProgressData } from "@/hooks/useCourseProgressData";
+import QuizContent from "./QuizContent";
 
 const Course = () => {
   const {
@@ -28,6 +29,23 @@ const Course = () => {
   const handleProgress = ({ played }: { played: number }) => {
     if (
       played >= 0.8 &&
+      !hasMarkedComplete &&
+      currentChapter &&
+      currentSection &&
+      userProgress?.sections &&
+      !isChapterCompleted()
+    ) {
+      setHasMarkedComplete(true);
+      updateChapterProgress(
+        currentSection.sectionId,
+        currentChapter.chapterId,
+        true
+      );
+    }
+  };
+
+  const handleQuizComplete = () => {
+    if (
       !hasMarkedComplete &&
       currentChapter &&
       currentSection &&
@@ -75,7 +93,7 @@ const Course = () => {
 
         <Card className="course__video">
           <CardContent className="course__video-container">
-            {currentChapter?.video ? (
+            {currentChapter?.type === "Video" && currentChapter?.video ? (
               <ReactPlayer
                 ref={playerRef}
                 url={currentChapter.video as string}
@@ -91,9 +109,18 @@ const Course = () => {
                   },
                 }}
               />
+            ) : currentChapter?.type === "Quiz" ? (
+              <QuizContent
+                courseId={course._id}
+                chapterId={currentChapter?.chapterId || ""}
+                userId={user.id}
+                onQuizComplete={handleQuizComplete}
+              />
             ) : (
               <div className="course__no-video">
-                No video available for this chapter.
+                {currentChapter?.type === "Text"
+                  ? "This chapter contains text content. Please view it in the Notes tab."
+                  : "No video or quiz available for this chapter."}
               </div>
             )}
           </CardContent>
@@ -136,14 +163,11 @@ const Course = () => {
             </TabsContent>
 
             <TabsContent className="course__tab-content" value="Quiz">
-              <Card className="course__tab-card">
-                <CardHeader className="course__tab-header">
-                  <CardTitle>Quiz Content</CardTitle>
-                </CardHeader>
-                <CardContent className="course__tab-body">
-                  {/* Add quiz content here */}
-                </CardContent>
-              </Card>
+            {/* <QuizContent
+                courseId={course.id}
+                chapterId={currentChapter?.chapterId || ""}
+                userId={user.id}
+              /> */}
             </TabsContent>
           </Tabs>
 

@@ -19,6 +19,14 @@ const quizQuestionSchema = new Schema({
     options: [quizOptionSchema]
 });
 
+// New schema to store user quiz responses
+const quizResponseSchema = new Schema({
+    userId: { type: String, required: true },
+    questionId: { type: String, required: true },
+    selectedOptionId: { type: String, required: true },
+    isCorrect: { type: Boolean, required: true },
+    submittedAt: { type: Date, default: Date.now },
+});
 
 const commentSchema = new Schema({
   commentId: {type: String,required: true,}, 
@@ -63,6 +71,7 @@ const courseSchema = new Schema({
             { type: String, required: true, }, 
         }), ],
     },
+    quizResponses: [quizResponseSchema], // Add quiz responses field
 }, { timestamps: true, });
 
 const Course = mongoose.model("Courses", courseSchema);
