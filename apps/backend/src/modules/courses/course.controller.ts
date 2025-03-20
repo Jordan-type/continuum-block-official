@@ -29,6 +29,7 @@ const createCourse = async (req: Request, res: Response): Promise<void> => {
             status: "Draft",
             sections: [],
             enrollments: [],
+            quizResponses: [],
         });
         
         await newCourse.save();
@@ -361,6 +362,153 @@ const addReview = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+// New endpoint: Fetch quizzes for a specific chapter
+const getChapterQuizzes = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { courseId, chapterId } = req.params;
+  
+      // Find the course
+      const course = await Course.findById(courseId);
+      if (!course) {
+        res.status(404).json({
+          message: "Course not found",
+        });
+        return;
+      }
+  
+      // Find the chapter within the course
+      let targetChapter = null;
+      for (const section of course.sections) {
+        const chapter = section.chapters.find((ch: any) => ch.chapterId === chapterId);
+        if (chapter) {
+          targetChapter = chapter;
+          break;
+        }
+      }
+  
+      if (!targetChapter) {
+        res.status(404).json({
+          message: "Chapter not found",
+        });
+        return;
+      }
+  
+      // Check if the chapter has a quiz
+      if (!targetChapter.quiz || targetChapter.quiz.length === 0) {
+        res.status(404).json({
+          message: "No quizzes found for this chapter",
+        });
+        return;
+      }
+  
+      // Format the quiz data to match the frontend expectation
+      const quizData = [
+        {
+          id: `quiz-${chapterId}`, // Generate a quiz ID (you can modify this logic)
+          chapterId,
+          questions: targetChapter.quiz.map((question: any) => ({
+            id: question.questionId,
+            question: question.text,
+            options: question.options.map((option: any) => ({
+              label: option.text,
+              value: option.optionId,
+            })),
+            correctAnswer: question.options.find((option: any) => option.isCorrect)?.optionId || "",
+          })),
+        },
+      ];
+  
+      res.status(200).json({
+        message: "Quizzes retrieved successfully",
+        data: quizData,
+      });
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+      res.status(500).json({
+        message: "Error fetching quizzes",
+        error,
+      });
+    }
+  };
+
+// New endpoint: Submit a quiz response
+const submitQuizResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { courseId, chapterId, quizId } = req.params;
+      const { questionId, answer, userId } = req.body;
+  
+      // Validate input
+      if (!questionId || !answer || !userId) {
+        res.status(400).json({
+          message: "questionId, answer, and userId are required",
+        });
+        return;
+      }
+  
+      // Find the course
+      const course = await Course.findById(courseId);
+      if (!course) {
+        res.status(404).json({
+          message: "Course not found",
+        });
+        return;
+      }
+  
+      // Find the chapter
+      let targetChapter = null;
+      for (const section of course.sections) {
+        const chapter = section.chapters.find((ch: any) => ch.chapterId === chapterId);
+        if (chapter) {
+          targetChapter = chapter;
+          break;
+        }
+      }
+  
+      if (!targetChapter) {
+        res.status(404).json({
+          message: "Chapter not found",
+        });
+        return;
+      }
+  
+      // Find the question
+      const question = targetChapter.quiz.find((q: any) => q.questionId === questionId);
+      if (!question) {
+        res.status(404).json({
+          message: "Question not found",
+        });
+        return;
+      }
+  
+      // Check if the answer is correct
+      const correctOption = question.options.find((option: any) => option.isCorrect);
+      const isCorrect = correctOption && answer === correctOption.optionId;
+  
+      // Store the user's response
+      const quizResponse = {
+        userId,
+        questionId,
+        selectedOptionId: answer,
+        isCorrect,
+        submittedAt: new Date(),
+      };
+  
+      course.quizResponses.push(quizResponse);
+      await course.save();
+  
+      res.status(200).json({
+        message: "Quiz response submitted successfully",
+        data: { isCorrect },
+      });
+    } catch (error) {
+      console.error("Error submitting quiz response:", error);
+      res.status(500).json({
+        message: "Error submitting quiz response",
+        error,
+      });
+    }
+  };
+
 
 export {
     createCourse,
@@ -369,5 +517,7 @@ export {
     getCourse,
     updateCourse,
     getUploadVideoUrl,
-    deleteCourse
+    deleteCourse,
+    getChapterQuizzes, 
+    submitQuizResponse,
 }
