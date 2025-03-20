@@ -134,6 +134,28 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
       }),
     }),
 
+    // Fetch quizzes for a specific chapter
+    getChapterQuizzes: build.query<Quiz[], { courseId: string; chapterId: string }>({
+      query: ({ courseId, chapterId }) => ({
+        url: `courses/${courseId}/chapters/${chapterId}/quizzes`,
+        method: "GET",
+      }),
+      providesTags: (result, error, { chapterId }) => [{ type: "Courses", id: chapterId }],
+    }),
+
+    // Submit quiz response (optional, if you want to track user answers)
+    submitQuizResponse: build.mutation<
+      { success: boolean; message: string },
+      { courseId: string; chapterId: string; quizId: string; questionId: string; answer: string; userId: string }
+    >({
+      query: ({ courseId, chapterId, quizId, questionId, answer, userId }) => ({
+        url: `courses/${courseId}/chapters/${chapterId}/quizzes/${quizId}/submit`,
+        method: "POST",
+        body: { questionId, answer, userId },
+      }),
+      invalidatesTags: (result, error, { chapterId }) => [{ type: "Courses", id: chapterId }],
+    }),
+
     /* BOOTCAMPS */
     createBootcamp: build.mutation({
       query: (bootcampData) => ({
@@ -353,6 +375,8 @@ export const {
   useUpdateCourseMutation,
   useDeleteCourseMutation,
   useGetUploadVideoUrlMutation,
+  useGetChapterQuizzesQuery, 
+  useSubmitQuizResponseMutation,
 
   useCreateBootcampMutation,
   useListBootcampsQuery,

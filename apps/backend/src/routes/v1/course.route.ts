@@ -5,7 +5,7 @@ const router: Router = express.Router();
 
 // controller
 import { imageMulter, videoMulter  } from "../../utils/fileUploader";
-import { createCourse, listCourses, listCoursesByIds, getCourse, updateCourse, getUploadVideoUrl, deleteCourse } from "../../modules/courses/course.controller";
+import { createCourse, listCourses, listCoursesByIds, getCourse, updateCourse, getUploadVideoUrl, deleteCourse, getChapterQuizzes, submitQuizResponse, } from "../../modules/courses/course.controller";
 
 router.post("/create", requireAuth(), createCourse)
 router.get("/all-courses", listCourses);
@@ -14,5 +14,8 @@ router.get("/:courseId", getCourse);
 router.put("/update/:courseId", requireAuth(), imageMulter, updateCourse); // imageMulter,
 router.post("/:courseId/sections/:sectionId/chapters/:chapterId/get-upload-url", requireAuth(), videoMulter,  getUploadVideoUrl);
 router.delete("/delete/:courseId", requireAuth(), deleteCourse);
+router.get("/:courseId/chapters/:chapterId/quizzes", getChapterQuizzes);
+router.post("/:courseId/chapters/:chapterId/quizzes/:quizId/submit", submitQuizResponse);
 
-export default router;              
+export default router;      
+

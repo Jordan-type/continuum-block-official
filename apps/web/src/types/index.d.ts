@@ -138,7 +138,7 @@ declare global {
     title: string;
     content: string;
     video?: string | File;
-    quiz?: QuizQuestion[];
+    quiz?: BackendQuizQuestion[];
     freePreview?: boolean;
     type: "Text" | "Quiz" | "Video";
     comments?: any[];
@@ -244,13 +244,30 @@ declare global {
     courseStatus: boolean;
     courseImage: string | File;
     sections: Section[];
+    quizzes?: Quiz[];
   }
 
-  interface QuizQuestion {
+  interface BackendQuizQuestion {
     questionId: string;
     text: string;
-    options: { optionId: string; text: string; isCorrect: boolean }[];
+    options: { 
+      optionId: string; text: string; 
+      isCorrect: boolean 
+    }[];
   }
+  interface FrontendQuizQuestion {
+    id: string;
+    question: string;
+    options: { label: string; value: string }[];
+    correctAnswer: string;
+  }
+  
+  interface Quiz {
+    id: string;
+    chapterId: string;
+    questions: FrontendQuizQuestion[];
+  }
+
 
   interface Bootcamp {
     _id: string;
