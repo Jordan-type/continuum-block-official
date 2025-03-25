@@ -53,7 +53,12 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
   }
 };
 
-export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Users", "Courses", "Bootcamps", "CourseProgress"], endpoints: (build) => ({
+export const api = createApi({ 
+  baseQuery: customBaseQuery, 
+  reducerPath: "api", 
+  tagTypes: ["Users", "Courses", "Bootcamps", "CourseProgress"], 
+  
+  endpoints: (build) => ({
     /* USER CLERK AND MONGODB USER */
     createUser: build.mutation<User,{ userId: string; firstName: string; lastName: string; email: string; userType?: string }>({
       query: (newUser) => ({

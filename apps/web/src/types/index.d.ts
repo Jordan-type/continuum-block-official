@@ -277,7 +277,7 @@ declare global {
       id: string;
     };
     title: string;
-    startDate: Date;
+    startDate: Date | string;
     duration: string;
     type: "Full-Time" | "Part-Time";
     liveClasses: {

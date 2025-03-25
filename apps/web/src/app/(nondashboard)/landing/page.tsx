@@ -6,7 +6,7 @@ import FeaturedCourses from "./components/FeaturedCourses";
 import FeaturedBootcamps from "./components/FeaturedBootcamps";
 import { About } from "./components/About";
 import { Services } from "./components/Services";
-import { Testimonials } from "./components/Testimonials";
+import Testimonial from "./components/Testimonials";
 import Team from "./components/Team"
 import { Sponsors } from "./components/Sponsors";
 import { FAQ } from "./components/Faqz";
@@ -21,7 +21,7 @@ const Landing = () => {
     <FeaturedBootcamps/>
     <Services/>
     <About/>
-    <Testimonials />
+    <Testimonial />
     <Team />
     <FAQ />
     </>
