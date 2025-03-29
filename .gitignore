@@ -12,6 +12,10 @@ apps/web/.env
 apps/mobile/.env
 packages/*/.env
 
+# Auto Generated PWA files
+apps/web/public/sw.js
+apps/web/public/workbox-*.js
+
 # Ignore build and cache files for Next.js
 apps/web/.next/
 

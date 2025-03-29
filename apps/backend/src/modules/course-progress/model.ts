@@ -17,6 +17,7 @@ const chapterProgressSchema = new Schema({
   completed: { type: Boolean, required: true },
   completionTime: { type: Date, default: null }, // Time when chapter was completed
   score: { type: Number, default: 0 },           // Optional score for quizzes or assessments
+  isLocked: { type: Boolean, default: false }, // Flag to lock the quiz after completion
 });
 
 const sectionProgressSchema = new Schema({

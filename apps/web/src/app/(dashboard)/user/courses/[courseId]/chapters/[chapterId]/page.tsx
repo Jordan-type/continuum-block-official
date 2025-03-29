@@ -4,10 +4,12 @@ import { useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button"; // Import Button component
 import ReactPlayer from "react-player";
 import Loading from "@/components/Loading";
 import { useCourseProgressData } from "@/hooks/useCourseProgressData";
 import QuizContent from "./QuizContent";
+import CommentsSidebar from "@/components/CommentsSidebar";
 
 const Course = () => {
   const {
@@ -35,16 +37,33 @@ const Course = () => {
       userProgress?.sections &&
       !isChapterCompleted()
     ) {
-      setHasMarkedComplete(true);
-      updateChapterProgress(
+      try {
+        setHasMarkedComplete(true);
+        updateChapterProgress(
         currentSection.sectionId,
         currentChapter.chapterId,
         true
       );
+    } catch (error) {
+        console.error("Error updating chapter progress:", error);
+        setHasMarkedComplete(false); // Reset on failure
+      }
     }
   };
 
   const handleQuizComplete = () => {
+    if (
+      !hasMarkedComplete &&
+      currentChapter &&
+      currentSection &&
+      userProgress?.sections &&
+      !isChapterCompleted()
+    ) {
+      setHasMarkedComplete(true);
+    }
+  };
+
+  const handleMarkTextComplete = () => {
     if (
       !hasMarkedComplete &&
       currentChapter &&
@@ -64,6 +83,9 @@ const Course = () => {
   if (isLoading) return <Loading />;
   if (!user) return <div>Please sign in to view this course.</div>;
   if (!course || !userProgress) return <div>Error loading course</div>;
+
+  const isTextChapter = currentChapter?.type === "Text";
+  const chapterCompleted = isChapterCompleted();
 
   return (
     <div className="course">
@@ -146,7 +168,18 @@ const Course = () => {
                   <CardTitle>Notes Content</CardTitle>
                 </CardHeader>
                 <CardContent className="course__tab-body">
-                  {currentChapter?.content}
+                {currentChapter?.content || "No content available for this chapter."}
+                  {isTextChapter && (
+                    <div className="course__mark-complete">
+                      <Button
+                        onClick={handleMarkTextComplete}
+                        disabled={chapterCompleted}
+                        className="course__mark-complete-button"
+                      >
+                        {chapterCompleted ? "Chapter Completed" : "Mark as Complete"}
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -193,6 +226,7 @@ const Course = () => {
           </Card>
         </div>
       </div>
+      <CommentsSidebar />
     </div>
   );
 };

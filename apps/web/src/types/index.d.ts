@@ -269,6 +269,19 @@ declare global {
   }
 
 
+ interface BootcampTestimonial {
+    id: string;
+    author: {
+      name: string;
+      username: string;
+      profileImageUrl?: string;
+    };
+    text: string;
+    rating?: number;
+    date: string;
+  }
+
+
   interface Bootcamp {
     _id: string;
     hostedBy: {
@@ -277,12 +290,18 @@ declare global {
       id: string;
     };
     title: string;
-    startDate: Date;
+    startDate: Date | string;
     duration: string;
     type: "Full-Time" | "Part-Time";
+    deliveryMode: "Online" | "In-Person" | "Hybrid";
     liveClasses: {
       count: number;
       description: string;
+      schedule: Array<{
+        date: string;
+        title: string;
+        description?: string;
+      }>;
     };
     practicalCaseStudy: string;
     weeklyFeedback: string;
@@ -290,6 +309,15 @@ declare global {
     enrollmentStatus: "Open" | "Closed";
     courses: { courseId: string; title: string }[];
     members: { memberId: string; fullName: string; progress: number }[];
+    testimonials: BootcampTestimonial[];
+    price: {
+      amount: number;
+      currency: string;
+    };
+    categories: string[];
+    averageRating?: number;
+    reviewCount?: number;
+    prerequisites?: string;
     createdAt: Date;
     updatedAt: Date;
     createdBy: string;

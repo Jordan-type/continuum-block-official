@@ -1,3 +1,4 @@
+import calculateOverallProgress from "@/lib/progressUtils";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseQueryApi, FetchArgs } from "@reduxjs/toolkit/query";
 import { User } from "@clerk/nextjs/server";
@@ -53,7 +54,12 @@ const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extr
   }
 };
 
-export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", tagTypes: ["Users", "Courses", "Bootcamps", "CourseProgress"], endpoints: (build) => ({
+export const api = createApi({ 
+  baseQuery: customBaseQuery, 
+  reducerPath: "api", 
+  tagTypes: ["Users", "Courses", "Bootcamps", "CourseProgress"], 
+  
+  endpoints: (build) => ({
     /* USER CLERK AND MONGODB USER */
     createUser: build.mutation<User,{ userId: string; firstName: string; lastName: string; email: string; userType?: string }>({
       query: (newUser) => ({
@@ -332,18 +338,76 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
         { userId, courseId, progressData },
         { dispatch, queryFulfilled }
       ) {
+        console.log("fuck the Updating course progress for user:", userId, "course:", courseId, "with data:", progressData);
         const patchResult = dispatch(
-          api.util.updateQueryData(
-            "getUserCourseProgress",
-            { userId, courseId },
+          api.util.updateQueryData("getUserCourseProgress", { userId, courseId },
             (draft) => {
-              Object.assign(draft, {
-                ...draft,
-                sections: progressData.sections,
+              // Merge the new sections data with the existing sections
+              const updatedSections = progressData.sections.reduce((acc: any, newSection: any) => {
+                const existingSection = acc.find((s: any) => s.sectionId === newSection.sectionId);
+
+                if (existingSection) {
+                  // Update chapters in the existing section
+                  newSection.chapters.forEach((newChapter: any) => {
+                    const existingChapter = existingSection.chapters.find((c: any) => c.chapterId === newChapter.chapterId);
+                    if (existingChapter) {
+                      Object.assign(existingChapter, {
+                        ...existingChapter,
+                        ...newChapter,
+                        completionTime: newChapter.completed ? (existingChapter.completionTime || new Date().toISOString()) : existingChapter.completionTime || null,
+                        score: newChapter.score !== undefined ? newChapter.score : existingChapter.score || 0,
+                        isLocked: newChapter.isLocked !== undefined ? newChapter.isLocked : existingChapter.isLocked || false,
+                      });
+                    } else {
+                      existingSection.chapters.push({
+                        ...newChapter,
+                        completionTime: newChapter.completed ? new Date().toISOString() : null,
+                        score: newChapter.score || 0,
+                        isLocked: newChapter.isLocked || false,
+                      });
+                    }
+                  });
+                  return acc;
+                }
+                return [...acc, newSection];
+              }, draft.sections || []);
+
+              updatedSections.forEach((section: any) => {
+                const totalScore = section.chapters.reduce((sum: number, chapter: any) => sum + (chapter.score || 0), 0);
+                section.sectionScore = section.chapters.length > 0 ? totalScore / section.chapters.length : 0;
               });
-            }
-          )
-        );
+              
+              // Update the draft with the new sections and recalculate overall progress
+              draft.sections = updatedSections;
+              draft.overallProgress = calculateOverallProgress(updatedSections); // Use the utility function
+              draft.totalPoints = Math.min(draft.overallProgress * 100, 100) * 10;
+              draft.totalPrize = Math.min(draft.overallProgress * 100, 100) * 50;
+              draft.completionStatus = draft.overallProgress === 1 ? "completed" : "in-progress";
+              draft.lastActivityDate = new Date().toISOString();
+
+              const existingBadges = draft.badges ? draft.badges.map((badge: any) => badge.name) : [];
+              if (draft.overallProgress >= 0.5 && !existingBadges.includes("Intermediate Learner")) {
+                draft.badges.push({
+                  name: "Intermediate Learner",
+                  category: "Heroic",
+                  level: 1,
+                  earnedAt: new Date().toISOString(),
+                  description: "Reached 50% completion—halfway to greatness!",
+                });
+              }
+              if (draft.overallProgress === 1 && !existingBadges.includes("Course Master")) {
+                draft.badges.push({
+                  name: "Course Master",
+                  category: "Heroic",
+                  level: 3,
+                  earnedAt: new Date().toISOString(),
+                  description: "Completed the course a true hero of learning!",
+                });
+              }
+              
+              draft.engagementScore = (draft.engagementScore || 0) + 10; // Increment engagement score for each update
+            })
+          );
         try {
           await queryFulfilled;
         } catch {
@@ -351,12 +415,6 @@ export const api = createApi({ baseQuery: customBaseQuery, reducerPath: "api", t
         }
       },
     }),
-
-
-
-
-
-
   }),
 
   });

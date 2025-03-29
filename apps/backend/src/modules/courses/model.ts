@@ -43,7 +43,8 @@ const chapterSchema = new Schema({
     comments: { type: Array, schema: [commentSchema],},
     video: { type: String, },
     quiz: [quizQuestionSchema], 
-    homeworks: [{ type: Schema.Types.ObjectId, ref: "HomeworkSubmissions" }]
+    homeworks: [{ type: Schema.Types.ObjectId, ref: "HomeworkSubmissions" }],
+    duration: { type: String, default: "0min" }, // (e.g., "4min")
 });
 
 const sectionSchema = new Schema({
@@ -51,6 +52,7 @@ const sectionSchema = new Schema({
     sectionTitle: { type: String, required: true, },
     sectionDescription: { type: String, },
     chapters: { type: Array, schema: [chapterSchema],},
+    duration: { type: String, default: "0min" }, // (e.g., "1h 18min")
 });
 
 const courseSchema = new Schema({
@@ -71,7 +73,8 @@ const courseSchema = new Schema({
             { type: String, required: true, }, 
         }), ],
     },
-    quizResponses: [quizResponseSchema], // Add quiz responses field
+    quizResponses: [quizResponseSchema], 
+    duration: { type: String, default: "0min" }, 
 }, { timestamps: true, });
 
 const Course = mongoose.model("Courses", courseSchema);
