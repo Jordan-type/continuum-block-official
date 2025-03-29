@@ -446,6 +446,7 @@ async function uploadVideo(chapter: Chapter, courseId: string, sectionId: string
     const responseData = await getUploadVideoUrl({courseId, sectionId, chapterId: chapter.chapterId, formData}).unwrap();
     console.log("Upload URL:", responseData.uploadUrl);
     console.log("Video URL:", responseData.videoUrl);
+    console.log("Video Duration", responseData.duration)
 
     await fetch(responseData.uploadUrl, {
       method: "POST",

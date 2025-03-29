@@ -37,10 +37,17 @@ const ChaptersSidebar = () => {
     });
   };
 
+  // Calculate total chapters and completed chapters for the course
+  const totalChapters = course.sections.reduce((sum: number, section: any) => sum + section.chapters.length, 0);
+  const completedChapters = userProgress.sections.reduce((sum: number, section: any) => sum + section.chapters.filter((c: any) => c.completed).length, 0);
+
   return (
     <div ref={sidebarRef} className="chapters-sidebar">
       <div className="chapters-sidebar__header">
         <h2 className="chapters-sidebar__title">{course.title}</h2>
+        <p className="chapters-sidebar__course-duration">
+          Duration: {course.duration} • {completedChapters}/{totalChapters}
+        </p>
         <hr className="chapters-sidebar__divider" />
       </div>
       {course.sections.map((section: Section, index: number) => (
@@ -63,17 +70,7 @@ const ChaptersSidebar = () => {
   );
 };
 
-const Section = ({
-  section,
-  index,
-  sectionProgress,
-  chapterId,
-  courseId,
-  expandedSections,
-  toggleSection,
-  handleChapterClick,
-  updateChapterProgress,
-}: {
+const Section = ({section, index, sectionProgress, chapterId, courseId, expandedSections, toggleSection, handleChapterClick, updateChapterProgress,}: {
   section: any;
   index: number;
   sectionProgress: any;
@@ -82,15 +79,14 @@ const Section = ({
   expandedSections: string[];
   toggleSection: (sectionTitle: string) => void;
   handleChapterClick: (sectionId: string, chapterId: string) => void;
-  updateChapterProgress: (
-    sectionId: string,
-    chapterId: string,
-    completed: boolean
-  ) => void;
+  updateChapterProgress: (sectionId: string, chapterId: string, completed: boolean) => void;
 }) => {
   const completedChapters = sectionProgress?.chapters.filter((c: any) => c.completed).length || 0;
   const totalChapters = section.chapters.length;
   const isExpanded = expandedSections.includes(section.sectionTitle);
+
+  console.log(`Section ${section.sectionId} - completedChapters: ${completedChapters}, totalChapters: ${totalChapters}`);
+  console.log("sectionProgress:", JSON.stringify(sectionProgress, null, 2));
 
   return (
     <div className="chapters-sidebar__section">
@@ -111,6 +107,9 @@ const Section = ({
         <h3 className="chapters-sidebar__section-title">
           {section.sectionTitle}
         </h3>
+        <p className="chapters-sidebar__section-duration">
+          Duration: {section.duration} 
+        </p>
       </div>
       <hr className="chapters-sidebar__divider" />
 
@@ -208,17 +207,15 @@ const Chapter = ({chapter, index, sectionId, sectionProgress, chapterId, courseI
   courseId: string;
   handleChapterClick: (sectionId: string, chapterId: string) => void;
   updateChapterProgress: (sectionId: string, chapterId: string, completed: boolean ) => void; }) => {
-  const chapterProgress = sectionProgress?.chapters.find(
-    (c: any) => c.chapterId === chapter.chapterId
-  );
-  const isCompleted = chapterProgress?.completed;
-  const isCurrentChapter = chapterId === chapter.chapterId;
-
-  const handleToggleComplete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    updateChapterProgress(sectionId, chapter.chapterId, !isCompleted);
-  };
+    const chapterProgress = sectionProgress?.chapters.find((c: any) => c.chapterId === chapter.chapterId) || {completed: false};
+    const isCompleted = chapterProgress?.completed;
+    const isCurrentChapter = chapterId === chapter.chapterId;
+    
+    const handleToggleComplete = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      
+      updateChapterProgress(sectionId, chapter.chapterId, !isCompleted);
+    };
 
   return (
     <li
@@ -252,6 +249,9 @@ const Chapter = ({chapter, index, sectionId, sectionProgress, chapterId, courseI
       >
         {chapter.title}
       </span>
+      <p className="chapters-sidebar__chapter-duration">
+        Duration: {chapter.duration}
+      </p>
       {chapter.type === "Text" && (
         <FileText className="chapters-sidebar__text-icon" />
       )}

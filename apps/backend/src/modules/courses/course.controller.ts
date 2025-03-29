@@ -3,6 +3,7 @@ import { getAuth } from "@clerk/express";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 
+import { getVideoDuration, formatDuration } from "../../utils/getVideoDuration";
 import  { cloudinary } from "../../config/cloudinary.config";	
 import Course from "./model";
 
@@ -16,7 +17,7 @@ const createCourse = async (req: Request, res: Response): Promise<void> => {
             });
             return;
         }
-        
+       
         const newCourse = new Course({
             teacherId,
             teacherName,
@@ -172,17 +173,45 @@ const updateCourse = async (req: Request, res: Response): Promise<void> => {
             updateData.price = numericPrice * 100;
         }
 
+        let totalCourseDurationInSeconds = 0; // Track total course duration
+
         if (sections) {
             const sectionsData = typeof sections === "string" ? JSON.parse(sections) : sections;
 
             console.log("Sections data:", sectionsData);
 
-            updateData.sections = sectionsData.map((section: any) => ({
-              ...section,
-              sectionId: section.sectionId || uuidv4(),
-              chapters: section.chapters.map((chapter: any) => {
-                // Handle quiz questions if present
+            updateData.sections = sectionsData.map((section: any) => {
+              let sectionDurationInSeconds = 0;
+
+              const updatedChapters  = section.chapters.map((chapter: any) => {
                 const updatedChapter = { ...chapter, chapterId: chapter.chapterId || uuidv4() };
+                // Handle duration for each chapter
+                if (chapter.type === "Video") {
+                  // The frontend should pass the duration from getUploadVideoUrl
+                  if (chapter.duration) {
+                    updatedChapter.duration = chapter.duration; // e.g., "4min"
+                    // Parse the duration to calculate the section total
+                    const durationParts = chapter.duration.match(/(\d+)h?\s*(\d+)?min?/);
+                    if (durationParts) {
+                      const hours = parseInt(durationParts[1] || "0") * 3600;
+                      const minutes = parseInt(durationParts[2] || "0") * 60;
+                      sectionDurationInSeconds += hours + minutes;
+                    }
+                  } else {
+                    // Fallback if duration is not provided
+                    updatedChapter.duration = "0min";
+                  }
+                } else if (chapter.type === "Quiz") {
+                  // Estimate quiz duration (e.g., 10 minutes)
+                  updatedChapter.duration = chapter.duration || "10min";
+                  sectionDurationInSeconds += 10 * 60; // 10 minutes in seconds
+                } else if (chapter.type === "Text") {
+                  // Estimate text duration (e.g., 5 minutes)
+                  updatedChapter.duration = chapter.duration || "5min";
+                  sectionDurationInSeconds += 5 * 60; // 5 minutes in seconds
+                }
+
+                // Handle quiz questions if present
                 if (chapter.quiz) {
                   console.log(`Processing quiz for Chapter ${chapter.chapterId || updatedChapter.chapterId}:`, chapter.quiz);
                   updatedChapter.quiz = chapter.quiz.map((question: any) => {
@@ -201,16 +230,28 @@ const updateCourse = async (req: Request, res: Response): Promise<void> => {
                   console.log(`Updated quiz questions for Chapter ${chapter.chapterId || updatedChapter.chapterId}:`, updatedChapter.quiz);
                 }
                 return updatedChapter;
-              }),
-            }));
-          }
-      
+              });
 
-        console.log("Final update data:", updateData);
-        await Course.findByIdAndUpdate(courseId, updateData, { new: true });
-        const updatedCourse = await Course.findById(courseId);
-      
-          res.json({ 
+              // Add section duration to total course duration
+              totalCourseDurationInSeconds += sectionDurationInSeconds;
+
+              return {
+                ...section,
+                sectionId: section.sectionId || uuidv4(),
+                chapters: updatedChapters,
+                duration: formatDuration(sectionDurationInSeconds), // Set the section duration
+              }
+            });
+          }
+
+          // Set the total course duration
+          updateData.duration = formatDuration(totalCourseDurationInSeconds);
+          
+          console.log("Final update data:", updateData);
+          await Course.findByIdAndUpdate(courseId, updateData, { new: true });
+          const updatedCourse = await Course.findById(courseId);
+          
+          res.json({
             message: "Course updated successfully", 
             data: updatedCourse 
         });
@@ -249,11 +290,17 @@ const getUploadVideoUrl = async (req: Request, res: Response): Promise<void> => 
         // Optionally delete the file if it's temporarily stored locally
         fs.unlinkSync(filePath);
 
+        // Extract the duration from the Cloudinary response
+        const durationInSeconds = result.duration || 0; // Duration in seconds
+        const formattedDuration = formatDuration(durationInSeconds); // Convert to human-readable format (e.g., "4min")
+        console.log("formattedDuration", formattedDuration)
+
         res.json({
             message: "Video uploaded successfully",
             data: {
                 uploadUrl: result.public_id,
-                videoUrl: result.secure_url // Use secure_url to ensure you use https
+                videoUrl: result.secure_url, // Use secure_url to ensure you use https
+                duration: formattedDuration, // Return the formatted duration
             }
         });
     } catch (error) {
@@ -501,7 +548,7 @@ const submitQuizResponse = async (req: Request, res: Response): Promise<void> =>
         data: { isCorrect },
       });
     } catch (error) {
-      console.error("Error submitting quiz response:", error);
+      console.log("Error submitting quiz response:", error);
       res.status(500).json({
         message: "Error submitting quiz response",
         error,
