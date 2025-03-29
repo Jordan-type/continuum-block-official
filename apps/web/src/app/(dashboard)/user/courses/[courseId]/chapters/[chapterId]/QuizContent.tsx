@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetChapterQuizzesQuery, useSubmitQuizResponseMutation } from "@/state/api";
+import { useCourseProgressData } from "@/hooks/useCourseProgressData";
 import { toast } from "sonner";
 
 interface QuizContentProps {
@@ -21,6 +22,7 @@ interface Answer {
 const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, onQuizComplete }) => {
   const { data: quizzes, isLoading, error } = useGetChapterQuizzesQuery({ courseId, chapterId });
   const [submitQuizResponse] = useSubmitQuizResponseMutation();
+  const { userProgress, currentSection, updateChapterProgress } = useCourseProgressData();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -35,6 +37,11 @@ const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, 
   const questions = currentQuiz.questions;
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
+
+  // Check if the quiz is already completed and locked
+  const sectionProgress = userProgress?.sections.find((s: any) => s.sectionId === currentSection?.sectionId);
+  const chapterProgress = sectionProgress?.chapters.find((c: any) => c.chapterId === chapterId);
+  const isQuizLocked = chapterProgress?.isLocked || false;
 
   // Calculate score based on answers
   const calculateScore = () => {
@@ -62,12 +69,9 @@ const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, 
       toast.error("Please select an answer before proceeding.");
       return;
     }
-
+    
     // Save the answer
-    const newAnswer: Answer = {
-      questionId: currentQuestion.id,
-      selectedAnswer,
-    };
+    const newAnswer: Answer = {questionId: currentQuestion.id, selectedAnswer,};
     setAnswers([...answers, newAnswer]);
 
     try {
@@ -79,7 +83,6 @@ const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, 
         answer: selectedAnswer,
         userId,
       }).unwrap();
-      toast.success("Answer submitted successfully!");
     } catch (err) {
       toast.error("Failed to submit answer.");
     }
@@ -88,10 +91,57 @@ const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, 
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
     } else {
+      // Calculate the score and update progress
+      const { scorePercentage } = calculateScore();
       setShowResults(true); // Show results screen
-      if (onQuizComplete) onQuizComplete();
+
+      // Update CourseProgress with the score and lock the quiz
+      const passed = scorePercentage >= passingScore;
+      if (currentSection) {
+        try {
+          await updateChapterProgress(currentSection.sectionId, chapterId, passed, scorePercentage, true);
+          toast.success("Quiz progress updated successfully.");
+          if (onQuizComplete) onQuizComplete();
+        } catch (err) {
+          toast.error("Failed to update quiz progress.");
+        } 
+      } else {
+        toast.error("Current section is undefined. Cannot update progress.");
+      }
+
+      // if (onQuizComplete) onQuizComplete();
     }
   };
+
+  if (isQuizLocked && !showResults) {
+    const { scorePercentage, points } = chapterProgress?.score
+      ? { scorePercentage: chapterProgress.score, points: chapterProgress.score }
+      : calculateScore();
+    const passed = scorePercentage >= passingScore;
+
+    return (
+      <div className="quiz-results">
+        <h2 className="quiz-results__title">Knowledge Check</h2>
+        <div className="quiz-results__score">
+          <span className="quiz-results__label">Your Score:</span>
+          <span className="quiz-results__value">{Math.round(scorePercentage)}%</span>
+          <span className="quiz-results__points">{Math.round(points)} Points</span>
+        </div>
+        <div className="quiz-results__passing">
+          <span className="quiz-results__label">Passing Score:</span>
+          <span className="quiz-results__value">{passingScore}%</span>
+          <span className="quiz-results__points">{passingPoints} Points</span>
+        </div>
+        <div className="quiz-results__result">
+          <h3 className="quiz-results__result-title">Result</h3>
+          <div className={`quiz-results__status ${passed ? "quiz-results__status--pass" : "quiz-results__status--fail"}`}>
+            {passed ? "✔ You Passed" : "✘ You did not Pass"}
+          </div>
+          {!passed && <p className="quiz-results__message">Better Luck Next Time!</p>}
+        </div>
+      </div>
+    );
+  }
 
   if (showResults) {
     const { scorePercentage, points } = calculateScore();
@@ -145,6 +195,7 @@ const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, 
                     isSelected ? "quiz-content__option--selected" : ""
                   }`}
                   onClick={() => handleAnswerSelect(option.value)}
+                  disabled={isQuizLocked} // Disable button if quiz is locked
                 >
                   <span className="quiz-content__option-label">{optionLabel}</span>
                   {option.label}
@@ -157,6 +208,7 @@ const QuizContent: React.FC<QuizContentProps> = ({ courseId, chapterId, userId, 
           <Button
             onClick={handleNextQuestion}
             className="quiz-content__next-button"
+            disabled={isQuizLocked} // Disable button if quiz is locked
           >
             {currentQuestionIndex < totalQuestions - 1 ? "NEXT QUESTION" : "SUBMIT QUIZ"}
             <svg

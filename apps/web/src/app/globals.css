@@ -686,6 +686,12 @@ input[type="color"] {
   @apply text-lg font-bold pt-9 pb-6 px-8 text-primary-700; /* Updated to primary color */
 }
 
+.chapters-sidebar__course-duration {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
 .chapters-sidebar__divider {
   @apply border-gray-700;
 }
@@ -712,6 +718,11 @@ input[type="color"] {
 
 .chapters-sidebar__section-title {
   @apply text-white-50/90 font-semibold;
+}
+
+.chapters-sidebar__section-duration {
+  font-size: 12px;
+  color: #888;
 }
 
 .chapters-sidebar__section-content {
@@ -1976,4 +1987,121 @@ input[type="color"] {
   .quiz-results__message {
     @apply text-md;
   }
+}
+
+.comments-sidebar {
+  z-index: 1000;
+}
+
+.comments-sidebar--collapsed {
+  padding: 10px !important;
+}
+
+.comments-sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.comments-sidebar__title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.comments-sidebar__toggle {
+  color: #fff;
+}
+
+.comments-sidebar__filter-list {
+  display: flex;
+  gap: 5px;
+  background-color: transparent;
+  border-bottom: 1px solid #444;
+}
+
+.comments-sidebar__filter {
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 0;
+}
+
+.comments-sidebar__filter[data-state="active"] {
+  border-bottom: 2px solid #fff;
+}
+
+.comments-sidebar__list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comments-sidebar__comment {
+  background-color: #2a2a2a;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.comments-sidebar__comment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comments-sidebar__avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.comments-sidebar__comment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.comments-sidebar__user-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.comments-sidebar__timestamp {
+  font-size: 12px;
+  color: #888;
+}
+
+.comments-sidebar__message {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.comments-sidebar__reply {
+  color: #888;
+  font-size: 12px;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.comments-sidebar__input-container {
+  position: sticky;
+  bottom: 0;
+  background-color: #1a1a1a;
+  padding: 10px 0;
+}
+
+.comments-sidebar__input {
+  margin-bottom: 10px;
+}
+
+.comments-sidebar__input-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comments-sidebar__post-button {
+  background-color: #4a90e2;
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 10px;
 }

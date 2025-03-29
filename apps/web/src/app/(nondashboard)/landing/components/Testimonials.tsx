@@ -1,89 +1,43 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from "@/state/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from '@/state/api';
-import { Tweet, Mention } from '@/types/type';
+import { Tweet, Mention } from "@/types/type";
 
-
-interface TestimonialProps {
-  image: string;
-  name: string;
-  userName: string;
-  comment: string;
-}
-
-const testimonials: TestimonialProps[] = [
-  {
-    image: "https://github.com/shadcn.png",
-    name: "John Doe React",
-    userName: "@john_Doe",
-    comment: "This landing page is awesome!",
-  },
-  {
-    image: "https://github.com/shadcn.png",
-    name: "John Doe React",
-    userName: "@john_Doe1",
-    comment: "Lorem ipsum dolor sit amet,empor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.",
-  },
-
-  {
-    image: "https://github.com/shadcn.png",
-    name: "John Doe React",
-    userName: "@john_Doe2",
-    comment: "Lorem ipsum dolor sit amet,exercitation. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.",
-  },
-  {
-    image: "https://github.com/shadcn.png",
-    name: "John Doe React",
-    userName: "@john_Doe3",
-    comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-  },
-  {
-    image: "https://github.com/shadcn.png",
-    name: "John Doe React",
-    userName: "@john_Doe4",
-    comment: "Lorem ipsum dolor sit amet, tempor incididunt  aliqua. Ut enim ad minim veniam, quis nostrud.",
-  },
-  {
-    image: "https://github.com/shadcn.png",
-    name: "John Doe React",
-    userName: "@john_Doe5",
-    comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-];
-
-export  const Testimonials = () => {
-  const [testimonials, setTestimonials] = useState<TestimonialProps[]>([]);
+const Testimonial = () => {
+  const [tweets, setTweets] = useState<Tweet[]>([]);
   const username = "type_jordan";
-  const { data: userData, isFetching: isFetchingUser } = useGetUserByUsernameQuery(username);
+  const { data: userData, isFetching: isFetchingUser, error: userError } = useGetUserByUsernameQuery(username);
   const userId = userData?.id;
-  const { data: mentionsData, isFetching: isFetchingMentions } = useGetUserMentionsByIdQuery(userId || '', {
-    skip: !userId,  // Only run this query if userId is available
+  const { data: mentionsData, isFetching: isFetchingMentions, error: mentionsError } = useGetUserMentionsByIdQuery(userId || "", {
+    skip: !userId,
   });
-  
-  // Combine loading states from both hooks
-  const isLoading = isFetchingUser || isFetchingMentions;
 
-    useEffect(() => {
-      if (!isFetchingMentions && mentionsData && userData && !isFetchingUser) {
-        const adaptedTestimonials = Array.isArray(mentionsData) ? mentionsData.map((mention: Tweet) => ({
-          id: mention.id,
-          image: mention.user.profile_image_url,
-          name: mention.user.name,
-          userName: `@${mention.user.username}`,
-          comment: mention.text,
-        })) : [];
-        setTestimonials(adaptedTestimonials);
-      }
-    }, [mentionsData, userData, isFetchingMentions, isFetchingUser]);
-  
+  const isLoading = isFetchingUser || isFetchingMentions;
+  const error = userError || mentionsError;
+
+  useEffect(() => {
+    if (!isFetchingMentions && mentionsData && userData && !isFetchingUser) {
+      const adaptedTweets = Array.isArray(mentionsData)
+        ? mentionsData.map((mention: Mention) => ({
+            id: mention.id,
+            text: mention.text,
+            user: {
+              id: userData?.id || 'default_id',
+              name: userData?.name || "Jordan Muthemba",
+              username: userData?.username || "type_jordan",
+              profile_image_url: userData?.profile_image_url || "https://i.pravatar.cc/150?u=" + mention.id,
+            },
+          }))
+        : [];
+      setTweets(adaptedTweets);
+    }
+  }, [mentionsData, isFetchingMentions, userData, isFetchingUser]);
+
   return (
-    <section
-      id="testimonials"
-      className="container py-24 sm:py-32"
-    >
+    <section id="testimonials" className="container py-24 sm:py-32">
       <h2 className="text-3xl md:text-center font-bold">
         Discover Why
         <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
@@ -98,37 +52,52 @@ export  const Testimonials = () => {
       </p>
 
       {isLoading ? (
-        <p>Loading testimonials...</p>
+        <div className="text-center">
+          <svg
+            className="animate-spin h-5 w-5 mx-auto text-primary"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <p>Loading testimonials...</p>
+        </div>
+      ) : error ? (
+        <p className="text-red-500 text-center">
+          Failed to load testimonials: {JSON.stringify(error)}
+        </p>
+      ) : tweets.length === 0 ? (
+        <p className="text-center">No testimonials available at the moment.</p>
       ) : (
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 sm:block columns-2  lg:columns-3 lg:gap-6 mx-auto space-y-4 lg:space-y-6">
-          {testimonials.map(testimonial => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 sm:block columns-2 lg:columns-3 lg:gap-6 mx-auto space-y-4 lg:space-y-6">
+          {tweets.map((tweet) => (
             <Card
-              key={testimonial.userName}
-              className="max-w-md md:break-inside-avoid overflow-hidden"
+              key={tweet.id}
+              className="w-full h-auto max-w-md md:break-inside-avoid overflow-hidden transition-transform hover:scale-105"
             >
-              <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <CardHeader className="flex items-center gap-4 pb-2">
                 <Avatar>
-                  <AvatarImage
-                    alt={testimonial.name}
-                    src={testimonial.image}
-                  />
-                  <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
+                  <AvatarImage alt={tweet.user.name} src={tweet.user.profile_image_url} />
+                  <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
                 </Avatar>
-
                 <div className="flex flex-col">
-                  <CardTitle className="text-lg">{testimonial.name[0]}</CardTitle>
-                  <CardDescription>{testimonial.userName}</CardDescription>
+                  <CardTitle className="text-lg">{tweet.user.name}</CardTitle>
+                  <CardDescription>@{tweet.user.username}</CardDescription>
                 </div>
               </CardHeader>
-
-              <CardContent>{testimonial.comment}</CardContent>
+              <CardContent className="max-h-[150px] overflow-y-auto">{tweet.text}</CardContent>
             </Card>
-         ))}
-      </div>
+          ))}
+        </div>
       )}
     </section>
   );
 };
 
-
-
+export default Testimonial;

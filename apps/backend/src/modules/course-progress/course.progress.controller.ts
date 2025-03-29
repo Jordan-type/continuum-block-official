@@ -56,6 +56,7 @@ const getUserEnrolledCourses = async (req: Request, res: Response): Promise<void
 const getUserCourseProgress = async (req: Request, res: Response): Promise<void> => {
     const { userId, courseId } = req.params;
     console.log("courseId", courseId)
+    console.log("userId", userId)
   try {
     // Verify the authenticated user
     const auth = getAuth(req);
@@ -71,7 +72,7 @@ const getUserCourseProgress = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    console.log("progress", progress)
+    console.log("get progress===>", progress)
 
     res.status(200).json({
       message: "Course progress retrieved successfully",
@@ -110,7 +111,7 @@ const getUserCourseProgressBatch = async (req: Request, res: Response): Promise<
       courseId: { $in: courseIds.map(id => new mongoose.Types.ObjectId(id)) },
     }).exec();
 
-    console.log("progresses", progresses)
+    console.log("progresses==>", progresses)
 
     if (!progresses || progresses.length === 0) {
       res.status(404).json({ message: "No course progress found for this user" });
@@ -131,7 +132,7 @@ const getUserCourseProgressBatch = async (req: Request, res: Response): Promise<
       engagementScore: progress.engagementScore,
     }));
 
-    console.log("progressData", progressData)
+    console.log("progressData====>", progressData)
 
     res.status(200).json({
       message: "Course progresses retrieved successfully",
@@ -395,9 +396,12 @@ const updateUserCourseProgress = async (req: Request, res: Response): Promise<vo
     }
 
     // Fetch existing progress or create a new one
-    let progress = await CourseProgress.findOne({ userId, courseId }).exec();
-    if (!progress) {
-      progress = new CourseProgress({
+    const existingProgress = await CourseProgress.findOne({ userId, courseId }).exec();
+    console.log("existingProgress", existingProgress)
+
+
+    if (!existingProgress) {
+      const newProgress = new CourseProgress({
         userId,
         courseId,
         enrollmentDate: new Date().toISOString(),
@@ -411,31 +415,92 @@ const updateUserCourseProgress = async (req: Request, res: Response): Promise<vo
         badges: [],
         engagementScore: 0,
       });
-    } else {
-      // Merge existing progress with the new data
-      progress.sections = mergeSections(progress.sections, progressData.sections || []);
-      progress.lastAccessedTimestamp = new Date().toISOString();
-      progress.overallProgress = calculateOverallProgress(progress.sections);
-      progress.totalPoints = Math.min(progress.overallProgress * 100, 100) * 10; // Update points
-      progress.totalPrize = Math.min(progress.overallProgress * 100, 100) * 50; // Update prize
-      progress.completionStatus = progress.overallProgress === 1 ? "completed" : "in-progress";
-      // Update badges based on progress (e.g., 50%, 100%)
-      if (progress.overallProgress >= 0.5 && !progress.badges.includes("intermediate")) {
-        progress.badges.push("intermediate");
-      }
-      if (progress.overallProgress === 1 && !progress.badges.includes("advanced")) {
-        progress.badges.push("advanced");
-      }
-      // Update engagementScore (example: increment based on activity)
-      progress.engagementScore += 10; // Example increment; adjust based on logic
-    }
 
-    // Save the updated progress
-    await progress.save();
+      const saved = await newProgress.save();
+      console.log("saved.....", saved)
+
+      res.status(201).json({
+        message: "User course progress created successfully",
+        data: saved,
+      });
+
+      return;
+    } 
+      // Merge existing progress with the new data
+      const mergedSections = mergeSections(existingProgress.sections, progressData.sections || []);
+
+      // Update chapter progress with score and lock status if provided // Update sectionScore for each section
+      mergedSections.forEach((section: any) => {
+        const totalScore = section.chapters.reduce((sum: number, chapter: any) => sum + (chapter.score || 0), 0);
+        section.sectionScore = section.chapters.length > 0 ? totalScore / section.chapters.length : 0;
+      });
+      
+      // Calculate overall progress
+      const overallProgress = calculateOverallProgress(mergedSections);
+      const totalPoints = Math.min(overallProgress * 100, 100) * 10;
+      const totalPrize = Math.min(overallProgress * 100, 100) * 50;
+      const completionStatus = overallProgress === 1 ? "completed" : "in-progress";
+      const lastActivityDate = new Date().toISOString();
+      const lastAccessedTimestamp = new Date().toISOString();
+      
+      // Update badges if needed
+      const existingBadges = existingProgress.badges.map((badge: any) => badge.name);
+      const badgesToAdd: any[] = [];
+      if (overallProgress >= 0.5 && !existingBadges.includes("Intermediate Learner")) {
+        badgesToAdd.push({
+          name: "Intermediate Learner",
+          category: "Heroic",
+          level: 1,
+          earnedAt: new Date(),
+          description: "Reached 50% completion—halfway to greatness!",
+        });
+      }
+      
+      if (overallProgress === 1 && !existingBadges.includes("Course Master")) {
+        badgesToAdd.push({
+          name: "Course Master",
+          category: "Heroic",
+          level: 3,
+          earnedAt: new Date(),
+          description: "Completed the course a true hero of learning!",
+        });
+      }
+      
+      // Update engagement score
+      const updatedEngagementScore = (existingProgress.engagementScore || 0) + 10; // Example increment
+      
+      // Perform the atomic update using findByIdAndUpdate
+      const updatedProgress = await CourseProgress.findByIdAndUpdate(
+        existingProgress._id,
+        {
+          $set: {
+            sections: mergedSections,
+            overallProgress,
+            totalPoints,
+            totalPrize,
+            completionStatus,
+            lastActivityDate,
+            lastAccessedTimestamp,
+            engagementScore: updatedEngagementScore,
+        },
+        $push: {
+          badges: { $each: badgesToAdd }, // Add new badges to the existing array
+        },
+      },
+      { new: true, runValidators: true } // Return the updated document
+    ).exec();
+    
+    if (!updatedProgress) {
+      throw new Error("Failed to update course progress");
+    }
+    
+    // Log the updated progress with fully expanded chapters
+    console.log("updated.....", JSON.stringify(updatedProgress.sections, null, 2));
+
 
     res.status(200).json({
       message: "User course progress updated successfully",
-      data: progress,
+      data: updatedProgress,
     });
   } catch (error) {
     console.error("Error updating user course progress:", error);
