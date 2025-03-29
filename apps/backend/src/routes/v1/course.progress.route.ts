@@ -11,7 +11,7 @@ router.get("/:userId/courses/:courseId", getUserCourseProgress)
 router.post("/:userId/courses/batch", getUserCourseProgressBatch);
 router.get("/leaderboard/:userId", requireAuth(), getLearningLeaderboard)
 router.get("/leaderboard/course/:courseId", getCourseLeaderboard)
-router.put("/:userId/courses/:courseId", updateUserCourseProgress);
+router.put("/:userId/courses/:courseId", requireAuth(), updateUserCourseProgress);
 
 export default router
 

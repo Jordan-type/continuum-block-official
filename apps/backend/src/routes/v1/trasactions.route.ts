@@ -1,7 +1,6 @@
 import express, { Router } from "express";
 import { requireAuth } from "@clerk/express" 
 
-
 // controller createStripePaymentIntent, createTransaction
 import { listTransactions, createTransaction } from "../../modules/transactions/transaction.controller";
 
@@ -11,8 +10,8 @@ import stkPushCallback from "../../services/callback"
 
 const router: Router = express.Router();
 
-router.post("/", createTransaction);
-router.get("/", listTransactions);
+router.post("/", requireAuth(), createTransaction);
+router.get("/", requireAuth(), listTransactions);
 router.post('/mpesa/stkpush', generateAccessToken, initiateSTKPush);
 router.post('/callback', stkPushCallback);
 

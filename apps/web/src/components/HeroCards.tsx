@@ -94,10 +94,10 @@ useEffect(() => {
               <Card className="w-full h-auto">
                 <CardHeader className="flex items-center gap-4 pb-2">
                   <Avatar>
-                    <AvatarImage
+                    {/* <AvatarImage
                       alt={tweet.user.name}
-                      src={tweet.user.profile_image_url}
-                    />
+                      src={"/pilot.png"}
+                    /> */}
                     <AvatarFallback>{tweet.user.name[0]}</AvatarFallback>
                   </Avatar>
 
