@@ -5,11 +5,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { useGetUserByUsernameQuery, useGetUserMentionsByIdQuery } from '@/state/api';
 import { Button, buttonVariants } from "../../../../components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import HeroCards from "../../../../components/HeroCards";
-import { Tweet, Mention } from '@/types/type';
 
 const LoadingSkeleton = () => {
   return (
@@ -34,42 +32,6 @@ const LoadingSkeleton = () => {
 };
 
 const Hero = () => {
-  const [tweets, setTweets] = useState<Tweet[]>([]);
-  const username = "type_jordan";
-  const { data: userData, isFetching: isFetchingUser } = useGetUserByUsernameQuery(username);
-
-  const userId = userData?.id;
-  const { data: mentionsData, isFetching: isFetchingMentions } = useGetUserMentionsByIdQuery(userId || '', {
-    skip: !userId,  // Only run this query if userId is available
-  });
-
-  // Combine loading states from both hooks
-  const isLoading = isFetchingUser || isFetchingMentions;
-
-  useEffect(() => {
-    console.log("User Data:", userData);
-    console.log("Mentions Data:", mentionsData);
-    if (!isFetchingMentions && mentionsData && userData && !isFetchingUser) {
-      const adaptedTweets = Array.isArray(mentionsData) ? mentionsData.map((mention: Mention) => ({
-        id: mention.id,
-        text: mention.text,
-        user: {
-          id: userData?.id || 'default_id',
-          name: userData?.name || "Jordan Muthemba",
-          username: userData?.username || "type_jordan",
-          profile_image_url: userData?.profile_image_url || "https://i.pravatar.cc/150?u=" + mention.id,
-        }
-      })) : [];
-      setTweets(adaptedTweets);
-    }
-  }, [mentionsData, isFetchingMentions, userData, isFetchingUser]);
-
-  useEffect(() => {
-    console.log('Tweets:', tweets); // Check what's actually in your state
-  }, [tweets]);
-
-
-  if (isLoading) return <LoadingSkeleton />;
 
   return (
     <motion.section
@@ -94,7 +56,7 @@ const Hero = () => {
             <span className="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] text-transparent bg-clip-text">
               Continuum Block
             </span>{" "}
-            Africa’s Largest network of
+            Africa&apos;s Largest network of
           </h1>
           <h2 className="inline">
             <span className="inline bg-gradient-to-r from-[#61DAFB] via-[#1fc0f1] to-[#03a3d7] text-transparent bg-clip-text">
@@ -138,16 +100,16 @@ const Hero = () => {
 
       {/* Hero cards sections */}
       <motion.div
-        className="z-10"
+        className="z-10 w-full max-w-md lg:max-w-lg"
         initial={{ x: -30, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.9, delay: 0.5 }}
       >
-        <HeroCards tweets={tweets} />
+        <HeroCards/>
       </motion.div>
 
       {/* Shadow effect */}
-      <div className="shadow"></div>
+      <div className="shadow" />
     </motion.section>
   );
 };

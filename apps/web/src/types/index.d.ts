@@ -127,10 +127,22 @@ declare global {
   }
 
   interface Comment {
-    commentId: string;
+    id: string;
     userId: string;
     text: string;
     timestamp: string;
+  }
+
+  interface Homework {
+    id: string;
+    title: string;
+    description: string;
+    dueDate: string;
+    submissions?: Array<{
+      userId: string;
+      submissionDate: string;
+      status: "Submitted" | "Graded";
+    }>;
   }
 
   interface Chapter {
@@ -141,13 +153,8 @@ declare global {
     quiz?: BackendQuizQuestion[];
     freePreview?: boolean;
     type: "Text" | "Quiz" | "Video";
-    comments?: any[];
-    homeworks?: any[];
-  }
-
-  interface ChapterProgress {
-    chapterId: string;
-    completed: boolean;
+    comments?: Comment[];
+    homeworks?: Homework[];
   }
 
   interface SectionProgress {
