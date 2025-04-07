@@ -1989,119 +1989,290 @@ input[type="color"] {
   }
 }
 
+/* Comments Sidebar */
 .comments-sidebar {
+  @apply w-[300px] transition-all duration-300 ease-in-out;
+  background-color: var(--sidebar-background); /* customgreys-primarybg */
+  color: var(--foreground); /* white-50 */
+  position: fixed;
+  right: 0;
+  top: 120px; /* Adjusted to align with the top of the course__video card */
+  height: calc(50vh + 3rem); /* 50vh (video container) + 3rem (CardContent padding) */
   z-index: 1000;
+  border-left: 1px solid var(--border); /* customgreys-secondarybg */
 }
 
 .comments-sidebar--collapsed {
-  padding: 10px !important;
-}
-
-.comments-sidebar__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.comments-sidebar__title {
-  font-size: 18px;
-  font-weight: 600;
+  @apply w-[50px];
 }
 
 .comments-sidebar__toggle {
-  color: #fff;
+  @apply absolute top-1/2 -translate-y-1/2 -left-4 w-8 h-8 rounded-full flex items-center justify-center;
+  background-color: var(--primary); /* primary-700, purple */
+  color: var(--primary-foreground); /* white-50 */
+}
+
+.comments-sidebar__chevron-icon {
+  @apply w-5 h-5;
+}
+
+.comments-sidebar__content {
+  @apply p-5 h-full flex flex-col; /* Add padding and ensure content takes full height */
+}
+
+.comments-sidebar__header {
+  @apply flex justify-between items-center mb-4; /* Reduced margin-bottom to match wireframe */
+}
+
+.comments-sidebar__title {
+  @apply text-lg font-semibold;
+  color: var(--foreground); /* white-50 */
+}
+
+.comments-sidebar__unread-count {
+  @apply text-sm;
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
+}
+
+.comments-sidebar__filters {
+  @apply mb-4; /* Reduced margin-bottom to match wireframe */
 }
 
 .comments-sidebar__filter-list {
-  display: flex;
-  gap: 5px;
-  background-color: transparent;
-  border-bottom: 1px solid #444;
+  @apply flex gap-3 bg-transparent;
+  border-bottom: 1px solid var(--border); /* customgreys-secondarybg */
 }
 
 .comments-sidebar__filter {
-  color: #fff;
-  font-size: 12px;
-  padding: 5px 10px;
-  border-radius: 0;
+  @apply text-sm px-2 py-1 border-none;
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
 }
 
 .comments-sidebar__filter[data-state="active"] {
-  border-bottom: 2px solid #fff;
+  @apply text-foreground border-b-2;
+  color: var(--foreground); /* white-50 */
+  border-color: var(--primary); /* primary-700 */
 }
 
 .comments-sidebar__list {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  @apply flex-1 overflow-y-auto mb-4; /* Reduced margin-bottom to match wireframe */
+}
+
+.comments-sidebar__no-comments {
+  @apply text-sm text-center;
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
 }
 
 .comments-sidebar__comment {
-  background-color: #2a2a2a;
-  padding: 10px;
-  border-radius: 5px;
+  @apply mb-4 bg-customgreys-secondarybg p-4 rounded-md; /* Reduced margin-bottom */
 }
 
 .comments-sidebar__comment-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  @apply flex items-center gap-3 mb-2;
 }
 
 .comments-sidebar__avatar {
-  width: 30px;
-  height: 30px;
+  @apply w-8 h-8;
+}
+
+.comments-sidebar__avatar-fallback {
+  @apply text-sm;
 }
 
 .comments-sidebar__comment-info {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .comments-sidebar__user-name {
-  font-size: 14px;
-  font-weight: 500;
+  @apply text-sm font-medium;
+  color: var(--foreground); /* white-50 */
 }
 
 .comments-sidebar__timestamp {
-  font-size: 12px;
-  color: #888;
+  @apply text-xs;
+  color: var(--muted-foreground); /* customgreys-dirtyGrey */
 }
 
 .comments-sidebar__message {
-  font-size: 14px;
-  margin-top: 5px;
+  @apply text-sm mb-2;
+  color: var(--foreground); /* white-50 */
 }
 
 .comments-sidebar__reply {
-  color: #888;
-  font-size: 12px;
-  padding: 0;
-  margin-top: 5px;
+  @apply text-xs p-0;
+  color: var(--primary); /* primary-700 */
 }
 
 .comments-sidebar__input-container {
-  position: sticky;
-  bottom: 0;
-  background-color: #1a1a1a;
-  padding: 10px 0;
+  @apply sticky bottom-0 pt-4;
+  background-color: var(--sidebar-background); /* customgreys-primarybg */
 }
 
 .comments-sidebar__input {
-  margin-bottom: 10px;
+  @apply bg-customgreys-secondarybg text-foreground border-none mb-3; /* customgreys-secondarybg, white-50 */
 }
 
 .comments-sidebar__input-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @apply flex justify-between items-center;
 }
 
 .comments-sidebar__post-button {
-  background-color: #4a90e2;
-  color: #fff;
-  font-size: 12px;
-  padding: 5px 10px;
+  @apply text-sm px-3 py-1;
+  background-color: var(--primary); /* primary-700 */
+  color: var(--primary-foreground); /* white-50 */
+}
+
+.comments-sidebar__post-button:hover {
+  @apply bg-primary-600; /* primary-600 */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .comments-sidebar {
+    @apply w-[250px]; /* Slightly smaller on mobile */
+    height: calc(40vh + 3rem); /* Match the video container height on mobile */
+  }
+
+  .comments-sidebar--collapsed {
+    @apply w-[40px]; /* Slightly smaller when collapsed on mobile */
+  }
+
+  .comments-sidebar__toggle {
+    @apply w-6 h-6 -left-3; /* Smaller button on mobile */
+  }
+
+  .comments-sidebar__chevron-icon {
+    @apply w-4 h-4; /* Smaller icon on mobile */
+  }
+}
+
+@media (min-width: 1280px) {
+  .comments-sidebar {
+    @apply w-[350px]; /* Larger on bigger screens */
+    height: calc(60vh + 3rem); /* Match the video container height on larger screens */
+  }
+}
+
+.not-found-page {
+  @apply flex flex-col items-center justify-between min-h-screen;
+  background-color: #f5f3ff; /* Light purple background */
+}
+
+.not-found-page__theme-toggle {
+  @apply absolute top-4 right-4;
+}
+
+.not-found-page__content {
+  @apply flex flex-col items-center justify-center flex-grow;
+}
+
+.not-found-page__logo {
+  @apply mb-8;
+}
+
+.not-found-page__title {
+  @apply text-9xl font-bold;
+  color: #7c3aed; /* Purple */
+}
+
+.not-found-page__message {
+  @apply text-center mb-8;
+}
+
+.not-found-page__subtitle {
+  @apply text-2xl font-semibold mb-2;
+  color: #1f2937; /* Dark gray */
+}
+
+.not-found-page__description {
+  @apply text-lg;
+  color: #6b7280; /* Medium gray */
+}
+
+.not-found-page__button {
+  @apply px-6 py-3 text-lg;
+  background-color: #7c3aed; /* Purple */
+  color: #ffffff; /* White */
+}
+
+.not-found-page__button:hover {
+  @apply bg-primary-600; /* Slightly darker purple on hover */
+}
+
+
+
+.not-found-page__bottom-button {
+  @apply absolute bottom-4 right-4;
+}
+
+.free-course-card {
+  @apply w-full;
+}
+
+.free-course-card__image-container {
+  @apply relative w-full h-40; /* Adjust height as needed */
+}
+
+.free-course-card__image {
+  @apply w-full h-full object-cover rounded-t-lg;
+}
+
+.free-course-card__badges {
+  @apply absolute top-2 left-2 flex gap-2;
+}
+
+.free-course-card__badge {
+  @apply bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded;
+}
+
+
+.free-course-card__content {
+  @apply p-4 space-x-3 relative;
+}
+
+.free-course-card__price {
+  @apply absolute top-[-24px] right-3 text-sm font-bold w-12 h-12 flex items-center justify-center rounded-full; /* Position above the content */
+}
+
+.free-course-card__details {
+  @apply flex gap-4 mb-2 text-sm text-muted-foreground;
+}
+
+.free-course-card__detail {
+  @apply flex items-center;
+}
+
+.free-course-card__title {
+  @apply text-lg font-semibold mb-1;
+  color: var(--foreground);
+}
+
+.free-course-card__description {
+  @apply text-sm text-muted-foreground mb-3;
+}
+
+.free-course-card__instructor {
+  @apply flex items-center justify-between gap-2; /* Use justify-between to align items */
+}
+
+.free-course-card__instructor-name {
+  @apply text-sm;
+  color: var(--foreground);
+}
+
+.free-course-card__button {
+  @apply flex items-center justify-center px-3 py-1 rounded text-sm; /* Adjust padding for a more compact button */
+}
+
+.free-course-card__carousel-previous,
+.free-course-card__carousel-next {
+  @apply absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-primary-foreground;
+}
+
+.free-course-card__carousel-previous {
+  @apply -left-4;
+}
+
+.free-course-card__carousel-next {
+  @apply -right-4;
 }

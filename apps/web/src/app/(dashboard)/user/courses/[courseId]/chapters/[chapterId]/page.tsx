@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -27,6 +27,7 @@ const Course = () => {
   console.log("currentChapter.video:", currentChapter);
 
   const playerRef = useRef<ReactPlayer>(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Track sidebar state
 
   const handleProgress = ({ played }: { played: number }) => {
     if (
@@ -89,7 +90,7 @@ const Course = () => {
 
   return (
     <div className="course">
-      <div className="course__container">
+      <div className={`course__container ${isSidebarCollapsed ? "course__container--sidebar-collapsed" : ""}`}>
         <div className="course__breadcrumb">
           <div className="course__path">
             {course.title} / {currentSection?.sectionTitle} /{" "}
@@ -226,7 +227,10 @@ const Course = () => {
           </Card>
         </div>
       </div>
-      <CommentsSidebar />
+      {/* <CommentsSidebar
+              isCollapsed={isSidebarCollapsed}
+              setIsCollapsed={setIsSidebarCollapsed}
+            /> */}
     </div>
   );
 };
