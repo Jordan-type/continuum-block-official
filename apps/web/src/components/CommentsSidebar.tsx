@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { Dispatch, SetStateAction, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +16,13 @@ interface Comment {
   isUnresolved?: boolean;
 }
 
-const CommentsSidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+interface CommentsSidebarProps {
+  isCollapsed: boolean;
+  setIsCollapsed: Dispatch<SetStateAction<boolean>>;
+  videoHeight?: string ;
+}
+
+const CommentsSidebar = ({ isCollapsed, setIsCollapsed }: CommentsSidebarProps) => {
   const [comments, setComments] = useState<Comment[]>([
     {
       userInitials: "ME",
@@ -60,7 +67,7 @@ const CommentsSidebar = () => {
         {
           userInitials: "DR", // Replace with actual user initials
           userName: "Your Name", // Replace with actual user name
-          timestamp: "00:03:87",
+          timestamp: "just now",
           message: newComment,
           isUnread: false,
           isUnresolved: true,
@@ -80,23 +87,12 @@ const CommentsSidebar = () => {
   return (
     <div
       className={`comments-sidebar ${isCollapsed ? "comments-sidebar--collapsed" : ""}`}
-      style={{
-        width: isCollapsed ? "50px" : "300px",
-        transition: "width 0.3s ease",
-        backgroundColor: "#1a1a1a",
-        color: "#fff",
-        height: "100vh",
-        position: "fixed",
-        right: 0,
-        top: 0,
-        overflowY: "auto",
-        padding: isCollapsed ? "10px" : "20px",
-        borderLeft: "1px solid #333",
-      }}
     >
       <div className="comments-sidebar__header">
         {!isCollapsed && (
-          <h3 className="comments-sidebar__title">Comments</h3>
+          <h3 className="comments-sidebar__title">
+            Comments ({filteredComments.length})
+          </h3>
         )}
         <Button
           variant="ghost"
@@ -104,7 +100,11 @@ const CommentsSidebar = () => {
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="comments-sidebar__toggle"
         >
-          {isCollapsed ? <ChevronLeft /> : <ChevronRight />}
+          {isCollapsed ? (
+             <ChevronLeft className="comments-sidebar__chevron-icon"/> 
+          ):( 
+             <ChevronRight className="comments-sidebar__chevron-icon"/>
+          )}
         </Button>
       </div>
 
@@ -132,36 +132,41 @@ const CommentsSidebar = () => {
           </Tabs>
 
           <div className="comments-sidebar__list">
-            {filteredComments.map((comment, index) => (
-              <div key={index} className="comments-sidebar__comment">
-                <div className="comments-sidebar__comment-header">
-                  <Avatar className="comments-sidebar__avatar">
-                    <AvatarFallback
-                      style={{
-                        backgroundColor:
-                          comment.userInitials === "ME"
-                            ? "#ff8c00"
-                            : comment.userInitials === "DS"
-                            ? "#ff69b4"
-                            : comment.userInitials === "EM"
-                            ? "#dda0dd"
-                            : "#ffd700",
-                      }}
-                    >
-                      {comment.userInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="comments-sidebar__comment-info">
-                    <span className="comments-sidebar__user-name">{comment.userName}</span>
-                    <span className="comments-sidebar__timestamp">{comment.timestamp}</span>
+            {filteredComments.length === 0 ? (
+              <p className="comments-sidebar__no-comments">No comments found.</p>
+            ) : (
+              filteredComments.map((comment, index) => (
+                <div key={index} className="comments-sidebar__comment">
+                  <div className="comments-sidebar__comment-header">
+                    <Avatar className="comments-sidebar__avatar">
+                      <AvatarFallback
+                        className="comments-sidebar__avatar-fallback"
+                        style={{
+                          backgroundColor:
+                            comment.userInitials === "ME"
+                              ? "#ff8c00"
+                              : comment.userInitials === "DS"
+                              ? "#ff69b4"
+                              : comment.userInitials === "EM"
+                              ? "#dda0dd"
+                              : "#ffd700",
+                        }}
+                      >
+                        {comment.userInitials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="comments-sidebar__comment-info">
+                      <span className="comments-sidebar__user-name">{comment.userName}</span>
+                      <span className="comments-sidebar__timestamp">{comment.timestamp}</span>
+                    </div>
                   </div>
+                  <p className="comments-sidebar__message">{comment.message}</p>
+                  <Button variant="link" className="comments-sidebar__reply">
+                    Reply
+                  </Button>
                 </div>
-                <p className="comments-sidebar__message">{comment.message}</p>
-                <Button variant="link" className="comments-sidebar__reply">
-                  Reply
-                </Button>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
           <div className="comments-sidebar__input-container">
@@ -170,7 +175,6 @@ const CommentsSidebar = () => {
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Your thoughts here"
               className="comments-sidebar__input"
-              style={{ backgroundColor: "#333", color: "#fff", border: "none" }}
             />
             <div className="comments-sidebar__input-actions">
               <Button variant="ghost" size="icon">

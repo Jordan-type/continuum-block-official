@@ -13,14 +13,14 @@ const LoadingSkeleton = () => {
         <Skeleton className="h-6 w-full max-w-3xl mx-auto md:w-3/4 mt-4 mb-8" />
 
         <div className="flex flex-wrap md:justify-center gap-4">
-          {[1, 2, 3, 4, 5].map((_, index) => (
-            <Skeleton key={index} className="h-8 w-32 px-3 py-1 rounded-full bg-customgreys-secondarybg" />
+          {[1, 2, 3, 4, 5].map((num) => (
+            <Skeleton key={`skeleton-tag-${num}`} className="h-8 w-32 px-3 py-1 rounded-full bg-customgreys-secondarybg" />
           ))}
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3, 4, 5, 6].map((_, index) => (
-            <Skeleton key={index} className="h-[340px] xl:h-[380px] rounded-lg bg-customgreys-secondarybg border-2 border-transparent animate-pulse" />
+          {[1, 2, 3, 4, 5, 6].map((num) => (
+            <Skeleton key={`skeleton-card-${num}`} className="h-[340px] xl:h-[380px] rounded-lg bg-customgreys-secondarybg border-2 border-transparent animate-pulse" />
           ))}
         </div>
     </section>
@@ -71,8 +71,8 @@ const FeaturedCourses = () => {
       </p>
 
       <div className="flex flex-wrap md:justify-center gap-4">
-        {courseList.map((tag: string, index) => (
-          <div key={index}>
+        {courseList.map((tag: string) => (
+          <div key={tag}>
             <Badge variant="secondary" className="text-sm">
              {tag}
             </Badge>
@@ -88,21 +88,20 @@ const FeaturedCourses = () => {
         viewport={{ amount: 0.3, once: true }}
       >
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {publishedCourses &&
-            publishedCourses.slice(0, 6).map((course, index) => (
-              <motion.div
-                key={course._id}
-                initial={{ y: 50, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ amount: 0.4 }}
-              >
-                <CourseCardSearch
-                  course={course}
-                  onClick={() => handleCourseClick(course._id)}
-                />
-              </motion.div>
-            ))}
+          {publishedCourses?.slice(0, 6).map((course, index) => (
+            <motion.div
+              key={course._id}
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              viewport={{ amount: 0.4 }}
+            >
+              <CourseCardSearch
+                course={course}
+                onClick={() => handleCourseClick(course._id)}
+              />
+            </motion.div>
+          ))}
         </div>
       </motion.div>
     </motion.section>
