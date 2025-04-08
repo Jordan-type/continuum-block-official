@@ -1020,7 +1020,15 @@ input[type="color"] {
   @apply p-0 flex justify-between;
 }
 
+.course-card__category-level-wrapper {
+  @apply flex items-center gap-2;
+}
+
 .course-card__category {
+  @apply text-sm bg-secondary-200 rounded-full px-3 py-2 text-primary-700; /* Updated to secondary color */
+}
+
+.course-card__level {
   @apply text-sm bg-secondary-200 rounded-full px-3 py-2 text-primary-700; /* Updated to secondary color */
 }
 
