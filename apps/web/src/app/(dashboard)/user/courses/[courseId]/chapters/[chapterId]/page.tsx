@@ -158,8 +158,8 @@ const Course = () => {
               <TabsTrigger className="course__tab" value="Resources">
                 Resources
               </TabsTrigger>
-              <TabsTrigger className="course__tab" value="Quiz">
-                Quiz
+              <TabsTrigger className="course__tab" value="Comments">
+                Comments
               </TabsTrigger>
             </TabsList>
 
@@ -196,11 +196,10 @@ const Course = () => {
               </Card>
             </TabsContent>
 
-            <TabsContent className="course__tab-content" value="Quiz">
-            {/* <QuizContent
-                courseId={course.id}
-                chapterId={currentChapter?.chapterId || ""}
-                userId={user.id}
+            <TabsContent className="course__tab-content" value="Comments">
+              {/* <CommentsSidebar
+                isCollapsed={isSidebarCollapsed}
+                setIsCollapsed={setIsSidebarCollapsed}
               /> */}
             </TabsContent>
           </Tabs>
