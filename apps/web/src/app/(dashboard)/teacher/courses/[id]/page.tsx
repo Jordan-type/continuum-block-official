@@ -47,14 +47,7 @@ const CourseEditor = () => {
     },
   });
 
-  // Remove useFieldArray since we no longer use quizQuestions
-  // const { fields, append, remove } = useFieldArray({
-  //   control: methods.control,
-  //   name: "quizQuestions",
-  // });
   const [selectedSectionIndex, setSelectedSectionIndex] = useState<number | null>(null);
-  // Remove selectedChapterIndex since we’re creating new chapters
-  // const [selectedChapterIndex, setSelectedChapterIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (course) {
@@ -124,10 +117,7 @@ const CourseEditor = () => {
       </div>
 
       <Form {...methods}>
-        <form
-          onSubmit={methods.handleSubmit(onSubmit)}
-          encType="multipart/form-data"
-        >
+        <form  onSubmit={methods.handleSubmit(onSubmit)} encType="multipart/form-data">
           <Header
             title="Course Setup"
             subtitle="Complete all fields and save your course"
