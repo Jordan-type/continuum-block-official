@@ -117,9 +117,9 @@ const HeroCards = () => {
                       </p>
                       <div className="free-course-card__instructor">
                         <div className="flex items-center gap-2">
-                        <Avatar >
-                          {/* <AvatarImage src={freeCourses[currentCourseIndex].teacher.avatar} /> */}
-                          <AvatarFallback>
+                        <Avatar className="free-course-card__instructor-avatar">
+                          <AvatarImage alt={course.teacherName} />
+                          <AvatarFallback className="free-course-card__instructor-avatar-fallback">
                             {course.teacherName[0]}
                           </AvatarFallback>
                         </Avatar>
