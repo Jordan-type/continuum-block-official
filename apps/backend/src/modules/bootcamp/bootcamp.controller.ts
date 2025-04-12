@@ -22,6 +22,12 @@ const createBootcamp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const startDate = new Date();
+    const duration = "4 weeks";
+    const durationInWeeks = parseInt(duration.split(" ")[0], 10); // Extract number of weeks
+    const endDate = new Date(startDate)
+    endDate.setDate(startDate.getDate() + durationInWeeks * 7) // Add weeks to startDate
+
     const newBootcamp = new Bootcamp({
       hostedBy:{
         type: type || "Individual",
@@ -29,12 +35,15 @@ const createBootcamp = async (req: Request, res: Response): Promise<void> => {
         id: userId
       },
       title: "Untitled Bootcamp",
+      description: "No description provided",
       startDate: new Date(),
+      endDate,
       duration: "4 weeks", // Default duration
       type: "Part-Time", // Default type
       liveClasses: {
         count: 1,
         description: "No live classes scheduled",
+        schedule: [],
       },
       practicalCaseStudy: "Not specified",
       weeklyFeedback: "Not specified",
@@ -43,6 +52,10 @@ const createBootcamp = async (req: Request, res: Response): Promise<void> => {
       status: "Draft",
       courses: [],
       members: [],
+      price: {
+        amount: 0,
+        currency: "USD"
+      }
     });
 
     await newBootcamp.save();
@@ -52,7 +65,7 @@ const createBootcamp = async (req: Request, res: Response): Promise<void> => {
       data: newBootcamp,
     });
   } catch (error) {
-    console.error("Error creating bootcamp:", error);
+    console.log("Error creating bootcamp:", error);
     res.status(500).json({
       message: "Error creating bootcamp",
       error,

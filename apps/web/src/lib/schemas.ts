@@ -2,7 +2,13 @@ import * as z from "zod";
 import { parsePhoneNumberWithError } from "libphonenumber-js";
 
 export const bootcampSchema = z.object({
+  hostedBy: z.object({
+    type: z.enum(["Individual", "Organization"]),
+    name: z.string().min(1, "Hosted by name is required"),
+    id: z.string().min(1, "Hosted by ID is required"),
+  }),
   title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
   startDate: z.date(),
   duration: z.string().min(1, "Duration is required"),
   type: z.boolean(),
@@ -18,6 +24,25 @@ export const bootcampSchema = z.object({
   status: z.boolean(),
   courses: z.array(z.object({ courseId: z.string(), title: z.string() })).optional(),
   members: z.array(z.object({ memberId: z.string(), fullName: z.string(), progress: z.number() })).optional(),
+  testimonials: z.array(z.object({ testimonialId: z.string(), name: z.string(), content: z.string() })).optional(),
+  price: z.object({
+    amount: z.number().min(0, "Price must be greater than 0"),
+    currency: z.string().min(1, "Currency is required"),
+  }),
+  paymentPlans: z.array(z.object({
+    amount: z.number().min(0, "Price must be greater than 0"),
+    currency: z.string().min(1, "Currency is required"),
+    duration: z.string().min(1, "Duration is required"),
+  })).optional(),
+  categories: z.array(z.string()).optional(),
+  averageRating: z.number().min(0).max(5).optional(),
+  reviewCount: z.number().min(0).optional(),
+  prerequisites: z.string().optional(),
+  leaderboard: z.array(z.object({
+    memberId: z.string().uuid(),
+    fullName: z.string().min(1, "Full name is required"),
+    progress: z.number().min(0).max(100),
+  })).optional(),  
 });
 
 export type BootcampFormData = z.infer<typeof bootcampSchema>;

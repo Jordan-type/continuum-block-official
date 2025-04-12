@@ -49,7 +49,7 @@ const Bootcamps = () => {
     const handleCreateBootcamp = async () => {
       if (!user) return;
 
-      const result = await createBootcamp({ hostedBy: {type: "individual", name: user.fullName || "Unknown User", id: user.id, }, }).unwrap();
+      const result = await createBootcamp({ hostedBy: {type: "Individual", name: user.fullName || "Unknown User", id: user.id, }, }).unwrap();
       router.push(`/teacher/bootcamps/${result._id}`, {
         scroll: false,
       });

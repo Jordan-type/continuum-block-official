@@ -294,12 +294,10 @@ const CourseEditor = () => {
                   onClick={() =>
                     dispatch(openSectionModal({ sectionIndex: null }))
                   }
-                  className="border-none text-primary-700 group"
+                 className="border-none bg-primary-700 hover:bg-primary-600 mb-4"
                 >
-                  <Plus className="mr-1 h-4 w-4 text-primary-700 group-hover:white-100" />
-                  <span className="text-primary-700 group-hover:white-100">
+                  <Plus className="mr-1 h-4 w-4" />
                     Add Section
-                  </span>
                 </Button>
               </div>
 
@@ -313,7 +311,7 @@ const CourseEditor = () => {
 
               {/* Add Quiz Question Form */}
               <div className="mt-6">
-                <h3 className="text-xl font-semibold text-secondary-foreground mb-4">Add Quiz Chapter</h3>
+                <h3 className="text-xl font-semibold text-secondary-foreground mb-4">Quiz Chapter</h3>
                 <div className="space-y-4">
                   <select
                     onChange={(e) => {
@@ -336,6 +334,7 @@ const CourseEditor = () => {
                     className="bg-primary-700 hover:bg-primary-600 mt-4"
                     disabled={selectedSectionIndex === null}
                   >
+                    <Plus class="mr-1 h-4 w-4"/>
                     Add New Quiz Chapter
                   </Button>
                 </div>

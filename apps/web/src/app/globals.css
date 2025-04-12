@@ -1493,15 +1493,15 @@ input[type="color"] {
 
 /* Add Chapter Button */
 .add-chapter-button {
-  @apply border-none text-primary-700; /* Updated to primary color */
+  @apply border-none text-white-100; /* Updated to primary color */  
 }
 
 .add-chapter-button__icon {
-  @apply mr-1 h-4 w-4 text-primary-700; /* Updated to primary color */
+  @apply mr-1 h-4 w-4 ; /* Updated to primary color */
 }
 
 .add-chapter-button__text {
-  @apply text-primary-700; /* Updated to primary color */
+  @apply text-white-100; /* Updated to primary color */
 }
 
 /* AppSidebar */
