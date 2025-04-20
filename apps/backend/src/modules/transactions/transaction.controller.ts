@@ -31,6 +31,36 @@ const listTransactions = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+
+const listTransactionsByUserId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId } = req.query;
+        const transactions = await Transaction.find({ userId });
+
+        res.json({
+            message: "Transactions retrieved successfully",
+            data: transactions,
+        });
+    } catch (error){
+        res.status(500).json({ 
+            message: "Error retrieving transactions", 
+            error 
+        });
+    }
+}
+
+const getTransactionById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { transactionId } = req.params;
+        const transaction = await Transaction.findById(transactionId);
+    } catch (error){
+        res.status(500).json({ 
+            message: "Error retrieving transaction", 
+            error 
+        });
+    }
+}
+
 // const createStripePaymentIntent = async (req: Request, res: Response ): Promise<void> => {
 //   try {
 //     let { amount } = req.body;
@@ -132,5 +162,6 @@ const createTransaction = async (req: Request, res: Response): Promise<void> => 
 export {
     listTransactions,
     // createStripePaymentIntent,
-    createTransaction
+    createTransaction,
+    getTransactionById
 }

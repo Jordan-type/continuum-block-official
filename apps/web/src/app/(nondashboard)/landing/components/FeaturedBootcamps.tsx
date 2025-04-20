@@ -45,7 +45,7 @@ const FeaturedBootcamps = () => {
   const { data: bootcamps, isLoading, isError } = useListBootcampsQuery({ type: "all" });
 
   const handleBootcampClick = (bootcampId: string) => {
-    router.push(`/search?id=${bootcampId}`, { scroll: false });
+    router.push(`/bootcamps?id=${bootcampId}`, { scroll: false });
   };
 
   if (isLoading) return <LoadingSkeleton />;

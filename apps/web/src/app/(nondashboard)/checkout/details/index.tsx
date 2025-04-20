@@ -50,7 +50,7 @@ const CheckoutDetailsPage = () => {
       
       console.log("Free guest enrollment transaction data:", transactionData);
       await createTransaction(transactionData).unwrap();
-      toast.success(`Enrolled in course for free! (Price: ${formatPrice(selectedCourse.price)})`);
+      toast.success(`Enrolled to ${selectedCourse.title} course for free! (Price: ${formatPrice(selectedCourse.price)})`);
       navigateToStep(3); // Navigate to the completion page
     } catch (error) {
       console.log("Error enrolling in free course:", error);

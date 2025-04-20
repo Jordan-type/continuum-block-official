@@ -126,7 +126,7 @@ const CourseModal = () => {
         <div className="course-modal__content">
           <div className="course-modal__header flex justify-between items-center mb-4">
             <h2 className="course-modal__title text-2xl font-bold text-white-50">
-              {selectedCourseIndex !== null ? "Edit Course" : "Add a Course to Your Bootcamp"}
+              {selectedCourseIndex !== null ? "Edit Course" : "Add Course to Bootcamp"}
             </h2>
             <button onClick={onClose} className="course-modal__close text-white-50 hover:text-red-400">
               <X className="w-6 h-6" />
