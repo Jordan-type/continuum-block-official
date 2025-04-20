@@ -289,6 +289,15 @@ declare global {
   }
 
 
+  interface BootcampCardProps {
+    bootcamp: Bootcamp;
+    onGoToBootcamp: (bootcamp: Bootcamp) => void;
+  }
+  
+  interface BootcampPreviewProps {
+    bootcamp: Bootcamp;
+  }
+
   interface Bootcamp {
     _id: string;
     hostedBy: {
@@ -325,7 +334,6 @@ declare global {
     averageRating?: number;
     reviewCount?: number;
     prerequisites?: string;
-    createdAt: Date;
     updatedAt: Date;
     createdBy: string;
     image?: string; // Optional image field
@@ -342,6 +350,7 @@ declare global {
   interface BootcampFormData {
     title: string;
     startDate: Date;
+    description: string;
     duration: string;
     type: boolean;
     liveClasses: {
@@ -356,6 +365,17 @@ declare global {
     status: boolean;
     courses?: { courseId: string; title: string }[];
     members?: { memberId: string; fullName: string; progress: number }[];
+    testimonials?: { testimonialId: string; name: string; content: string }[];
+    price: {
+      amount: number;
+      currency: string;
+    };
+    paymentPlans?: { amount: number; currency: string; duration: string }[];
+    categories?: string[];
+    averageRating?: number;
+    reviewCount?: number;
+    prerequisites?: string;
+    leaderboard?: { memberId: string; fullName: string; progress: number }[];
   }
 
   interface BootcampModule {

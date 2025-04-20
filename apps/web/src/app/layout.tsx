@@ -14,6 +14,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/icons/logo.svg",
+  },
   title: "Continuum Block | Continuously Learning New Skills",
   description: "Empowering individuals and organizations with cutting-edge knowledge and tools to master new skills, drive innovation, and achieve their goals in an ever-evolving world.",
   keywords:["Web3", "Education", "Blockchain", "NFTs", "DeFi", "DAOs", "Crypto", "Metaverse", "Decentralized", "Learning", "Skills", "Innovation", "Technology", "Future", "Continuum Block"],

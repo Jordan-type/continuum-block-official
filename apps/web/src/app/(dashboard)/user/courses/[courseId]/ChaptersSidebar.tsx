@@ -107,7 +107,7 @@ const Section = ({section, index, sectionProgress, chapterId, courseId, expanded
         <h3 className="chapters-sidebar__section-title">
           {section.sectionTitle}
         </h3>
-        <p className="chapters-sidebar__section-duration">
+        <p className="chapters-sidebar__section-duration px-2">
           Duration: {section.duration} 
         </p>
       </div>

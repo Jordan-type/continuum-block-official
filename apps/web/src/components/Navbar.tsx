@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { Bell, BookOpen, SearchIcon } from "lucide-react";
+import { Bell, BookOpen, School, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -89,7 +89,20 @@ const Navbar = ({ isCoursePage }: { isCoursePage: boolean }) => {
             showName={true}
             userProfileMode="navigation"
             userProfileUrl={ userRole === "teacher" ? "/teacher/profile" : "/user/profile"}
-          />
+          >
+            <UserButton.MenuItems>
+              <UserButton.Link
+              label="My Courses"
+              labelIcon={<BookOpen className="h-4 w-4" />}
+              href={userRole === "teacher" ? "/teacher/courses" : "/user/courses"}
+            />
+            <UserButton.Link
+            label="My Bootcamps"
+            labelIcon={<School className="h-4 w-4" />}
+            href={userRole === "teacher" ? "/teacher/bootcamps" : "/user/bootcamps"}
+            />
+            </UserButton.MenuItems>
+          </UserButton>
         </div>
       </div>
     </nav>

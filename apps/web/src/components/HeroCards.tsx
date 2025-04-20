@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -26,8 +27,8 @@ import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
 
 const HeroCards = () => {
-  // Fetch courses using the query
-  const { data: courses, isLoading: coursesLoading } = useListCoursesQuery({});
+  const router = useRouter()
+  const { data: courses, isLoading: coursesLoading } = useListCoursesQuery({});  // Fetch courses using the query
 
   // Memoize freeCourses to prevent recalculation on every render
   const freeCourses = useMemo(
@@ -57,6 +58,12 @@ const HeroCards = () => {
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [api, freeCourses]);
+
+  const handleEnrollNow = (courseId: string) => {
+    router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`, {
+      scroll: false,
+    });
+  };
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -117,15 +124,17 @@ const HeroCards = () => {
                       </p>
                       <div className="free-course-card__instructor">
                         <div className="flex items-center gap-2">
-                        <Avatar >
-                          {/* <AvatarImage src={freeCourses[currentCourseIndex].teacher.avatar} /> */}
-                          <AvatarFallback>
+                        <Avatar className="free-course-card__instructor-avatar">
+                          <AvatarImage alt={course.teacherName} />
+                          <AvatarFallback className="free-course-card__instructor-avatar-fallback">
                             {course.teacherName[0]}
                           </AvatarFallback>
                         </Avatar>
                         <span>{course.teacherName}</span>
                       </div>
-                      <Button className="free-course-card__button bg-purple-100 text-purple-700 hover:bg-purple-200">
+                      <Button 
+                        onClick={() => handleEnrollNow(course._id)}
+                        className="free-course-card__button bg-purple-100 text-purple-700 hover:bg-purple-200">
                         Enroll Now <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                       </div>
