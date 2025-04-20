@@ -470,7 +470,7 @@ input[type="color"] {
 }
 
 .billing__grid {
-  @apply h-[400px] w-full;
+  @apply w-full;
 }
 
 .billing__amount {
@@ -478,7 +478,7 @@ input[type="color"] {
 }
 
 .billing__table {
-  @apply text-customgreys-dirtyGrey min-h-[200px];
+  @apply text-customgreys-dirtyGrey w-full;
 }
 
 .billing__table-header {
@@ -486,11 +486,11 @@ input[type="color"] {
 }
 
 .billing__table-header-row {
-  @apply border-none text-white-50;
+  @apply border-none text-white-50 uppercase text-xs;
 }
 
 .billing__table-cell {
-  @apply border-none p-4;
+  @apply border-none p-4 px-6 text-gray-200;
 }
 
 .billing__table-row {
@@ -502,8 +502,47 @@ input[type="color"] {
 }
 
 .billing__table-body {
-  @apply bg-customgreys-primarybg min-h-[200px];
+  @apply bg-customgreys-primarybg;
 }
+
+.billing__amount {
+  @apply font-medium;
+}
+
+/* Pagination styles */
+.billing__pagination {
+  @apply mt-4 flex justify-between items-center;
+}
+
+.pagination {
+  @apply mt-4;
+}
+
+.pagination-content {
+  @apply flex items-center space-x-1;
+}
+
+.pagination-item {
+  @apply flex items-center;
+}
+
+.pagination-link {
+  @apply px-3 py-1 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white-50;
+}
+
+.pagination-link[data-active="true"] {
+  @apply bg-primary-700 text-white-50;
+}
+
+.pagination-previous,
+.pagination-next {
+  @apply px-3 py-1 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white-50;
+}
+
+.pagination-ellipsis {
+  @apply px-3 py-1 text-gray-300;
+}
+
 
 /* User Courses Page */
 .user-courses {
@@ -1454,15 +1493,15 @@ input[type="color"] {
 
 /* Add Chapter Button */
 .add-chapter-button {
-  @apply border-none text-primary-700; /* Updated to primary color */
+  @apply border-none text-white-100; /* Updated to primary color */  
 }
 
 .add-chapter-button__icon {
-  @apply mr-1 h-4 w-4 text-primary-700; /* Updated to primary color */
+  @apply mr-1 h-4 w-4 ; /* Updated to primary color */
 }
 
 .add-chapter-button__text {
-  @apply text-primary-700; /* Updated to primary color */
+  @apply text-white-100; /* Updated to primary color */
 }
 
 /* AppSidebar */
@@ -2263,10 +2302,14 @@ input[type="color"] {
   @apply flex items-center justify-between gap-2; /* Use justify-between to align items */
 }
 
-.free-course-card__instructor-name {
-  @apply text-sm;
-  color: var(--foreground);
+.free-course-card__instructor-avatar {
+  @apply w-10 h-10;
 }
+
+.free-course-card__instructor-avatar-fallback {
+  @apply bg-secondary-700 text-black;
+}
+
 
 .free-course-card__button {
   @apply flex items-center justify-center px-3 py-1 rounded text-sm; /* Adjust padding for a more compact button */

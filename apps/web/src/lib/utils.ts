@@ -321,6 +321,7 @@ export const createBootcampFormData = (data: BootcampFormData): FormData => {
 
   // Append basic fields
   formData.append("title", data.title);
+  formData.append("description", data.description);
   formData.append("startDate", data.startDate instanceof Date ? data.startDate.toISOString() : data.startDate); // Convert Date to ISO string
   formData.append("duration", data.duration);
   formData.append("type", data.type ? "Full-Time" : "Part-Time"); // Convert boolean to string
@@ -331,7 +332,14 @@ export const createBootcampFormData = (data: BootcampFormData): FormData => {
   formData.append("certification", data.certification);
   formData.append("enrollmentStatus", data.enrollmentStatus ? "Open" : "Closed"); // Convert boolean to string
   formData.append("status", data.status ? "Published" : "Draft"); // Add status field
-
+  formData.append("testimonials", JSON.stringify(data.testimonials));
+  formData.append("price", JSON.stringify(data.price));
+  formData.append("paymentPlans", JSON.stringify(data.paymentPlans));
+  formData.append("categories", JSON.stringify(data.categories));
+  formData.append("averageRating", String(data.averageRating));
+  formData.append("reviewCount", String(data.reviewCount));
+  formData.append("prerequisites", data.prerequisites);
+  formData.append("leaderboard", JSON.stringify(data.leaderboard));
   // Handle courses array
   if (data.courses && data.courses.length > 0) {
     data.courses.forEach((course, index) => {
@@ -359,6 +367,7 @@ export const createBootcampFormData = (data: BootcampFormData): FormData => {
   // Log for debugging
   console.log("FormData created for bootcamp:", {
     title: data.title,
+    description: data.description,
     startDate: data.startDate,
     duration: data.duration,
     type: data.type,
@@ -371,8 +380,15 @@ export const createBootcampFormData = (data: BootcampFormData): FormData => {
     courses: data.courses,
     members: data.members,
     image: data.image,
+    testimonials: data.testimonials,
+    price: data.price,
+    paymentPlans: data.paymentPlans,
+    categories: data.categories,
+    averageRating: data.averageRating,
+    reviewCount: data.reviewCount,
+    prerequisites: data.prerequisites,
+    leaderboard: data.leaderboard,
   });
-
   return formData;
 };
 

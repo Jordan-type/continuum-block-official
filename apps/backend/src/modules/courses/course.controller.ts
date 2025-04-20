@@ -76,9 +76,10 @@ const listCoursesByIds = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         
-        const courses = await Course.find({ _id: { $in: courseIds } }).select("title").exec();
+        const courses = await Course.find({ _id: { $in: courseIds } }).select("title image").exec();
+
         res.status(200).json({ 
-            message: "Courses retrieved successfully", 
+            message: "Courses retrieved successfully the fuck", 
             data: courses 
         });
     } catch (error) {

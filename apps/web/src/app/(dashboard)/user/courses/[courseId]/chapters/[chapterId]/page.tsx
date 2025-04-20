@@ -202,6 +202,12 @@ const Course = () => {
                 setIsCollapsed={setIsSidebarCollapsed}
               /> */}
             </TabsContent>
+            <TabsContent className="course__tab-content" value="Learning Tools">
+              {/* <CommentsSidebar
+                isCollapsed={isSidebarCollapsed}
+                setIsCollapsed={setIsSidebarCollapsed}
+              /> */}
+            </TabsContent>
           </Tabs>
 
           <Card className="course__instructor-card">

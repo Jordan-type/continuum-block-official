@@ -43,6 +43,7 @@ const BootcampEditor = () => {
     resolver: zodResolver(bootcampSchema),
     defaultValues: {
       title: "",
+      description: "",
       startDate: new Date(),
       duration: "",
       type: false,
@@ -58,6 +59,14 @@ const BootcampEditor = () => {
       status: false,
       courses: [],
       members: [],
+      testimonials: [],
+      price: { amount: 0, currency: "USD" },
+      paymentPlans: [],
+      categories: [],
+      averageRating: 0,
+      reviewCount: 0,
+      prerequisites: "",
+      leaderboard: [],  
     },
   });
 
@@ -66,6 +75,7 @@ const BootcampEditor = () => {
     if (bootcamp) {
       methods.reset({
         title: bootcamp.title,
+        description: bootcamp.description ,
         startDate: new Date(bootcamp.startDate),
         duration: bootcamp.duration,
         type: bootcamp.type === "Part-Time",
@@ -74,10 +84,18 @@ const BootcampEditor = () => {
         weeklyFeedback: bootcamp.weeklyFeedback,
         certification: bootcamp.certification,
         enrollmentStatus: bootcamp.enrollmentStatus === "Open",
-        image: bootcamp.image || "",
+        image: bootcamp.image || "/placeholder.png",
         status: bootcamp.status === "Published",
         courses: bootcamp.courses || [],
         members: bootcamp.members || [],
+        testimonials: bootcamp.testimonials || [],
+        price: bootcamp.price || { amount: 0, currency: "USD" },
+        paymentPlans: bootcamp.paymentPlans || [],
+        categories: bootcamp.categories || [],
+        averageRating: bootcamp.averageRating || 0,
+        reviewCount: bootcamp.reviewCount || 0,
+        prerequisites: bootcamp.prerequisites || "",
+        leaderboard: bootcamp.leaderboard || [],
       });
       setPreview(bootcamp.image);
       dispatch(setBootcampCourses(bootcamp.courses || []));
@@ -295,22 +313,25 @@ const BootcampEditor = () => {
             </div>
 
             <div className="bg-customgreys-darkGrey mt-4 md:mt-0 p-4 rounded-lg basis-1/2">
+            <div className="flex justify-between items-center mb-2">
+                <h2 className="text-2xl font-semibold text-secondary-foreground">
+                 Manage Bootcamp Courses
+                </h2>
+
+                <Button
+                  type="button"
+                  size="sm"
+                 className="border-none bg-primary-700 hover:bg-primary-600 mb-4"
+                 onClick={addCourse}
+                >
+                  <Plus className="w-4 h-4 mr-2" /> Add Course
+                </Button>
+              </div>
             {isBootcampLoading ? (
                 <p>Loading bootcamp content...</p>
               ) : (
                 <DroppableComponent />
               )}
-
-              <div className="mt-6">
-                <h3 className="text-xl font-semibold text-white-50 mb-4">Manage Courses</h3>
-                <Button
-                  type="button"
-                  onClick={addCourse}
-                  className="bg-primary-700 hover:bg-primary-600 mb-4"
-                >
-                  <Plus className="w-4 h-4 mr-2" /> Add Course
-                </Button>
-              </div>
             </div>
           </div>
         </form>

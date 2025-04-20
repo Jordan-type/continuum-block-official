@@ -53,6 +53,23 @@ const leaderboardEntrySchema = new Schema({
   rank: { type: Number, required: true },
 });
 
+// Sub-schema for bootcamp payments installments
+const paymentPlanSchema = new Schema({
+  planId: { type: String, required: true }, // e.g., "Pay in TWO Instalments"
+  name: { type: String, required: true }, // e.g., "Pay in TWO Instalments"
+  totalAmount: { type: Number, required: true }, // Total cost
+  installmentCount: { type: Number, required: true }, // Number of installments
+  installmentAmount: { type: Number, required: true }, // Amount per installment
+  frequency: { type: String, enum: ["Weekly", "Monthly"], required: true }, // Payment interval
+  intervalWeeks: { type: Number, required: false }, // Optional for custom week intervals
+  isCreditVetted: { type: Boolean, default: false }, // If vetting is needed (e.g., Flexi)
+  description: { type: String }, // Optional: e.g., "Ideal for budget conscious learners"
+  nextDueDate: { type: Date, required: false }, // When the next installment is due
+  isDefault: { type: Boolean, default: false }, // If this is the default payment plan
+  isActive: { type: Boolean, default: true }, // If this payment plan is currently active
+  metadata: { type: Schema.Types.Mixed, required: false } // to track offer/seasonal campaigns
+});
+
 // Main schema for bootcamps
 const bootcampSchema = new Schema({
   hostedBy: { type: hostedBySchema, required: true, }, // should be the name of the user who created the bootcamp
@@ -78,6 +95,7 @@ const bootcampSchema = new Schema({
   members: [memberSchema],
   testimonials: [testimonialSchema], 
   price: { type: priceSchema, required: true }, 
+  paymentPlans: [paymentPlanSchema], // Added payment plans or installments
   categories: [{ type: String }], // Added for filtering, e.g., ["Blockchain", "Web3"]
   averageRating: { type: Number, required: false, min: 1, max: 5 }, // Added
   reviewCount: { type: Number, required: false, default: 0 }, // Added

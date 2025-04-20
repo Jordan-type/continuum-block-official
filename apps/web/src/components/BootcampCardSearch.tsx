@@ -1,13 +1,10 @@
-// components/BootcampCardSearch.tsx
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 
-const BootcampCardSearch = ({
-  bootcamp,
-  isSelected,
-  onClick,
-}: SearchBootcampCardProps) => {
+const BootcampCardSearch = ({ bootcamp, isSelected, onClick, }: SearchBootcampCardProps) => {
   return (
     <div
       onClick={onClick}

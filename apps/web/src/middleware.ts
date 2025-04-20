@@ -25,7 +25,7 @@ export default clerkMiddleware(async (auth, req) => {
   // Redirect logic for student routes
   if (isStudentRoute(req)) {
     if (userRole !== "student") {
-      const url = new URL("/teacher/courses", req.url);
+      const url = new URL("/user/courses", req.url);
       return NextResponse.redirect(url);
     }
   }
@@ -33,7 +33,7 @@ export default clerkMiddleware(async (auth, req) => {
   // Redirect logic for teacher routes
   if (isTeacherRoute(req)) {
     if (userRole !== "teacher") {
-      const url = new URL("/user/courses", req.url);
+      const url = new URL("/teacher/courses", req.url);
       return NextResponse.redirect(url);
     }
   }
