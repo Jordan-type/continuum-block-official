@@ -11,6 +11,7 @@ interface TeamProps {
   imageUrl: string;
   name: string;
   position: string;
+  description: string;
   socialNetworks: SociaNetworkslProps[];
 }
 
@@ -20,29 +21,11 @@ interface SociaNetworkslProps {
 }
 
 const teamList: TeamProps[] = [
-  // {
-  //   imageUrl: "https://i.pravatar.cc/150?img=35",
-  //   name: "Emma Smith",
-  //   position: "Product Manager",
-  //   socialNetworks: [
-  //     {
-  //       name: "Linkedin",
-  //       url: "https://www.linkedin.com/in/leopoldo-miranda/",
-  //     },
-  //     {
-  //       name: "Facebook",
-  //       url: "https://www.facebook.com/",
-  //     },
-  //     {
-  //       name: "Instagram",
-  //       url: "https://www.instagram.com/",
-  //     },
-  //   ],
-  // },
   {
     imageUrl: "https://res.cloudinary.com/dbfydlpwo/image/upload/v1741347307/continuum_block/hzpq5irvpbub7gxiibe0.jpg",
     name: "Jordan Muthemba",
-    position: "Smart Contract Developer & Blockchain Trainer",
+    position: "Founder & Blockchain Trainer",
+    description: `“Blockchain isn&rsquo;t just a technological evolution; it&rsquo;s a cultural revolution... It&rsquo;s crucial we navigate not just with the intent to innovate, but also with a commitment to ethical practices that benefit all.”`,
     socialNetworks: [
       {
         name: "Linkedin",
@@ -51,6 +34,26 @@ const teamList: TeamProps[] = [
       {
         name: "Instagram",
         url: "https://www.instagram.com/",
+      },
+    ],
+  },
+  {
+    imageUrl: "https://i.pravatar.cc/150?img=35",
+    name: "Michael Chege",
+    position: "Marketing Strategist & co-Founder",
+    description: `“Blockchain isn&rsquo;tt just tech—it&rsquo;ts a bold shift redefining trust and transparency. From decentralized dreams to a future where fairness is built-in, it&rsquo;ts our chance to innovate responsibly. Join us to shape this equitable world.”`,
+    socialNetworks: [
+      {
+        name: "Linkedin",
+        url: "",
+      },
+      {
+        name: "Facebook",
+        url: "",
+      },
+      {
+        name: "Instagram",
+        url: "",
       },
     ],
   },
@@ -103,7 +106,7 @@ const Team = () => {
       </p>
 
      <div className="flex justify-center">       {/* grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 gap-y-10 items-center */}
-        {teamList.map(({ imageUrl, name, position, socialNetworks }: TeamProps) => (
+        {teamList.map(({ imageUrl, name, position, description, socialNetworks }: TeamProps) => (
           <Card
             key={name}
             className="bg-muted/50 relative mt-8 flex flex-col justify-center items-center max-w-sm"
@@ -125,10 +128,7 @@ const Team = () => {
             </CardHeader>
 
             <CardContent className="text-center pb-2">
-              <p>
-              &quot;Blockchain isn&rsquo;t just a technological evolution; it&rsquo;s a cultural revolution. It challenges our conventional views on data security and transactions, promising a future where transparency and trust
-                are the norm, not the exception. As we stand on the brink of this technological frontier, it&rsquo;s crucial we navigate not just with the intent to innovate, but also with a commitment to ethical practices that benefit all.&quot;
-              </p>
+            <p>{description}</p>
             </CardContent>
 
             <CardFooter className="flex justify-center gap-2">
