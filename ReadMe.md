@@ -38,7 +38,7 @@ cd apps/backend
 pnpm dev
 
 # Start frontend (in a new terminal)
-cd apps/frontend
+cd apps/web
 pnpm dev
 ```
 
